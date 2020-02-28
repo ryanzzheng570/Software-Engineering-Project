@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Your Shop Page"</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Shop</h1>
+<p th:text="'Id: ' + ${shop.id}"/>
+
+<p><strong>Items:</strong></p>
+<tr th:each="item: ${shop.items}">
+    <td th:text="'Name: ' + ${item.name}" />
+    <td th:each="image: ${item.images}" />
+        <a href="${image[0]}">
+            <img src="${image[0]}" alt="${image[1]}" style="width:200px;height:200px;border:0;">
+        </a>
+    <td th:text="'Cost: ' + ${item.cost}" />
+    <br />
+</tr>
+
+<br />
+<br />
+<br />
+<br />
+
+<p><strong>Add Buddy</strong></p>
+<form action="#" th:action="@{/addBuddy}" th:object="${buddyInfo}" method="post">
+    <input type="hidden" th:value="${book.id}" name="bookId"/>
+    <p>Name: <input type="text" th:field="*{name}"/></p>
+    <p>Phone Number: <input type="text" th:field="*{phoneNumber}"/></p>
+    <p>Address: <input type="text" th:field="*{address}"/></p>
+    <p><input type="submit" value="Add Buddy" /></p>
+</form>
+
+<br />
+<br />
+<br />
+<br />
+
+<p><strong>Remove Buddy</strong></p>
+<form action="#" th:action="@{/removeBuddy}" th:object="${buddyInfo}" method="post">
+    <input type="hidden" th:value="${book.id}" name="bookId"/>
+    <p>Buddy Id: <input type="text" name="buddyId"/></p>
+    <p><input type="submit" value="Remove Buddy" /></p>
+</form>
+
+</body>
+</html>
