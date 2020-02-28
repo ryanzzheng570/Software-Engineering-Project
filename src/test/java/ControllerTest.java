@@ -1,4 +1,4 @@
-package AddressBookProj;
+package ShopifyProj;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ControllerTest {
 
     @Autowired
-    private BuddyInfoController controller;
+    private ShopController controller;
 
     @Test
     public void contexLoads() throws Exception {

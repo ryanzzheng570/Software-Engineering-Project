@@ -1,4 +1,4 @@
-package AddressBookProj;
+package ShopifyProj;
 
 import org.junit.jupiter.api.Test;
 
