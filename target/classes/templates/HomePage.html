@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Home Page</h1>
+
+<p>Your Current Books:</p>
+<tr th:each="id: ${bookIds}">
+    <td th:text="'Address Book Id: ' + ${id}" />
+    <br />
+</tr>
+
+<p class="test"> TEST VALUE IS </p>
+
+<form action="#" th:action="@{/addAddressBook}" method="post">
+    <p><input type="submit" value="Add Book" /> <input type="reset" value="Reset" /></p>
+</form>
+
+<form action="#" th:action="@{/viewAddressBook}" th:object="${addressBook}">
+    <p>Book Id: <input type="text" th:field="*{id}"/></p>
+    <p><input type="submit" value="View Book" /> <input type="reset" value="Reset" /></p>
+</form>
+
+</body>
+</html>

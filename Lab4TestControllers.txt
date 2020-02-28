@@ -1,0 +1,17 @@
+curl http://localhost:8080/addressBook
+curl http://localhost:8080/addAddressBook
+curl http://localhost:8080/addressBook
+curl "http://localhost:8080/addBuddy?name="Frodo"&phoneNumber=1&address="Shire"&bookId=1"
+curl http://localhost:8080/addressBook/1/myBuddies
+curl http://localhost:8080/buddyInfo
+curl "http://localhost:8080/removeBuddy?buddyId=2&bookId=1"
+curl http://localhost:8080/addressBook/1/myBuddies
+curl http://localhost:8080/buddyInfo 
+
+
+
+curl --data "" http://localhost:8181/addAddressBook
+curl --data "name="Frodo"&phoneNumber=1&address="Shire"&bookId=2" http://localhost:8181/addAddressBook
+
+
+http://localhost:8181/viewAddressBook/?id=2

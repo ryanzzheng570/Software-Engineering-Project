@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Home Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <h1>Address Book</h1>
+    <p th:text="'Id: ' + ${book.id}"/>
+
+    <p>My Buddies:</p>
+    <tr th:each="buddy: ${book.myBuddies}">
+        <td th:text="'Id: ' + ${buddy.id}" />
+        <td th:text="'Name: ' + ${buddy.name}" />
+        <td th:text="'Phone Number: ' + ${buddy.phoneNumber}" />
+        <td th:text="'Address: ' + ${buddy.address}" />
+        <br />
+    </tr>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <p><strong>Add Buddy</strong></p>
+    <form action="#" th:action="@{/addBuddy}" th:object="${buddyInfo}" method="post">
+        <input type="hidden" th:value="${book.id}" name="bookId"/>
+        <p>Name: <input type="text" th:field="*{name}"/></p>
+        <p>Phone Number: <input type="text" th:field="*{phoneNumber}"/></p>
+        <p>Address: <input type="text" th:field="*{address}"/></p>
+        <p><input type="submit" value="Add Buddy" /></p>
+    </form>
+
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <p><strong>Remove Buddy</strong></p>
+    <form action="#" th:action="@{/removeBuddy}" th:object="${buddyInfo}" method="post">
+        <input type="hidden" th:value="${book.id}" name="bookId"/>
+        <p>Buddy Id: <input type="text" name="buddyId"/></p>
+        <p><input type="submit" value="Remove Buddy" /></p>
+    </form>
+
+</body>
+</html>
