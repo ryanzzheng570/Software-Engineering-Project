@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -16,8 +14,10 @@ public class Shop {
     private int id;
 
     private String shopName;
-    private List<String> tags;
-    private List<Item> items;
+
+    private Set<Tag> tags;
+
+    private Set<Item> items;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -27,11 +27,11 @@ public class Shop {
     public Shop()
     {
         this(DEFAULT_SHOP_NAME,
-            Optional.of(new ArrayList<String>()),
-            Optional.of(new ArrayList<Item>()));
+            Optional.of(new HashSet<>()),
+            Optional.of(new HashSet<Item>()));
     }
 
-    public Shop(String shopName, Optional<List<String>> tags, Optional<List<Item>> items){
+    public Shop(String shopName, Optional<Set<Tag>> tags, Optional<Set<Item>> items){
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.shopName = shopName;
@@ -39,13 +39,13 @@ public class Shop {
         if (tags.isPresent()){
             this.tags = tags.get();
         } else {
-            this.tags = new ArrayList<String>();
+            this.tags = new HashSet<>();
         }
 
         if (items.isPresent()){
             this.items = items.get();
         } else {
-            this.items = new ArrayList<Item>();
+            this.items = new HashSet<Item>();
         }
     }
 
@@ -63,75 +63,74 @@ public class Shop {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public List<Item> getItems(){
+    public Set<Item> getItems(){
         return(this.items);
     }
 
-    public void setItems(List<Item> newItemLst) {
+    public void setItems(Set<Item> newItemLst) {
         this.items = newItemLst;
     }
 
     public void clearItems(){
-        this.items = new ArrayList<Item>();
+        this.items = new HashSet<Item>();
     }
 
-    public Item getItem(int ind) {
-        Item toRet = null;
-
-        if (ind < this.items.size()) {
-            toRet = this.items.get(ind);
+    public Item getItem(int id) {
+        for (Item item : this.items) {
+            if (item.getId() == id) {
+                return(item);
+            }
         }
-
-        return(toRet);
-    }
-
-    public void removeItem(int ind){
-        if (ind < this.items.size()) {
-            this.items.remove(ind);
-        }
+        return(null);
     }
 
     public void removeItemWithId(int id) {
-        int ind = 0;
-        while (ind < this.items.size()){
-            if (this.items.get(ind).getId() == id) {
+        Item toRemove = null;
+        for (Item item : this.items) {
+            if (item.getId() == id) {
+                toRemove = item;
                 break;
             }
-            ind += 1;
         }
-        this.removeItem(ind);
+        this.items.remove(toRemove);
     }
 
-    public void addTag(String newTag) {
+    public void addTag(Tag newTag) {
         this.tags.add(newTag);
     }
 
-    public List<String> getTags(){
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    public Set<Tag> getTags(){
         return(this.tags);
     }
 
-    public void setTags(List<String> newTagList) {
+    public void setTags(Set<Tag> newTagList) {
         this.tags = newTagList;
     }
 
     public void clearTags(){
-        this.tags = new ArrayList<String>();
+        this.tags = new HashSet<Tag>();
     }
 
-    public String getTag(int ind) {
-        String toRet = null;
-
-        if (ind < this.tags.size()) {
-            toRet = this.tags.get(ind);
+    public Tag getTag(int id) {
+        for (Tag tag : this.tags) {
+            if (tag.getId() == id) {
+                return (tag);
+            }
         }
 
-        return(toRet);
+        return(null);
     }
 
-    public void removeTag(int ind){
-        if (ind < this.tags.size()) {
-            this.tags.remove(ind);
+    public void removeTagWithId(int id) {
+        Tag toRemove = null;
+        for (Tag tag : this.tags) {
+            if (tag.getId() == id) {
+                toRemove = tag;
+                break;
+            }
         }
+        this.tags.remove(toRemove);
     }
 
     @Override
@@ -140,8 +139,8 @@ public class Shop {
         toRet += String.format("Shop (Id: %d): \n", this.id);
 
         toRet += "Tags: [";
-        for (String tag: this.tags) {
-            toRet += tag;
+        for (Tag tag: this.tags) {
+            toRet += tag.toString();
             toRet += ", ";
         }
         toRet = toRet.substring(0, toRet.length() - 2);

@@ -25,7 +25,7 @@ public class ShopTest {
 
         testShop.addItem(newItem);
 
-        assertEquals(testShop.getItem(0), newItem);
+        assertEquals(testShop.getItem(newItem.getId()), newItem);
         assertEquals(testShop.getItems().size(), 1);
     }
 
@@ -34,7 +34,7 @@ public class ShopTest {
         Item newItem = new Item("ITEM_1");
 
         testShop.addItem(newItem);
-        testShop.removeItem(0);
+        testShop.removeItemWithId(newItem.getId());
 
         assertEquals(testShop.getItems().size(), 0);
     }

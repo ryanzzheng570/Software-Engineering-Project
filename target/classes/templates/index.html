@@ -7,73 +7,23 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-    <h1>Home Page</h1>
+<h1>Home Page</h1>
 
-    <p>Your Current Books:</p>
-    <table id="bookIdTable">
-        <tr>
-            <th>Address Book ID</th>
-        </tr>
-        <tr th:each="id: ${bookIds}">
-            <td th:text="${id}"></td>
-        </tr>
-    </table>
+<p>Your Current Shops:</p>
+<table id="shopIdTable">
+    <tr>
+        <th>Shop ID</th>
+    </tr>
+    <tr th:each="id: ${shopIds}">
+        <td th:text="${id}"></td>
+    </tr>
+</table>
 
-    <form action="#" th:action="@{/addAddressBook}" method="post" id="addForm">
-        <p><input type="submit" value="Add Book" /></p>
-    </form>
+<form action="#" th:action="@{/addShop}" method="post" id="addShopForm">
+    <p><input type="submit" value="Add Shop" /></p>
+</form>
 
-    <form action="#" th:action="@{/viewAddressBook}" th:object="${addressBook}" id="viewForm">
-        <p>Book Id: <input type="text" th:field="*{id}"/></p>
-        <p><input type="submit" value="View Book" /> <input type="reset" value="Reset" /></p>
-    </form>
-
-    <div id="viewAddressBookDivId" style="display:none">
-        <h1>Address Book</h1>
-        <p class="viewBookId"></p>
-
-        <p>My Buddies:</p>
-        <table id="viewBookBuddies">
-            <thead>
-                <tr>
-                    <th>Buddy ID</th>
-                    <th>Name</th>
-                    <th>Phone Number</th>
-                    <th>Address</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <p><strong>Add Buddy</strong></p>
-        <form action="#" th:action="@{/addBuddy}" th:object="${buddyInfo}" method="post" id="addBuddyForm">
-            <input type="hidden" name="bookId" class="needsBookId"/>
-            <p>Name: <input type="text" th:field="*{name}"/></p>
-            <p>Phone Number: <input type="text" th:field="*{phoneNumber}"/></p>
-            <p>Address: <input type="text" th:field="*{address}"/></p>
-            <p><input type="submit" value="Add Buddy" /></p>
-        </form>
-
-        <br />
-        <br />
-        <br />
-        <br />
-
-        <p><strong>Remove Buddy</strong></p>
-        <form action="#" th:action="@{/removeBuddy}" th:object="${buddyInfo}" method="post" id="removeBuddyForm">
-            <input type="hidden" name="bookId" class="needsBookId"/>
-            <p>Buddy Id: <input type="text" name="buddyId"/></p>
-            <p><input type="submit" value="Remove Buddy" /></p>
-        </form>
-    </div>
-
-    <script type="text/javascript" th:src="@{/js/jsController.js}"></script>
+<script type="text/javascript" th:src="@{/js/jsController.js}"></script>
 
 </body>
 </html>
