@@ -1,10 +1,6 @@
-import ShopifyProj.AddressBook;
-import ShopifyProj.BuddyInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class AddressBookTest {
     private AddressBook testBook;

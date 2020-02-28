@@ -1,9 +1,6 @@
-import ShopifyProj.BuddyInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class BuddyInfoTest {
     private final String ORIG_NAME = "TEST_NAME";

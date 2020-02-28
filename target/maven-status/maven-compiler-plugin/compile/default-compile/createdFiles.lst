@@ -1,15 +1,2 @@
-AddressBookProj\AddressBook.class
-AddressBookProj\BuddyInfoController.class
-AddressBookProj\BuddyInfoRepository.class
-AddressBookProj\AddressBookRepository.class
-AddressBookProj\BuddyInfo.class
-AddressBookProj\ThymeController.class
-AddressBookProj\SwingDisplay$3.class
-AddressBookProj\AddressBookController.class
-AddressBookProj\SwingDisplay.class
-AddressBookProj\SwingController.class
-AddressBookProj\SwingDisplay$2.class
-AddressBookProj\SwingDisplay$4.class
-AddressBookProj\SwingDisplay$1.class
-AddressBookProj\SwingDisplay$5.class
-AddressBookProj\Launcher.class
+ShopifyProj\ShopRepository.class
+ShopifyProj\ShopController.class
