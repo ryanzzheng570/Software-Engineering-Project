@@ -1,4 +1,4 @@
-package AddressBookProj;
+package ShopifyProj;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;

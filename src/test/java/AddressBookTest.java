@@ -1,11 +1,8 @@
-import AddressBookProj.AddressBook;
-import AddressBookProj.BuddyInfo;
+import ShopifyProj.AddressBook;
+import ShopifyProj.BuddyInfo;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.*;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
