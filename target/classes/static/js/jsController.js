@@ -24,7 +24,9 @@ $(document).ready(function() {
             type: "POST",
             dataType: "json"
         }).then(function(data) {
-                $("#shopList").append("<tr><td>" + shop.id + "</td></tr>");
+            for(shop in data) {
+                $("#shopList").append("<tr><td>" + data.id + "</td></tr>");
+            }
         })
     })
 

@@ -58,6 +58,14 @@ public class Shop {
         this.id = newId;
     }
 
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
     public void addItem(Item newItem) {
         this.items.add(newItem);
     }

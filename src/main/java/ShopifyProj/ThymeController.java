@@ -34,5 +34,9 @@ public class ThymeController {
         return "index";
     }
 
+    @GetMapping("/search")
+    public String viewSearchPage(Model model) {
+        return "search";
+    }
 
 }
