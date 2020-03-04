@@ -1,4 +1,5 @@
 import ShopifyProj.Item;
+import ShopifyProj.Shop;
 import ShopifyProj.Tag;
 import org.junit.After;
 import org.junit.Before;

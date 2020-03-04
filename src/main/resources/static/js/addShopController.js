@@ -75,6 +75,15 @@ $(document).ready(function() {
                 tagCell.appendChild(tagText);
                 newRow.appendChild(tagCell);
 
+                var merchantViewCell = document.createElement("td");
+                var merchantButton = document.createElement("button");
+                merchantButton.type = "submit";
+                merchantButton.name = "shopId";
+                merchantButton.value = data.id;
+                merchantButton.innerText = "Go to Shop";
+                merchantViewCell.appendChild(merchantButton);
+                newRow.appendChild(merchantViewCell);
+
                 $("#shopIdTable").append(newRow);
             });
         }

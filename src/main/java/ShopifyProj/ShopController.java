@@ -17,7 +17,7 @@ public class ShopController {
     private ShopRepository shopRepo;
 
     @PostMapping("/addShop")
-    public @ResponseBody
+    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
                                       @RequestParam(value = "tag") Optional<List<String>> tags) {
         Set<Tag> tagSet = new HashSet<Tag>();
 
