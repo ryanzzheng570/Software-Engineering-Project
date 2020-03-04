@@ -11,7 +11,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>bramsoft</groupId>
+    <groupId>SYSC4806_Group5</groupId>
     <artifactId>MiniShopify</artifactId>
     <version>1.0-SNAPSHOT</version>
 

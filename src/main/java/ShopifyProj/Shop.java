@@ -141,13 +141,15 @@ public class Shop {
         String toRet = "";
         toRet += String.format("Shop Name: %s, Id: %d: \n", this.shopName, this.id);
 
-        toRet += "Tags: [";
-        for (Tag tag : this.tags) {
-            toRet += tag.toString();
-            toRet += ", ";
+        if (!this.tags.isEmpty()) {
+            toRet += "Tags: [";
+            for (Tag tag : this.tags) {
+                toRet += tag.toString();
+                toRet += ", ";
+            }
+            toRet = toRet.substring(0, toRet.length() - 2);
+            toRet += "]";
         }
-        toRet = toRet.substring(0, toRet.length() - 2);
-        toRet += "]";
 
         for (Item item : this.items) {
             toRet += "\tItem: " + item.toString() + "\n";

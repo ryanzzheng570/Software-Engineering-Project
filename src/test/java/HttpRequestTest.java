@@ -19,8 +19,14 @@ public class HttpRequestTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void greetingShouldReturnDefaultMessage() throws Exception {
+    public void goToHomePage() throws Exception {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/",
                 String.class)).contains("Home Page");
+    }
+
+    @Test
+    public void goToAddShopPage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToAddShopPage",
+                String.class)).contains("Add Shop Page");
     }
 }

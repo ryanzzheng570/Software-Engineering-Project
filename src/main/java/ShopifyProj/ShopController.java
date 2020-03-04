@@ -17,18 +17,19 @@ public class ShopController {
     private ShopRepository shopRepo;
 
     @PostMapping("/addShop")
-    public @ResponseBody
-    Shop addShop(@RequestParam(value = "shopName") String name,
-                 @RequestParam(value = "tag") List<String> tags) {
+    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
+                                      @RequestParam(value = "tag") Optional<List<String>> tags) {
         Set<Tag> tagSet = new HashSet<Tag>();
 
-        for (String tag : tags) {
-            tagSet.add(new Tag(tag));
+        if (tags.isPresent()) {
+            for (String tag : tags.get()) {
+                if (!tag.equals("")){
+                    tagSet.add(new Tag(tag));
+                }
+            }
         }
 
         Shop newShop = new Shop(name, Optional.of(tagSet));
-
-        System.out.println(newShop.toString());
 
         shopRepo.save(newShop);
 
