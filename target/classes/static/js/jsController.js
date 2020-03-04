@@ -20,13 +20,14 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: "http://localhost:8181/searchForShops",
+            url: "http://localhost:8181/searchForShops" + $("#searchShopForm").serialize(),
             type: "POST",
+            data: {
+                "searchField": $("#searchField").val()
+            },
             dataType: "json"
         }).then(function(data) {
-            for(shop in data) {
-                $("#shopList").append("<tr><td>" + data.id + "</td></tr>");
-            }
+                $("#shopList").append("<tr><td>" + shop.id + "</td></tr>");
         })
     })
 
