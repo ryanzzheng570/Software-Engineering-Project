@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<h1>Add Shop</h1>
+<h1>Add Shop Page</h1>
 
 <h3>Your Current Shops:</h3>
 <table id="shopIdTable">
@@ -25,17 +25,12 @@
 
 <h3>New Shop Information:</h3>
 <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="addShopForm">
-    <table id="shopInfoTable">
-        <tr>
-            <td>Shop Name</td>
-            <td><input name="shopName" type="text"></td>
-        </tr>
-    </table>
-
     <p><input type="button" value="Add Tag" id="addTag" /></p>
 
     <p><input type="submit" value="Add Shop" /></p>
 </form>
+
+<p><input type="button" value="Reset Form" id="resetForm" /></p>
 
 <form action="#" th:action="@{/}">
     <input type="submit" value="Go To Home Page" />

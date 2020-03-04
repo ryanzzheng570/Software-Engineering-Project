@@ -11,10 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class ControllerTest {
 
     @Autowired
-    private ShopController controller;
+    private ShopController shopCont;
+
+    @Autowired
+    private ThymeController thymeCont;
 
     @Test
-    public void contexLoads() throws Exception {
-        assertThat(controller).isNotNull();
+    public void shopContextLoads() throws Exception {
+        assertThat(shopCont).isNotNull();
+    }
+
+    @Test
+    public void thymeContextLoads() throws Exception {
+        assertThat(thymeCont).isNotNull();
     }
 }
