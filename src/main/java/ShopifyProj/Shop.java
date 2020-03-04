@@ -44,14 +44,6 @@ public class Shop {
         this.items = new HashSet<Item>();
     }
 
-    public void setShopName(String newName){
-        this.shopName = newName;
-    }
-
-    public String getShopName(){
-        return(this.shopName);
-    }
-
     @Id
     public int getId() {
         return this.id;
