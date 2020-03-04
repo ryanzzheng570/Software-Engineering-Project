@@ -3,6 +3,7 @@ package ShopifyProj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
@@ -16,22 +17,27 @@ public class ThymeController {
     @Autowired
     private ShopRepository shopRepo;
 
-    private List<Integer> getIds() {
-        List<Integer> ids = new ArrayList<Integer>();
+    private List<Shop> getShops() {
+        List<Shop> shops = new ArrayList<Shop>();
         for (Shop shop : shopRepo.findAll()) {
-            Integer id = shop.getId();
-            ids.add(id);
+            shops.add(shop);
         }
 
-        return ids;
+        return shops;
 
     }
 
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        model.addAttribute("shopIds", getIds());
+        return "homepage";
+    }
 
-        return "index";
+    @GetMapping("/goToAddShopPage")
+    public String viewAddShopPage(Model model) {
+        model.addAttribute("shops", getShops());
+        model.addAttribute("shop", new Shop());
+
+        return "addShopPage";
     }
 
     @GetMapping("/search")
