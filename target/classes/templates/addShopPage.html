@@ -11,18 +11,23 @@
 <h1>Add Shop</h1>
 
 <h3>Your Current Shops:</h3>
-<table id="shopIdTable">
-    <tr>
-        <th>Shop ID</th>
-        <th>Name</th>
-        <th>Tags</th>
-    </tr>
-    <tr th:each="shop: ${shops}">
-        <td th:text="${shop.id}"></td>
-        <td th:text="${shop.shopName}"></td>
-        <td th:text="${shop.tags}"></td>
-    </tr>
-</table>
+<form action="#" th:action="@{/goToShop}">
+    <table id="shopIdTable">
+        <tr>
+            <th>Shop ID</th>
+            <th>Name</th>
+            <th>Tags</th>
+        </tr>
+        <tr th:each="shop: ${shops}">
+            <td th:text="${shop.id}"></td>
+            <td th:text="${shop.shopName}"></td>
+            <td th:text="${shop.tags}"></td>
+            <td>
+                <button type="submit" name="shopId" th:value="${shop.id}">Go to Shop</button>
+            </td>
+        </tr>
+    </table>
+</form>
 
 <h3>New Shop Information:</h3>
 <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="addShopForm">

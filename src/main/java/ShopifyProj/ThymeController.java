@@ -25,8 +25,8 @@ public class ThymeController {
 
     }
 
-    private Shop getShopByName(String aShopName) {
-        return shopRepo.findByShopName(aShopName);
+    private Shop getShopById(int aShopId) {
+        return shopRepo.findById(aShopId);
     }
 
     @GetMapping("/")
@@ -42,9 +42,10 @@ public class ThymeController {
         return "addShopPage";
     }
 
+
     @GetMapping("/goToShop")
-    public String viewShopPage(@RequestParam(value = "shopName") String aShopName, Model model) {
-        model.addAttribute("shop", getShopByName(aShopName));
+    public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
+        model.addAttribute("shop", getShopById(aShopId));
         return "shopPage";
     }
 

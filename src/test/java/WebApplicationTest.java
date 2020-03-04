@@ -19,29 +19,33 @@ public class WebApplicationTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ShopRepository shopRepo;
 
     @Test
     public void goToNewShop() throws Exception {
-        String shopName = "Test Shop";
+        String shopName = "goToNewShop";
         this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
-        this.mockMvc.perform(get("/goToShop?shopName=" + shopName)).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
     }
 
     @Test
     public void goToShopWithTags() throws Exception {
+        String shopName = "goToShopWithTags";
         String tagOne = "Tag One";
         String tagTwo = "Tag Two";
-        this.mockMvc.perform(post("/addShop?shopName=TestShop" + "&tag=" + tagOne + "&tag=" + tagTwo));
-        this.mockMvc.perform(get("/goToShop?shopName=TestShop")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=" + tagOne + "&tag=" + tagTwo));
+        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string((containsString(tagOne)))).andExpect(content().string((containsString(tagTwo))));
     }
 
     @Test
     public void goToShopWithoutItems() throws Exception {
+        String shopName = "goToShopWithoutItems";
         String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
-        this.mockMvc.perform(post("/addShop?shopName=TestShop2&tag=tagOne"));
-        this.mockMvc.perform(get("/goToShop?shopName=TestShop2")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
+        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string((containsString(noItemsMessage))));
     }
 }

@@ -15,7 +15,6 @@ $(document).ready(function() {
             type: "POST",
             dataType: "json"
         }).then(function(data) {
-            console.log(data);
             var newRow = "";
 
             newRow += "<tr>";
@@ -30,6 +29,7 @@ $(document).ready(function() {
             }
 
             newRow += "<td>" + tags + "</td>";
+            newRow += "<td><button type='submit' name='shopId' value='" + data.id+ "'>Go to Shop</button></td>";
             newRow += "</tr>";
 
             $("#shopIdTable").append(newRow);
