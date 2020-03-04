@@ -1,4 +1,3 @@
-import ShopifyProj.Shop;
 import ShopifyProj.Item;
 import ShopifyProj.Tag;
 import org.junit.After;
@@ -11,12 +10,12 @@ public class ShopTest {
     private Shop testShop;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testShop = new Shop();
     }
 
     @After
-    public void teardown(){
+    public void teardown() {
         testShop = null;
     }
 
