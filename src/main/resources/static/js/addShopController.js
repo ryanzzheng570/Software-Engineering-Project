@@ -1,49 +1,128 @@
-var tagKey = "TAG"
+var globals = {
+    tagCounter: 0
+};
 
-var tagCounter = 0;
+function resetForm() {
+    $("#addShopForm table").remove();
+
+    var tableElem = document.createElement("table");
+    tableElem.id = "shopInfoTable";
+
+    var initialRow = document.createElement("tr");
+
+    var nameCell = document.createElement("td");
+    var nameText = document.createTextNode("Shop Name");
+    nameCell.appendChild(nameText);
+    initialRow.appendChild(nameCell);
+
+    var inputCell = document.createElement("td");
+    var inputBody = document.createElement("input");
+    inputBody.name = "shopName";
+    inputBody.type = "text";
+    inputCell.appendChild(inputBody);
+    initialRow.appendChild(inputCell);
+
+    tableElem.appendChild(initialRow);
+
+    var elem = document.getElementById("addShopForm");
+    elem.insertBefore(tableElem, elem.firstChild);
+}
 
 $(document).ready(function() {
+    resetForm();
+
     $("#addShopForm").submit(function(e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
 
-        console.log($("#addShopForm").serialize());
+        var info = $("#addShopForm").serializeArray();
+        var infoJson = {};
 
-        $.ajax({
-            url: "http://localhost:8181/addShop?" + $("#addShopForm").serialize(),
-            type: "POST",
-            dataType: "json"
-        }).then(function(data) {
-            var newRow = "";
+        for (var i = 0; i < info.length; i++){
+            var curr = info[i];
+            infoJson[curr["name"]] = curr["value"];
+        }
 
-            newRow += "<tr>";
-            newRow += "<td>" + data.id + "</td>";
-            newRow += "<td>" + data.shopName + "</td>";
+        if (infoJson["shopName"] === "") {
+            alert("Please enter a store name!");
+        } else {
+            $.ajax({
+                url: "http://localhost:8181/addShop?" + $("#addShopForm").serialize(),
+                type: "POST",
+                dataType: "json"
+            }).then(function(data) {
+                var newRow = document.createElement("tr");
 
-            var tags = [];
-            for (var tagInd = 0; tagInd < data.tags.length; tagInd++){
-                var currTagName = data.tags[tagInd].tagName;
-                console.log(currTagName);
-                tags.push(currTagName);
-            }
+                var idCell = document.createElement("td");
+                var idText = document.createTextNode(data.id);
+                idCell.appendChild(idText);
+                newRow.appendChild(idCell);
 
-            newRow += "<td>" + tags + "</td>";
-            newRow += "<td><button type='submit' name='shopId' value='" + data.id+ "'>Go to Shop</button></td>";
-            newRow += "</tr>";
+                var nameCell = document.createElement("td");
+                var nameText = document.createTextNode(data.shopName);
+                nameCell.appendChild(nameText);
+                newRow.appendChild(nameCell);
 
-            $("#shopIdTable").append(newRow);
-        })
-    })
+                var tags = [];
+                for (var tagInd = 0; tagInd < data.tags.length; tagInd++){
+                    var currTagName = data.tags[tagInd].tagName;
+                    tags.push(currTagName);
+                }
+
+                var tagCell = document.createElement("td");
+                var tagText = document.createTextNode("[" + tags + "]");
+                tagCell.appendChild(tagText);
+                newRow.appendChild(tagCell);
+
+                $("#shopIdTable").append(newRow);
+            });
+        }
+    });
 
     $("#addTag").click(function(e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
 
-        //$("#shopInfoTable").append("<tr><td>Tag Value</td><td><input name=\"" + tagKey + "_" + tagCounter + "\" type=\"text\"></td></tr>");
-        $("#shopInfoTable").append("<tr><td>Tag Value</td><td><input name=\"tag\" type=\"text\"></td></tr>");
+        var rowId = "TAG_" + globals.tagCounter;
 
-        tagCounter += 1;
-    })
+        var row = document.createElement("tr");
+        row.id = rowId;
+
+        var nameBox = document.createElement("td");
+        var nameText = document.createTextNode("Tag Value");
+        nameBox.appendChild(nameText);
+        row.appendChild(nameBox);
+
+        var valBox = document.createElement("td");
+        var inputText = document.createElement("input");
+        inputText.type = "text";
+        inputText.name = "tag";
+        valBox.appendChild(inputText);
+        row.appendChild(valBox);
+
+        var buttonBox = document.createElement("td");
+        var inputButton = document.createElement("input");
+        inputButton.type = "button";
+        inputButton.value = "Remove Tag";
+        inputButton.addEventListener('click', function() {
+            var row = document.getElementById(rowId);
+            row.parentNode.removeChild(row);
+        });
+        buttonBox.appendChild(inputButton);
+        row.appendChild(buttonBox);
+
+        document.getElementById("shopInfoTable").appendChild(row);
+
+        globals.tagCounter += 1;
+    });
+
+    $("#resetForm").click(function(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+
+        resetForm();
+    });
 });
