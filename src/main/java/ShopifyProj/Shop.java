@@ -27,11 +27,10 @@ public class Shop {
     public Shop()
     {
         this(DEFAULT_SHOP_NAME,
-            Optional.of(new HashSet<>()),
-            Optional.of(new HashSet<Item>()));
+            Optional.of(new HashSet<>()));
     }
 
-    public Shop(String shopName, Optional<Set<Tag>> tags, Optional<Set<Item>> items){
+    public Shop(String shopName, Optional<Set<Tag>> tags){
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.shopName = shopName;
@@ -42,11 +41,15 @@ public class Shop {
             this.tags = new HashSet<>();
         }
 
-        if (items.isPresent()){
-            this.items = items.get();
-        } else {
-            this.items = new HashSet<Item>();
-        }
+        this.items = new HashSet<Item>();
+    }
+
+    public void setShopName(String newName){
+        this.shopName = newName;
+    }
+
+    public String getShopName(){
+        return(this.shopName);
     }
 
     @Id
@@ -136,7 +139,7 @@ public class Shop {
     @Override
     public String toString() {
         String toRet = "";
-        toRet += String.format("Shop (Id: %d): \n", this.id);
+        toRet += String.format("Shop Name: %s, Id: %d: \n", this.shopName, this.id);
 
         toRet += "Tags: [";
         for (Tag tag: this.tags) {
@@ -144,6 +147,7 @@ public class Shop {
             toRet += ", ";
         }
         toRet = toRet.substring(0, toRet.length() - 2);
+        toRet += "]";
 
         for (Item item : this.items) {
             toRet += "\tItem: " + item.toString() + "\n";
