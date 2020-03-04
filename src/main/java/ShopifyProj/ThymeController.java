@@ -2,15 +2,13 @@ package ShopifyProj;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 public class ThymeController {
@@ -27,7 +25,9 @@ public class ThymeController {
 
     }
 
-
+    private Shop getShopByName(String aShopName) {
+        return shopRepo.findByShopName(aShopName);
+    }
 
     @GetMapping("/")
     public String viewHomePage(Model model) {
@@ -40,6 +40,12 @@ public class ThymeController {
         model.addAttribute("shop", new Shop());
 
         return "addShopPage";
+    }
+
+    @GetMapping("/goToShop")
+    public String viewShopPage(@RequestParam(value = "shopName") String aShopName, Model model) {
+        model.addAttribute("shop", getShopByName(aShopName));
+        return "shopPage";
     }
 
 }

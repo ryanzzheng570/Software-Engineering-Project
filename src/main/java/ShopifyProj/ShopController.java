@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ShopController {
@@ -18,8 +17,9 @@ public class ShopController {
     private ShopRepository shopRepo;
 
     @PostMapping("/addShop")
-    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
-                   @RequestParam(value = "tag") List<String> tags) {
+    public @ResponseBody
+    Shop addShop(@RequestParam(value = "shopName") String name,
+                 @RequestParam(value = "tag") List<String> tags) {
         Set<Tag> tagSet = new HashSet<Tag>();
 
         for (String tag : tags) {

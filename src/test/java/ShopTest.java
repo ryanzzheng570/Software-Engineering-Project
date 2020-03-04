@@ -1,5 +1,5 @@
-import ShopifyProj.Shop;
 import ShopifyProj.Item;
+import ShopifyProj.Shop;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,17 +10,17 @@ public class ShopTest {
     private Shop testShop;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         testShop = new Shop();
     }
 
     @After
-    public void teardown(){
+    public void teardown() {
         testShop = null;
     }
 
     @Test
-    public void testAddBuddy(){
+    public void testAddBuddy() {
         Item newItem = new Item("ITEM_1");
 
         testShop.addItem(newItem);
@@ -30,7 +30,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testRemoveBuddy(){
+    public void testRemoveBuddy() {
         Item newItem = new Item("ITEM_1");
 
         testShop.addItem(newItem);
@@ -40,7 +40,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testClearBuddies(){
+    public void testClearBuddies() {
         Item buddy1 = new Item("ITEM_1");
         Item buddy2 = new Item("ITEM_2");
         Item buddy3 = new Item("ITEM_3");
