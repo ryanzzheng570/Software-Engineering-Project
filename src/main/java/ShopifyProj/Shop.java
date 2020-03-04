@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import javax.swing.text.html.Option;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -24,29 +25,31 @@ public class Shop {
     private static final String DEFAULT_SHOP_NAME = "";
 
     @Autowired
-    public Shop()
-    {
+    public Shop() {
         this(DEFAULT_SHOP_NAME,
-            Optional.of(new HashSet<>()),
-            Optional.of(new HashSet<Item>()));
+                Optional.of(new HashSet<>()));
     }
 
-    public Shop(String shopName, Optional<Set<Tag>> tags, Optional<Set<Item>> items){
+    public Shop(String shopName, Optional<Set<Tag>> tags) {
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.shopName = shopName;
 
-        if (tags.isPresent()){
+        if (tags.isPresent()) {
             this.tags = tags.get();
         } else {
             this.tags = new HashSet<>();
         }
 
-        if (items.isPresent()){
-            this.items = items.get();
-        } else {
-            this.items = new HashSet<Item>();
-        }
+        this.items = new HashSet<Item>();
+    }
+
+    public void setShopName(String newName) {
+        this.shopName = newName;
+    }
+
+    public String getShopName() {
+        return (this.shopName);
     }
 
     @Id
@@ -63,25 +66,25 @@ public class Shop {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<Item> getItems(){
-        return(this.items);
+    public Set<Item> getItems() {
+        return (this.items);
     }
 
     public void setItems(Set<Item> newItemLst) {
         this.items = newItemLst;
     }
 
-    public void clearItems(){
+    public void clearItems() {
         this.items = new HashSet<Item>();
     }
 
     public Item getItem(int id) {
         for (Item item : this.items) {
             if (item.getId() == id) {
-                return(item);
+                return (item);
             }
         }
-        return(null);
+        return (null);
     }
 
     public void removeItemWithId(int id) {
@@ -100,15 +103,15 @@ public class Shop {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<Tag> getTags(){
-        return(this.tags);
+    public Set<Tag> getTags() {
+        return (this.tags);
     }
 
     public void setTags(Set<Tag> newTagList) {
         this.tags = newTagList;
     }
 
-    public void clearTags(){
+    public void clearTags() {
         this.tags = new HashSet<Tag>();
     }
 
@@ -119,7 +122,7 @@ public class Shop {
             }
         }
 
-        return(null);
+        return (null);
     }
 
     public void removeTagWithId(int id) {
@@ -136,19 +139,20 @@ public class Shop {
     @Override
     public String toString() {
         String toRet = "";
-        toRet += String.format("Shop (Id: %d): \n", this.id);
+        toRet += String.format("Shop Name: %s, Id: %d: \n", this.shopName, this.id);
 
         toRet += "Tags: [";
-        for (Tag tag: this.tags) {
+        for (Tag tag : this.tags) {
             toRet += tag.toString();
             toRet += ", ";
         }
         toRet = toRet.substring(0, toRet.length() - 2);
+        toRet += "]";
 
         for (Item item : this.items) {
             toRet += "\tItem: " + item.toString() + "\n";
         }
 
-        return(toRet);
+        return (toRet);
     }
 }

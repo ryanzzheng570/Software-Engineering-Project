@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -15,6 +14,8 @@ public class Item {
 
     private String itemName;
 
+    private int inventory;
+
     private static final AtomicLong counter = new AtomicLong();
 
     @Autowired
@@ -22,7 +23,7 @@ public class Item {
         this("");
     }
 
-    public Item(String name){
+    public Item(String name) {
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.itemName = name;
@@ -32,17 +33,33 @@ public class Item {
         this.id = id;
     }
 
-    @Id
-    public int getId(){
-        return(this.id);
+    public void setInventory(int inv) {
+        this.inventory = inv;
     }
 
-    public void setItemName(String newName){
+    public int getInventory() {
+        return this.inventory;
+    }
+
+    public void decrementInventory() {
+        if (this.inventory > 0) {
+            this.inventory--;
+        } else {
+            this.inventory = 0;
+        }
+    }
+
+    @Id
+    public int getId() {
+        return (this.id);
+    }
+
+    public void setItemName(String newName) {
         this.itemName = newName;
     }
 
-    public String getItemName(){
-        return(this.itemName);
+    public String getItemName() {
+        return (this.itemName);
     }
 
     @Override
@@ -51,6 +68,6 @@ public class Item {
 
         toRet += this.itemName;
 
-        return(toRet);
+        return (toRet);
     }
 }
