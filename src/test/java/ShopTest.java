@@ -1,8 +1,11 @@
+import ShopifyProj.Images;
 import ShopifyProj.Shop;
 import ShopifyProj.Item;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,7 +24,7 @@ public class ShopTest {
 
     @Test
     public void testAddBuddy(){
-        Item newItem = new Item("ITEM_1");
+        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00");
 
         testShop.addItem(newItem);
 
@@ -31,7 +34,7 @@ public class ShopTest {
 
     @Test
     public void testRemoveBuddy(){
-        Item newItem = new Item("ITEM_1");
+        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00");
 
         testShop.addItem(newItem);
         testShop.removeItemWithId(newItem.getId());
@@ -41,9 +44,9 @@ public class ShopTest {
 
     @Test
     public void testClearBuddies(){
-        Item buddy1 = new Item("ITEM_1");
-        Item buddy2 = new Item("ITEM_2");
-        Item buddy3 = new Item("ITEM_3");
+        Item buddy1 = new Item("ITEM_1", new ArrayList<Images>(), "0.00");
+        Item buddy2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00");
+        Item buddy3 = new Item("ITEM_3", new ArrayList<Images>(), "0.00");
 
         testShop.addItem(buddy1);
         testShop.addItem(buddy2);
