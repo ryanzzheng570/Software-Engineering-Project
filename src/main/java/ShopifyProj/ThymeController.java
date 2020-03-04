@@ -27,6 +27,8 @@ public class ThymeController {
 
     }
 
+
+
     @GetMapping("/")
     public String viewHomePage(Model model) {
         return "homepage";
@@ -39,6 +41,5 @@ public class ThymeController {
 
         return "addShopPage";
     }
-
 
 }
