@@ -20,7 +20,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testAddBuddy() {
+    public void testAddItem() {
         Item newItem = new Item("ITEM_1");
 
         testShop.addItem(newItem);
@@ -30,7 +30,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testRemoveBuddy() {
+    public void testRemoveItem() {
         Item newItem = new Item("ITEM_1");
 
         testShop.addItem(newItem);
@@ -40,7 +40,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testClearBuddies() {
+    public void testClearItems() {
         Item buddy1 = new Item("ITEM_1");
         Item buddy2 = new Item("ITEM_2");
         Item buddy3 = new Item("ITEM_3");
