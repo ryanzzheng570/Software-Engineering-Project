@@ -55,4 +55,51 @@ public class WebLayerTest {
                 .andExpect(content().string(containsString(tag1)))
                 .andExpect(content().string(containsString(tag2)));
     }
+
+    @Test
+    public void searchShopNoMatch() throws Exception {
+        String searchField = "testShop";
+        String requestStr = String.format("/search?searchField=%s", searchField);
+
+        this.mockMvc.perform(post(requestStr)).andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void searchShopByName() throws Exception {
+        //Create a shop
+        String name = "TEST_SHOP";
+        String tag1 = "TAG_1";
+
+        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+
+        this.mockMvc.perform(post(requestStr));
+
+        //Search for the shop by name
+        String searchField = "TEST_SHOP";
+        String requestStr2 = String.format("/search?searchField=%s", searchField);
+
+        this.mockMvc.perform(post(requestStr2)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(name)));
+    }
+
+    @Test
+    public void searchShopByTag() throws Exception {
+        //Create a shop
+        String name = "TEST_SHOP";
+        String tag1 = "TAG_1";
+
+        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+
+        this.mockMvc.perform(post(requestStr));
+
+        //Search for the shop by name
+        String searchField = "TAG_1";
+        String requestStr2 = String.format("/search?searchField=%s", searchField);
+
+        this.mockMvc.perform(post(requestStr2)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(tag1)));
+    }
 }

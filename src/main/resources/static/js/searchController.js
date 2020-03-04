@@ -5,14 +5,15 @@ $(document).ready(function() {
         }
 
         $.ajax({
-            url: "http://localhost:8181/searchForShops" + $("#searchShopForm").serialize(),
+            url: "http://localhost:8181/search?" + $("#searchShopForm").serialize(),
             type: "POST",
-            data: {
-                "searchField": $("#searchField").val()
-            },
             dataType: "json"
         }).then(function (data) {
-            $("#shopList").append("<tr><td>" + shop.id + "</td></tr>");
+            console.log("here");
+            console.log("data", data);
+            for (row in data) {
+                document.write("Shop ID:" + row.id);
+            }
         })
     })
 }

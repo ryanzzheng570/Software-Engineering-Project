@@ -46,12 +46,24 @@ public class ShopController {
         return newShop;
     }
 
-    @PostMapping("/searchForShops")
+    @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
-        System.out.println("query" +  query);
+        System.out.println("Query: " + query);
         ArrayList<Shop> matchingShops = new ArrayList<>();
         for (Shop shop : shopRepo.findAll()) {
-            if (shop.getTags().contains(query) || shop.getShopName().equals(query)) {
+            System.out.println("tags: " + shop.getTags());
+            System.out.println("Name: " + shop.getShopName());
+
+            Set<Tag> tags = shop.getTags();
+
+            //Contains method does not work with tag name, need to iterate through
+            for (Tag t : tags) {
+                if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
+                    matchingShops.add(shop);
+                }
+            }
+
+            if (shop.getShopName().equals(query)) {
                 matchingShops.add(shop);
             }
         }

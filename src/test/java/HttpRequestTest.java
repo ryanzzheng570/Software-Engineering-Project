@@ -30,4 +30,10 @@ public class HttpRequestTest {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToAddShopPage",
                 String.class)).contains("Add Shop Page");
     }
+
+    @Test
+    public void goToSearchPage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/search",
+                String.class)).contains("Search for Shops");
+    }
 }
