@@ -45,8 +45,6 @@ public class ShopController {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();
-
-            //Contains method does not work with tag name, need to iterate through
             for (Tag t : tags) {
                 if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
                     matchingShops.add(shop);
