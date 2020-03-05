@@ -7,13 +7,15 @@ $(document).ready(function() {
             type: "POST",
             dataType: "json"
         }).then(function (data) {
+            $("#results").empty();
             for (let i = 0; i < data.length; i++) {
-                document.write("Shop ID: " + data[i].id + " , Shop Name: " + data[i].shopName + ", ");
-                document.write("Shop tags: ");
+                let tags = "";
                 for(let j = 0; j < data[i].tags.length; j++) {
-                    document.write(data[i].tags[j].tagName);
+                    tags += data[i].tags[j].tagName;
                 }
-                document.write("<br>");
+                let str = "Shop ID: " + data[i].id + ", Shop Name: " + data[i].shopName + ", Shop Tags: " + tags;
+
+                $("#results").append(`<p>${str}</p>`);
             }
         })
     })
