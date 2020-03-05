@@ -2,11 +2,10 @@ package ShopifyProj;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.ui.Model;
 
 import javax.persistence.Id;
 import javax.swing.text.html.Option;
@@ -19,24 +18,39 @@ public class ThymeController {
     @Autowired
     private ShopRepository shopRepo;
 
-    private List<Integer> getIds() {
-        List<Integer> ids = new ArrayList<Integer>();
+    private List<Shop> getShops() {
+        List<Shop> shops = new ArrayList<Shop>();
         for (Shop shop : shopRepo.findAll()) {
-            Integer id = shop.getId();
-            ids.add(id);
+            shops.add(shop);
         }
 
-        return ids;
+        return shops;
 
+    }
+
+    private Shop getShopById(int aShopId) {
+        return shopRepo.findById(aShopId);
     }
 
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        model.addAttribute("shopIds", getIds());
-
-        return "index";
+        return "homepage";
     }
 
+    @GetMapping("/goToAddShopPage")
+    public String viewAddShopPage(Model model) {
+        model.addAttribute("shops", getShops());
+        model.addAttribute("shop", new Shop());
+
+        return "addShopPage";
+    }
+
+
+    @GetMapping("/goToShop")
+    public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
+        model.addAttribute("shop", getShopById(aShopId));
+        return "shopPage";
+    }
 
     @GetMapping("/YourShopPage")
     public String displayYourShop(@RequestParam (value = "shopId") Integer shopId, Model model){
@@ -53,27 +67,30 @@ public class ThymeController {
         model.addAttribute("shop", toView);
         model.addAttribute("item", new Item());
 
+
         return "MerchantShopPage";
     }
 
     @PostMapping("/addItem")
-    public String addItem(@RequestParam (value = "shopID") Integer shopId, @RequestParam (value = "url") String url,
-                          @RequestParam (value = "altText") String altText, @RequestParam (name = "name") String name,
-                          @RequestParam (value = "cost") String cost,Model model){
+    public String addItem(@RequestParam (value = "shopId") Integer shopId, /*@RequestParam (value = "url") String url,
+                          @RequestParam (value = "altText") String altText,*/ @RequestParam (value = "itemName") String name,
+                          @RequestParam (value = "cost") String cost, Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
 
 
         if (shop.isPresent()){
-            Images image = new Images(url, altText);
+            //Images image = new Images(url, altText);
             List<Images> imagesToAdd = new ArrayList<Images>();
-            imagesToAdd.add(image);
+            //imagesToAdd.add(image);
 
             Item finalToAdd = new Item(name, imagesToAdd, cost);
 
 
             Shop finalShop = shop.get();
             finalShop.addItem(finalToAdd);
+            shopRepo.save(finalShop);
         }
+
 
         return displayYourShop(shopId, model);
     }
@@ -88,6 +105,7 @@ public class ThymeController {
             Shop finalShop = shop.get();
             if (finalShop.getItem(itemId) != null){
                 finalShop.removeItemWithId(itemId);
+                shopRepo.save(finalShop);
             }
         }
 

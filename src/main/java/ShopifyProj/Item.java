@@ -14,8 +14,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Item {
     private int id;
 
-
     private String itemName;
+
+    private int inventory;
 
     private List<Images> images;
     private String cost;
@@ -39,17 +40,33 @@ public class Item {
         this.id = id;
     }
 
-    @Id
-    public int getId(){
-        return(this.id);
+    public void setInventory(int inv) {
+        this.inventory = inv;
     }
 
-    public void setItemName(String newName){
+    public int getInventory() {
+        return this.inventory;
+    }
+
+    public void decrementInventory() {
+        if (this.inventory > 0) {
+            this.inventory--;
+        } else {
+            this.inventory = 0;
+        }
+    }
+
+    @Id
+    public int getId() {
+        return (this.id);
+    }
+
+    public void setItemName(String newName) {
         this.itemName = newName;
     }
 
-    public String getItemName(){
-        return(this.itemName);
+    public String getItemName() {
+        return (this.itemName);
     }
 
 
@@ -95,6 +112,6 @@ public class Item {
 
         toRet += this.itemName;
 
-        return(toRet);
+        return (toRet);
     }
 }
