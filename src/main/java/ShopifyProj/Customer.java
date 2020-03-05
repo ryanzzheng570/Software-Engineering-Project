@@ -37,15 +37,23 @@ public class Customer {
         this.boughItems = boughItems;
         this.cart = cart;
     }
-
+    /*
+        Append new item to the existing set
+     */
     public void appendNewBoughItem(Item item) {
         boughItems.add(item);
     }
 
+    /*
+        Append new item to the existing cart
+     */
     public void appendNewCartItem(Item item) {
         cart.add(item);
     }
 
+    /*
+        Get bough item using Id
+     */
     public Item getBoughItemById(int itemId) {
         for (Iterator<Item> it = boughItems.iterator(); it.hasNext(); ) {
             Item item = it.next();

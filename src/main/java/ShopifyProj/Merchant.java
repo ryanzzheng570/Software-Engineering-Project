@@ -2,7 +2,7 @@ package ShopifyProj;
 
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -40,6 +40,28 @@ public class Merchant {
         rating = 0;
     }
 
+    /*
+        Add new shop to existing shops
+     */
+    public void appendNewShops(Shop newShop) {
+        shops.add(newShop);
+    }
+
+    /*
+        Find the new shops using shop id
+     */
+    public Shop getShopById(int id) {
+        for(int i=0; i<shops.size(); i++) {
+            Shop shop = shops.get(i);
+            if( shop.getId() == id){
+                return shop;
+            }
+        }
+
+        return null;
+    }
+
+    @Id
     public int getId() {
         return id;
     }
@@ -48,6 +70,7 @@ public class Merchant {
         this.id = id;
     }
 
+    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     public List<Shop> getShops() {
         return shops;
     }
