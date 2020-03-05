@@ -3,7 +3,9 @@ package ShopifyProj;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -22,17 +24,9 @@ public class Merchant {
     }
 
     public Merchant(String name, String contactPhoneNumber, String email) {
-        this.name = name;
-        this.contactPhoneNumber = contactPhoneNumber;
-        this.email = email;
-        //Begin with 0 rating
-        rating = 0;
-    }
-
-    public Merchant(List<Shop> shops, String name, String contactPhoneNumber, String email) {
         this.id = Math.toIntExact(counter.incrementAndGet());
 
-        this.shops = shops;
+        this.shops = new ArrayList<Shop>();
         this.name = name;
         this.contactPhoneNumber = contactPhoneNumber;
         this.email = email;
@@ -51,14 +45,19 @@ public class Merchant {
         Find the new shops using shop id
      */
     public Shop getShopById(int id) {
-        for(int i=0; i<shops.size(); i++) {
-            Shop shop = shops.get(i);
-            if( shop.getId() == id){
+        for(Shop shop: shops) {
+            if(shop.getId() == id) {
                 return shop;
             }
         }
-
         return null;
+    }
+
+    public void removeShopById(int id) {
+        Shop toRemove = getShopById(id);
+        if(toRemove != null) {
+            shops.remove(toRemove);
+        }
     }
 
     @Id

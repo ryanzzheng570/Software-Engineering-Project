@@ -55,15 +55,37 @@ public class Customer {
         Get bough item using Id
      */
     public Item getBoughItemById(int itemId) {
-        for (Iterator<Item> it = boughItems.iterator(); it.hasNext(); ) {
-            Item item = it.next();
+        return itemSetIterator(boughItems, itemId);
+    }
+
+    /*
+    Get Cart item using Id
+ */
+    public Item getCartItemById(int itemId) {
+        return itemSetIterator(cart, itemId);
+    }
+
+    private Item itemSetIterator(Set<Item> set, int itemId) {
+        for (Item item : set) {
             if (item.getId() == itemId) {
-                return item;
+                return (item);
             }
         }
+        return (null);
+    }
 
-        //Return an empty for now, decide what to return if the bough item is not found later
-        return new Item();
+    public void removeBoughItemById(int itemId) {
+        Item toRemove = getBoughItemById(itemId);
+        if(toRemove != null) {
+            this.boughItems.remove(toRemove);
+        }
+    }
+
+    public void removeCartItemById(int itemId) {
+        Item toRemove = getCartItemById(itemId);
+        if(toRemove != null) {
+            this.cart.remove(toRemove);
+        }
     }
 
     @Id
