@@ -1,5 +1,5 @@
-package ShopifyProj;
-
+import ShopifyProj.Merchant;
+import ShopifyProj.Shop;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
