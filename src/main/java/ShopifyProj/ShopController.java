@@ -18,14 +18,6 @@ public class ShopController {
     @Autowired
     private ShopRepository shopRepo;
 
-    public Shop handleAddShop(String name, Set<Tag> tags) {
-        Shop newShop = new Shop(name, Optional.of(tags));
-
-        shopRepo.save(newShop);
-
-        return newShop;
-    }
-
     @PostMapping("/addShop")
     public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
                                       @RequestParam(value = "tag") Optional<List<String>> tags) {
