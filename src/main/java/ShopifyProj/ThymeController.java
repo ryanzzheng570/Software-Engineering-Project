@@ -3,8 +3,7 @@ package ShopifyProj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,10 @@ import java.util.List;
 public class ThymeController {
     @Autowired
     private ShopRepository shopRepo;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private MerchantRepository merchantRepository;
 
     private List<Shop> getShops() {
         List<Shop> shops = new ArrayList<Shop>();
@@ -47,6 +50,30 @@ public class ThymeController {
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         model.addAttribute("shop", getShopById(aShopId));
         return "shopPage";
+    }
+
+    @GetMapping("/addNewMerchant")
+    public String viewAddNewMerchantPage(Model model) {
+        model.addAttribute("merchant", new Merchant());
+        return "addMerchantPage";
+    }
+
+    @PostMapping("/addNewMerchant")
+    public String addNewMerchant(@ModelAttribute Merchant newMerchant, Model model) {
+        merchantRepository.save(newMerchant);
+        return "/";
+    }
+
+    @GetMapping("/createCustomerAccount")
+    public String viewCreateCustomerAccountPage(Model model) {
+        model.addAttribute("customer", new Customer());
+        return "createCustomerAccount";
+    }
+
+    @PostMapping("/createCustomerAccount")
+    public String createCustomerAccount(@ModelAttribute Customer newCustomer, Model model) {
+        customerRepository.save(newCustomer);
+        return "/";
     }
 
 }
