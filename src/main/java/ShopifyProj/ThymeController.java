@@ -58,22 +58,10 @@ public class ThymeController {
         return "addMerchantPage";
     }
 
-    @PostMapping("/addNewMerchant")
-    public String addNewMerchant(@ModelAttribute Merchant newMerchant, Model model) {
-        merchantRepository.save(newMerchant);
-        return "/";
-    }
-
     @GetMapping("/createCustomerAccount")
     public String viewCreateCustomerAccountPage(Model model) {
         model.addAttribute("customer", new Customer());
         return "createCustomerAccount";
-    }
-
-    @PostMapping("/createCustomerAccount")
-    public String createCustomerAccount(@ModelAttribute Customer newCustomer, Model model) {
-        customerRepository.save(newCustomer);
-        return "/";
     }
 
 }
