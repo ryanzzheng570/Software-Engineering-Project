@@ -21,7 +21,7 @@ public class Tag {
         this("");
     }
 
-    public Tag(String name){
+    public Tag(String name) {
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.tagName = name;
@@ -32,16 +32,16 @@ public class Tag {
     }
 
     @Id
-    public int getId(){
-        return(this.id);
+    public int getId() {
+        return (this.id);
     }
 
-    public void setTagName(String newName){
+    public void setTagName(String newName) {
         this.tagName = newName;
     }
 
-    public String getTagName(){
-        return(this.tagName);
+    public String getTagName() {
+        return (this.tagName);
     }
 
     @Override
@@ -50,6 +50,6 @@ public class Tag {
 
         toRet += this.tagName;
 
-        return(toRet);
+        return (toRet);
     }
 }
