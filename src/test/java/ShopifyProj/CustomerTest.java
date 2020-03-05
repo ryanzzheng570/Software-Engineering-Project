@@ -1,16 +1,12 @@
 package ShopifyProj;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerTest {
     private Customer testCustomer;
@@ -28,10 +24,10 @@ class CustomerTest {
     @Test
     public void appendNewBoughItem() {
         Item newItem = new Item("ITEM_1");
-        testCustomer.appendNewBoughItem(newItem);
+        testCustomer.appendNewBoughtItem(newItem);
 
-        assertEquals(newItem, testCustomer.getBoughItemById(newItem.getId()));
-        assertEquals(1, testCustomer.getBoughItems().size());
+        assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
+        assertEquals(1, testCustomer.getBoughtItems().size());
     }
 
     @Test
@@ -46,8 +42,8 @@ class CustomerTest {
     @Test
     public void getBoughItemById() {
         Item newItem = new Item("ITEM_1");
-        testCustomer.appendNewBoughItem(newItem);
-        assertEquals(newItem, testCustomer.getBoughItemById(newItem.getId()));
+        testCustomer.appendNewBoughtItem(newItem);
+        assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
     }
 
     @Test
@@ -62,12 +58,12 @@ class CustomerTest {
         Item newItem = new Item("ITEM_1");
         Item newItem2 = new Item("ITEM_2");
 
-        testCustomer.appendNewBoughItem(newItem);
-        testCustomer.appendNewBoughItem(newItem2);
-        testCustomer.removeBoughItemById(newItem.getId());
+        testCustomer.appendNewBoughtItem(newItem);
+        testCustomer.appendNewBoughtItem(newItem2);
+        testCustomer.removeBoughtItemById(newItem.getId());
 
-        assertEquals(newItem2, testCustomer.getBoughItemById(newItem2.getId()));
-        assertEquals(1, testCustomer.getBoughItems().size());
+        assertEquals(newItem2, testCustomer.getBoughtItemById(newItem2.getId()));
+        assertEquals(1, testCustomer.getBoughtItems().size());
     }
 
     @Test

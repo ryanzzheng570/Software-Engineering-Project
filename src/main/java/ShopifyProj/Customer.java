@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,7 +18,7 @@ public class Customer {
     private String address;
     private String phoneNumber;
     private String note;
-    private Set<Item> boughItems;
+    private Set<Item> boughtItems;
     private Set<Item> cart;
 
     @Autowired
@@ -27,21 +26,21 @@ public class Customer {
     }
 
     public Customer(String name, String email, String address, String phoneNumber, String note,
-                    Set<Item> boughItems, Set<Item> cart) {
+                    Set<Item> boughtItems, Set<Item> cart) {
         this.id = Math.toIntExact(counter.incrementAndGet());
         this.name = name;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.note = note;
-        this.boughItems = boughItems;
+        this.boughtItems = boughtItems;
         this.cart = cart;
     }
     /*
         Append new item to the existing set
      */
-    public void appendNewBoughItem(Item item) {
-        boughItems.add(item);
+    public void appendNewBoughtItem(Item item) {
+        boughtItems.add(item);
     }
 
     /*
@@ -54,8 +53,8 @@ public class Customer {
     /*
         Get bough item using Id
      */
-    public Item getBoughItemById(int itemId) {
-        return itemSetIterator(boughItems, itemId);
+    public Item getBoughtItemById(int itemId) {
+        return itemSetIterator(boughtItems, itemId);
     }
 
     /*
@@ -74,10 +73,10 @@ public class Customer {
         return (null);
     }
 
-    public void removeBoughItemById(int itemId) {
-        Item toRemove = getBoughItemById(itemId);
+    public void removeBoughtItemById(int itemId) {
+        Item toRemove = getBoughtItemById(itemId);
         if(toRemove != null) {
-            this.boughItems.remove(toRemove);
+            this.boughtItems.remove(toRemove);
         }
     }
 
@@ -138,12 +137,12 @@ public class Customer {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<Item> getBoughItems() {
-        return boughItems;
+    public Set<Item> getBoughtItems() {
+        return boughtItems;
     }
 
-    public void setBoughItems(Set<Item> boughItems) {
-        this.boughItems = boughItems;
+    public void setBoughtItems(Set<Item> boughtItems) {
+        this.boughtItems = boughtItems;
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
