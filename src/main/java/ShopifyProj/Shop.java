@@ -44,14 +44,6 @@ public class Shop {
         this.items = new HashSet<Item>();
     }
 
-    public void setShopName(String newName) {
-        this.shopName = newName;
-    }
-
-    public String getShopName() {
-        return (this.shopName);
-    }
-
     @Id
     public int getId() {
         return this.id;
@@ -59,6 +51,14 @@ public class Shop {
 
     public void setId(int newId) {
         this.id = newId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
     }
 
     public void addItem(Item newItem) {

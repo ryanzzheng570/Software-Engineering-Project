@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
 public class ShopController {
@@ -34,6 +36,27 @@ public class ShopController {
         shopRepo.save(newShop);
 
         return newShop;
+    }
+
+    @PostMapping("/search")
+    public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
+        ArrayList<Shop> matchingShops = new ArrayList<>();
+        for (Shop shop : shopRepo.findAll()) {
+            boolean isAdded = false;
+
+            Set<Tag> tags = shop.getTags();
+            for (Tag t : tags) {
+                if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
+                    matchingShops.add(shop);
+                    isAdded = true;
+                }
+            }
+
+            if (shop.getShopName().equals(query) && isAdded == false) {
+                matchingShops.add(shop);
+            }
+        }
+        return matchingShops;
     }
 
 }

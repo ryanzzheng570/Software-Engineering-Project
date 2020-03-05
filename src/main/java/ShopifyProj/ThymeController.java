@@ -42,6 +42,10 @@ public class ThymeController {
         return "addShopPage";
     }
 
+    @GetMapping("/search")
+    public String viewSearchPage(Model model) {
+        return "search";
+    }
 
     @GetMapping("/goToShop")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
