@@ -48,11 +48,9 @@ public class ShopController {
 
     @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
-        System.out.println("Query: " + query);
         ArrayList<Shop> matchingShops = new ArrayList<>();
         for (Shop shop : shopRepo.findAll()) {
-            System.out.println("tags: " + shop.getTags());
-            System.out.println("Name: " + shop.getShopName());
+            boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();
 
@@ -60,10 +58,11 @@ public class ShopController {
             for (Tag t : tags) {
                 if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
                     matchingShops.add(shop);
+                    isAdded = true;
                 }
             }
 
-            if (shop.getShopName().equals(query)) {
+            if (shop.getShopName().equals(query) && isAdded == false) {
                 matchingShops.add(shop);
             }
         }

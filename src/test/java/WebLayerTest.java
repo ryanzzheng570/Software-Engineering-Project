@@ -41,6 +41,20 @@ public class WebLayerTest {
     }
 
     @Test
+    public void addShopOneTags() throws Exception {
+        String name = "TEST_SHOP";
+        String tag1 = "TAG_1";
+
+        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+
+        this.mockMvc.perform(post(requestStr));
+        this.mockMvc.perform(get("/goToAddShopPage")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(tag1)));
+    }
+
+    @Test
     public void addShopWithTwoTags() throws Exception {
         String name = "TEST_SHOP";
         String tag1 = "TAG_1";

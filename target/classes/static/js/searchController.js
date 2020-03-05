@@ -1,20 +1,20 @@
 $(document).ready(function() {
-
-}
-
-$("#searchShopForm").submit(function (e) {
-    if (e.preventDefault) {
+    $("#searchShopForm").submit(function (e) {
         e.preventDefault();
-    }
 
-    $.ajax({
-        url: "http://localhost:8181/search" + $("#searchShopForm").serialize(),
-        type: "POST",
-        dataType: "json"
-    }).then(function (data) {
-        console.log("data", data);
-        for (row in data) {
-            document.write("Shop ID:" + row.id);
-        }
+        $.ajax({
+            url: "http://localhost:8181/search?" + $("#searchShopForm").serialize(),
+            type: "POST",
+            dataType: "json"
+        }).then(function (data) {
+            for (let i = 0; i < data.length; i++) {
+                document.write("Shop ID: " + data[i].id + " , Shop Name: " + data[i].shopName + ", ");
+                document.write("Shop tags: ");
+                for(let j = 0; j < data[i].tags.length; j++) {
+                    document.write(data[i].tags[j].tagName);
+                }
+                document.write("<br>");
+            }
+        })
     })
 })
