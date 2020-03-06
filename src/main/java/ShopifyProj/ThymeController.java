@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.swing.text.html.Option;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -80,24 +81,59 @@ public class ThymeController {
         return "MerchantShopPage";
     }
 
+    private String parseCostInput(String cost) {
+        System.out.println("HERE");
+        cost = cost.replaceAll("[$]", "");
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        boolean numeric = true;
+        double check = 0;
+
+        try {
+            check = Double.parseDouble(cost);
+        } catch (NumberFormatException e) {
+            numeric = false;
+        }
+        System.out.println(numeric);
+
+        if (numeric){
+            cost = formatter.format(check);
+        }else{
+            cost = "Invalid Cost Input";
+        }
+        System.out.println("DONE");
+        return(cost);
+    }
+
+
     @PostMapping("/addItem")
     public String addItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "url") String url,
                           @RequestParam (value = "altText") String altText, @RequestParam (value = "itemName") String name,
-                          @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory,Model model){
+                          @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory, Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
+
+        System.out.println(shopId);
+        System.out.println(url);
+        System.out.println(altText);
+        System.out.println(name);
+        System.out.println(cost);
+        System.out.println(inventory);
 
 
         if (shop.isPresent()){
-           // System.out.println(url + "\n" + altText);
-            Images image = new Images(url, altText);
             List<Images> imagesToAdd = new ArrayList<Images>();
-            imagesToAdd.add(image);
 
-            Item finalItemToAdd = new Item(name, imagesToAdd, cost, inventory);
+            if (!url.equals("")) {
+                Images image = new Images(url, altText);
+                imagesToAdd.add(image);
+            }
+
+            String newCost = parseCostInput(cost);
+
+            Item finalItemToAdd = new Item(name, imagesToAdd, newCost, inventory);
 
             Shop finalShop = shop.get();
             finalShop.addItem(finalItemToAdd);
-            //System.out.println(finalShop.getItems().get(0).getImages().get(0).getUrl());
             shopRepo.save(finalShop);
         }
 

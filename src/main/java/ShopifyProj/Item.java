@@ -88,23 +88,7 @@ public class Item {
 
 
     public void setCost(String newCost){
-        newCost = newCost.replaceAll("[$]", "");
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        boolean numeric = true;
-        double check = 0;
-
-        try{
-            check = Double.parseDouble(newCost);
-        }catch (NumberFormatException e) {
-            numeric = false;
-        }
-
-        if (numeric){
-            this.cost = formatter.format(check);
-        }else{
-            this.cost = "Invalid Cost Input";
-        }
+        this.cost = newCost;
     }
 
     public String getCost(){ return this.cost; }
