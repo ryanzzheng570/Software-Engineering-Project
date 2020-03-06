@@ -18,8 +18,28 @@
     <h2>Items</h2>
     <table>
         <tr th:each="item: ${shop.items}">
-            <td th:text="${item}"></td>
-            <br>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th th:if="${not #lists.isEmpty(item.images)}">Image</th>
+                    <th>Quantity</th>
+                    <th>Cost</th>
+                </tr>
+                <tr>
+                    <td th:text="${item.itemName}" />
+
+                    <td th:if="${not #lists.isEmpty(item.images)}">
+                        <a th:href="${item.images[0]?.url}">
+                            <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}" style="width:200px;height:200px;border:0;">
+                        </a>
+                    </td>
+
+                    <td th:text="${item.inventory}" />
+
+                    <td th:text="${item.cost}" />
+                    <td><input type="submit" value="Remove Item" /></td>
+                </tr>
+            </table>
         </tr>
     </table>
 </div>

@@ -98,7 +98,10 @@ public class Item {
     public String toString() {
         String toRet = "";
 
-        toRet += this.itemName;
+        toRet += this.itemName + "\n";
+        for (Images image : this.images) {
+            toRet += "Image: " + image.toString() + "\n";
+        }
 
         return (toRet);
     }

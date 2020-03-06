@@ -70,6 +70,7 @@ public class ThymeController {
         Optional<Shop> theShop = shopRepo.findById(shopId);
         if(theShop.isPresent()){
             toView = theShop.get();
+            System.out.println(toView);
         }else {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
@@ -126,6 +127,7 @@ public class ThymeController {
             if (!url.equals("")) {
                 Images image = new Images(url, altText);
                 imagesToAdd.add(image);
+                System.out.println("ADDING IMAGE" + image.toString());
             }
 
             String newCost = parseCostInput(cost);

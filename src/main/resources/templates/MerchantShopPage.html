@@ -18,16 +18,16 @@
         <table>
             <tr>
                 <th>Name</th>
-                <th>Images</th>
+                <th th:if="${not #lists.isEmpty(item.images)}">Image</th>
                 <th>Quantity</th>
                 <th>Cost</th>
             </tr>
             <tr>
                 <td th:text="${item.itemName}" />
 
-                <td th:each="image: ${item.images}" />
-                    <a href="${image.url}">
-                        <img src="${image.url}" alt="${image.altText}" style="width:200px;height:200px;border:0;">
+                <td th:if="${not #lists.isEmpty(item.images)}">
+                    <a th:href="${item.images[0]?.url}">
+                        <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}" style="width:200px;height:200px;border:0;">
                     </a>
                 </td>
 
