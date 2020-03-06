@@ -3,9 +3,7 @@ package ShopifyProj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.swing.text.html.Option;
@@ -17,6 +15,10 @@ import java.util.Optional;
 public class ThymeController {
     @Autowired
     private ShopRepository shopRepo;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private MerchantRepository merchantRepository;
 
     private List<Shop> getShops() {
         List<Shop> shops = new ArrayList<Shop>();
@@ -45,6 +47,10 @@ public class ThymeController {
         return "addShopPage";
     }
 
+    @GetMapping("/search")
+    public String viewSearchPage(Model model) {
+        return "search";
+    }
 
     @GetMapping("/goToShop")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
@@ -112,6 +118,18 @@ public class ThymeController {
         }
 
         return displayYourShop(shopId, model);
+    }
+
+    @GetMapping("/addNewMerchant")
+    public String viewAddNewMerchantPage(Model model) {
+        model.addAttribute("merchant", new Merchant());
+        return "addMerchantPage";
+    }
+
+    @GetMapping("/createCustomerAccount")
+    public String viewCreateCustomerAccountPage(Model model) {
+        model.addAttribute("customer", new Customer());
+        return "createCustomerAccount";
     }
 
 }

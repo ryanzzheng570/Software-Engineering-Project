@@ -4,6 +4,10 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ### Added Technology
  FaaS, Microservices, Serverless: Amazon Lambda, Google Cloud Functions, Apache OpenWhisk...
  
+ ### Important Links
+ Travis CI: https://travis-ci.org/haseebakhan10/EngLabProject
+ Heroku: https://dashboard.heroku.com/apps/minishopifygroup5
+ 
  ### Current State
  ### Plan For Next Sprint
  - Allow merchants to create stores and customers to search for stores by name
