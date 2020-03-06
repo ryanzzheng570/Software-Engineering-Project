@@ -63,7 +63,7 @@ public class ThymeController {
     }
 
     @GetMapping("/YourShopPage")
-    public String displayYourShop(@RequestParam (value = "shopId") Integer shopId, Model model){
+    public String displayYourShop(@RequestParam(value = "shopId") Integer shopId, Model model){
 
         Shop toView = null;
 
