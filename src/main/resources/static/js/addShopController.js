@@ -80,7 +80,7 @@ $(document).ready(function() {
                 merchantButton.type = "submit";
                 merchantButton.name = "shopId";
                 merchantButton.value = data.id;
-                merchantButton.innerText = "Go to Shop";
+                merchantButton.innerText = "Go to your Shop";
                 merchantViewCell.appendChild(merchantButton);
                 newRow.appendChild(merchantViewCell);
 
