@@ -25,7 +25,6 @@ class CustomerTest {
 
     @Test
     public void appendNewBoughItem() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         testCustomer.appendNewBoughtItem(newItem);
 
@@ -35,7 +34,6 @@ class CustomerTest {
 
     @Test
     public void appendNewCartItem() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         testCustomer.appendNewCartItem(newItem);
 
@@ -45,7 +43,6 @@ class CustomerTest {
 
     @Test
     public void getBoughItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         testCustomer.appendNewBoughtItem(newItem);
         assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
@@ -53,7 +50,6 @@ class CustomerTest {
 
     @Test
     public void getCartItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         testCustomer.appendNewCartItem(newItem);
         assertEquals(newItem, testCustomer.getCartItemById(newItem.getId()));
@@ -61,8 +57,6 @@ class CustomerTest {
 
     @Test
     public void removeBoughItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         Item newItem2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
 
@@ -76,8 +70,6 @@ class CustomerTest {
 
     @Test
     public void removeCartItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Images>(), "", 0);
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
         Item newItem2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
 
