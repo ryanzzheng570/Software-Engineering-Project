@@ -4,9 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Component
@@ -18,7 +16,7 @@ public class Shop {
 
     private Set<Tag> tags;
 
-    private Set<Item> items;
+    private List<Item> items;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -41,7 +39,7 @@ public class Shop {
             this.tags = new HashSet<>();
         }
 
-        this.items = new HashSet<Item>();
+        this.items = new ArrayList<Item>();
     }
 
     @Id
@@ -66,17 +64,15 @@ public class Shop {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<Item> getItems() {
+    public List<Item> getItems() {
         return (this.items);
     }
 
-    public void setItems(Set<Item> newItemLst) {
+    public void setItems(List<Item> newItemLst) {
         this.items = newItemLst;
     }
 
-    public void clearItems() {
-        this.items = new HashSet<Item>();
-    }
+    public void clearItems() { this.items = new ArrayList<Item>(); }
 
     public Item getItem(int id) {
         for (Item item : this.items) {

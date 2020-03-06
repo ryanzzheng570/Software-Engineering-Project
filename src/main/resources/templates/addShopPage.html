@@ -11,7 +11,7 @@
 <h1>Add Shop Page</h1>
 
 <h3>Your Current Shops:</h3>
-<form action="#" th:action="@{/goToShop}">
+<form action="#" th:action="@{/YourShopPage}">
     <table id="shopIdTable">
         <tr>
             <th>Shop ID</th>
@@ -23,7 +23,7 @@
             <td th:text="${shop.shopName}"></td>
             <td th:text="${shop.tags}"></td>
             <td>
-                <button type="submit" name="shopId" th:value="${shop.id}">Go to Shop</button>
+                <button type="submit" name="shopId" th:value="${shop.id}">Go to your Shop</button>
             </td>
         </tr>
     </table>
