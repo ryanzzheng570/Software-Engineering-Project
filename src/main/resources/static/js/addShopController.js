@@ -48,7 +48,7 @@ $(document).ready(function() {
             alert("Please enter a store name!");
         } else {
             $.ajax({
-                url: "http://localhost:8181/addShop?" + $("#addShopForm").serialize(),
+                url: "/addShop?" + $("#addShopForm").serialize(),
                 type: "POST",
                 dataType: "json"
             }).then(function(data) {

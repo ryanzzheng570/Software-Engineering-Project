@@ -3,7 +3,7 @@ $(document).ready(function() {
         e.preventDefault();
 
         $.ajax({
-            url: "http://localhost:8181/search?" + $("#searchShopForm").serialize(),
+            url: "/search?" + $("#searchShopForm").serialize(),
             type: "POST",
             dataType: "json"
         }).then(function (data) {
