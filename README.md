@@ -9,6 +9,10 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  Heroku: https://dashboard.heroku.com/apps/minishopifygroup5
  
  ### Current State
+ - Shops can be created and added
+ - Shops can be searched by using the name or tags
+ - Customers can add items to their cart
+ - App is running on Travis CI and Heroku
+ 
  ### Plan For Next Sprint
- - Allow merchants to create stores and customers to search for stores by name
- - Get app running on Travis CI and Heroku
+
