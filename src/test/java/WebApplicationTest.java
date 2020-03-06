@@ -19,6 +19,7 @@ public class WebApplicationTest {
 
     @Autowired
     private MockMvc mockMvc;
+
     @Autowired
     private ShopRepository shopRepo;
 
@@ -26,7 +27,9 @@ public class WebApplicationTest {
     public void goToNewShop() throws Exception {
         String shopName = "goToNewShop";
 
-        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
+        String addShopQuery = String.format("/addShop?shopName=%s&tag=%s", shopName, "tagOne");
+
+        this.mockMvc.perform(post(addShopQuery));
 
         this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
@@ -43,13 +46,39 @@ public class WebApplicationTest {
         String tagOne = "Tag One";
         String tagTwo = "Tag Two";
 
-        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=" + tagOne + "&tag=" + tagTwo));
-        //this.mockMvc.perform(post("/addItem?shopId=" + shopName + "&tag=" + tagOne + "&tag=" + tagTwo));
+        String itemName = "ITEM";
+        String cost = "10";
+        String inventory = "30";
+
+        String addShopQuery = String.format("/addShop?shopName=%s&tag=%s&tag=%s", shopName, tagOne, tagTwo);
+        this.mockMvc.perform(post(addShopQuery));
+
+        String addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%s",
+                shopRepo.findByShopName(shopName).getId(),
+                "",
+                "",
+                itemName,
+                cost,
+                inventory);
+        this.mockMvc.perform(post(addItemQuery));
 
         this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
+                .andExpect(content().string((containsString(shopName))))
                 .andExpect(content().string((containsString(tagOne))))
-                .andExpect(content().string((containsString(tagTwo))));
+                .andExpect(content().string((containsString(tagTwo))))
+                .andExpect(content().string((containsString(itemName))))
+                .andExpect(content().string((containsString(cost))))
+                .andExpect(content().string((containsString(inventory))));
+
+        this.mockMvc.perform(get("/YourShopPage?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+                .andExpect(status().isOk())
+                //.andExpect(content().string((containsString(shopName))))
+                .andExpect(content().string((containsString(tagOne))))
+                .andExpect(content().string((containsString(tagTwo))))
+                .andExpect(content().string((containsString(itemName))))
+                .andExpect(content().string((containsString(cost))))
+                .andExpect(content().string((containsString(inventory))));
     }
 
     @Test

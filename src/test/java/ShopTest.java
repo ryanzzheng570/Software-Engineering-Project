@@ -25,7 +25,7 @@ public class ShopTest {
     }
 
     @Test
-    public void testAddBuddy(){
+    public void testAddItem(){
         Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
 
         testShop.addItem(newItem);
@@ -48,14 +48,14 @@ public class ShopTest {
     }
 
     @Test
-    public void testClearBuddies(){
-        Item buddy1 = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
-        Item buddy2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
-        Item buddy3 = new Item("ITEM_3", new ArrayList<Images>(), "0.00", 0);
+    public void testClearItems(){
+        Item item1 = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
+        Item item2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
+        Item item3 = new Item("ITEM_3", new ArrayList<Images>(), "0.00", 0);
 
-        testShop.addItem(buddy1);
-        testShop.addItem(buddy2);
-        testShop.addItem(buddy3);
+        testShop.addItem(item1);
+        testShop.addItem(item2);
+        testShop.addItem(item3);
 
         assertEquals(testShop.getItems().size(), 3);
 
