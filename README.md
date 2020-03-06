@@ -5,14 +5,24 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  FaaS, Microservices, Serverless: Amazon Lambda, Google Cloud Functions, Apache OpenWhisk...
  
  ### Important Links
- Travis CI: https://travis-ci.org/haseebakhan10/EngLabProject
+ Travis CI: https://travis-ci.org/haseebakhan10/EngLabProject <br />
  Heroku: https://dashboard.heroku.com/apps/minishopifygroup5
  
  ### Current State
- - Shops can be created and added
+ - Shops can be created
  - Shops can be searched by using the name or tags
- - Customers can add items to their cart
+ - Merchants can add items to their shops and remove them
+ - Shops have different views for customers and merchants
  - App is running on Travis CI and Heroku
  
+ ### UML Diagram
+ ![UML](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Eng%20Lab%20Project%20UML.png)
+ 
+ ### Database Schema
+ ![Database Schema](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Database%20Schema.png)
+ 
  ### Plan For Next Sprint
-
+ - Setup Firebase/database
+ - Reorganize pages to be merchant or customer
+ - Setup checkout and cart
+ - Update search
