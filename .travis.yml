@@ -1,8 +1,8 @@
 language: java
 jdk:
- - oraclejdk12
+- oraclejdk12
 deploy:
- provider: heroku
- api-key: 
-  secure: $HEROKU_API_KEY
- app: shopifyproj
+  provider: heroku
+  app: minishopifygroup5
+  api_key:
+    secure: XETCaOR44swXqWc72k2+QAOYr9OJQQsXmksm/RRBAWVZK1Q6A/T/Hc8VX10jhk8astYitbnoOlzx6fnsn0rNuEvV6xiK7dOmzQIQmTWLRwZR9vXAqgd55rFHXg4bk43ogU8it4pylbjQuxtUji3BXd2FHoBoaGbHhItlcWeWwjyCXNG3z4qehpZV407TCuR9oEwKQH7+QJ2N1gqfU3uryslZi5+lG5vsmaecdazCfbj9bjgl+59NS44F4hk68hlbeLqgfK9MdPQEYcy5xlV6ZY6DH0Qoy4450WlJQcpendyC4gnT6Qnqj1bam5C3zMlD4p258IOchISylrbTrXSIZF8E37uUDmXJekY7moAEd1RVMARMHeLZcnnnPAZl6c/XAoLRWUuGYQU+lqgBSitEP9EATFWg5f9TnAB5bsKnI7GuwUUDf2xrgIW/zzI9nYvUYMpP9qN/gO6Mqx+RydTNs44FEdnlF9/M01bna8IRUn2rcZVqQGtwJrOoF30mD7SfJSt+nC2EsBkLz4Vc3Ey3CbcTHez6ct/ynann+tJ6iuAXBWejqv+BAuk+jkRvfAKf9qV6e73Aj4KcF3RYmwUVhjR12IJbs1iwLaD682vlGHWDLiku97CWBl3T0qnFiSvUfSCe8yajOsKNdoLSsuONQqTnwpWo79wAHABDnqJkDVI=
