@@ -1,6 +1,7 @@
 package ShopifyProj;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,18 +27,22 @@ public class WebLayerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ShopRepository shopRepo;
+
+    @Autowired
+    private ItemRepository itemRepo;
+
     @Test
     public void addBasicShop() throws Exception {
         String name = "TEST_SHOP";
-        String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+        String requestStr = String.format("/addShop?shopName=%s", name);
 
         this.mockMvc.perform(post(requestStr));
         this.mockMvc.perform(get("/goToAddShopPage")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(name)))
-                .andExpect(content().string(containsString(tag1)));
+                .andExpect(content().string(containsString(name)));
     }
 
     @Test

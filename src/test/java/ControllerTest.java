@@ -15,6 +15,12 @@ public class ControllerTest {
     @Autowired
     private ThymeController thymeCont;
 
+    @Autowired
+    private CustomerWebController custCont;
+
+    @Autowired
+    private MerchantWebController merchCont;
+
     @Test
     public void shopContextLoads() throws Exception {
         assertThat(shopCont).isNotNull();
@@ -23,5 +29,15 @@ public class ControllerTest {
     @Test
     public void thymeContextLoads() throws Exception {
         assertThat(thymeCont).isNotNull();
+    }
+
+    @Test
+    public void custContextLoads() throws Exception {
+        assertThat(custCont).isNotNull();
+    }
+
+    @Test
+    public void merchContextLoads() throws Exception {
+        assertThat(merchCont).isNotNull();
     }
 }

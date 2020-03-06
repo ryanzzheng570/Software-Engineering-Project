@@ -16,7 +16,7 @@ class CustomerTest {
     @BeforeEach
     public void setUp() {
         this.testCustomer = new Customer("TestName", "TestEmail", "Test Address",
-                "123456789", "Testi note", new HashSet<Item>(), new HashSet<Item>() {
+                "123456789", "Test note", new HashSet<Item>(), new HashSet<Item>() {
         });
     }
 
