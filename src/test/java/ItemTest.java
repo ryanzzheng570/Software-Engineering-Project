@@ -14,10 +14,4 @@ public class ItemTest {
 
     @After
     public void teardown() { testItem = null; }
-
-    @Test
-    public void testSetCost(){
-        testItem.setCost("34.526");
-        assertEquals(testItem.getCost(), "$34.53");
-    }
 }
