@@ -72,21 +72,23 @@ public class ThymeController {
     }
 
     @PostMapping("/addItem")
-    public String addItem(@RequestParam (value = "shopId") Integer shopId, /*@RequestParam (value = "url") String url,
-                          @RequestParam (value = "altText") String altText,*/ @RequestParam (value = "itemName") String name,
+    public String addItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "url") String url,
+                          @RequestParam (value = "altText") String altText, @RequestParam (value = "itemName") String name,
                           @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory,Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
 
 
         if (shop.isPresent()){
-            //Images image = new Images(url, altText);
+           // System.out.println(url + "\n" + altText);
+            Images image = new Images(url, altText);
             List<Images> imagesToAdd = new ArrayList<Images>();
-            //imagesToAdd.add(image);
+            imagesToAdd.add(image);
 
-            Item finalToAdd = new Item(name, imagesToAdd, cost, inventory);
+            Item finalItemToAdd = new Item(name, imagesToAdd, cost, inventory);
 
             Shop finalShop = shop.get();
-            finalShop.addItem(finalToAdd);
+            finalShop.addItem(finalItemToAdd);
+            //System.out.println(finalShop.getItems().get(0).getImages().get(0).getUrl());
             shopRepo.save(finalShop);
         }
 
