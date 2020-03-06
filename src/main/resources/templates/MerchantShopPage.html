@@ -10,13 +10,15 @@
 <p th:text="'Tags: ' + ${shop.tags}"/>
 
 <p><strong>Items:</strong></p>
-<form action="#" th:action="@{/removeItem}" th:object="${item}" method="post">
-    <input type="hidden" th:value="${shop.id}" name="shopId"/>
-    <tr th:each="item: ${shop.items}">
+
+<tr th:each="item: ${shop.items}">
+    <form action="#" th:action="@{/removeItem}" th:object="${item}" method="post">
+        <input type="hidden" th:value="${shop.id}" name="shopId"/>
         <input type="hidden" th:value="${item.id}" name="itemId"/>
+        <td th:text="'ID: ' + ${item.id}" />
         <td th:text="'Name: ' + ${item.itemName}" />
         <br />
-        <td th:each="image: ${item.images}" />
+            <td th:each="image: ${item.images}" />
             <a href="${image.url}">
                 <img src="${image.url}" alt="${image.altText}" style="width:200px;height:200px;border:0;">
             </a>
@@ -25,8 +27,9 @@
         <td th:text="'Cost: ' + ${item.cost}" />
         <p><input type="submit" value="Remove Item" /></p>
         <br />
-    </tr>
-</form>
+        </form>
+</tr>
+
 
 <br />
 <br />

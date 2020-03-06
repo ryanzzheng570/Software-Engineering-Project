@@ -101,7 +101,9 @@ public class ThymeController {
 
         if (shop.isPresent()){
             Shop finalShop = shop.get();
+            System.out.println(itemId + " Id before getting item");
             if (finalShop.getItem(itemId) != null){
+                System.out.println(finalShop.getItem(itemId).getId() + " Id after getting item");
                 finalShop.removeItemWithId(itemId);
                 shopRepo.save(finalShop);
             }
