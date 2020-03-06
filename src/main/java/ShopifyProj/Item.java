@@ -25,14 +25,15 @@ public class Item {
 
     @Autowired
     public Item() {
-        this("", new ArrayList<Images>(), "");
+        this("", new ArrayList<Images>(), "", 0);
     }
 
-    public Item(String name, List<Images> images, String cost){
+    public Item(String name, List<Images> images, String cost, int inventory){
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.itemName = name;
         this.images = images;
+        this.inventory = inventory;
         this.cost = cost;
     }
 
@@ -87,9 +88,12 @@ public class Item {
 
 
     public void setCost(String newCost){
+        newCost = newCost.replaceAll("[$]", "");
+
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         boolean numeric = true;
         double check = 0;
+
         try{
             check = Double.parseDouble(newCost);
         }catch (NumberFormatException e) {

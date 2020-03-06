@@ -15,12 +15,14 @@
     <tr th:each="item: ${shop.items}">
         <input type="hidden" th:value="${item.id}" name="itemId"/>
         <td th:text="'Name: ' + ${item.itemName}" />
+        <br />
         <td th:each="image: ${item.images}" />
             <a href="${image.url}">
                 <img src="${image.url}" alt="${image.altText}" style="width:200px;height:200px;border:0;">
             </a>
-        <td th:text="'Cost: ' + ${item.cost}" />
         <br />
+        <td th:text="'Quantity: ' + ${item.inventory}" />
+        <td th:text="'Cost: ' + ${item.cost}" />
         <p><input type="submit" value="Remove Item" /></p>
     </tr>
 </form>
@@ -34,13 +36,17 @@
 <form action="#" th:action="@{/addItem}" th:object="${item}" method="post">
     <input type="hidden" th:value="${shop.id}" name="shopId"/>
     <p>Item Name: <input type="text" th:field="*{itemName}"/></p>
-    <!--<div style="float:left;">-->
-    <!--<p>Image URL: <input type="text" size="75" th:field="*{url}"/></p>-->
-    <!--</div>-->
-    <!--<div style="float:right;">-->
-    <!--<p>Alternative Text Description <input type="text" th:field="*{altText}"/></p>-->
-    <!--</div>-->
-    <!--<div style="clear:both"></div>-->
+    <tr th:each="image: ${item.images}">
+        <div style="float:left;">
+            <p>Image URL: <input type="text" size="75" th:field="*{image.url}"/></p>
+        </div>
+        <div style="float:right;">
+            <p>Alternative Text Description <input type="text" th:field="*{image.altText}"/></p>
+        </div>
+        <div style="clear:both"></div>
+    </tr>
+
+    <p>Quantity: <input type="text" th:field="*{inventory}"/></p>
     <p>Cost: <input type="text" th:field="*{cost}"/></p>
     <p><input type="submit" value="Add Item" /></p>
 </form>

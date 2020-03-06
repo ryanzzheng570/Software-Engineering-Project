@@ -72,19 +72,18 @@ public class ThymeController {
     }
 
     @PostMapping("/addItem")
-    public String addItem(@RequestParam (value = "shopId") Integer shopId, /*@RequestParam (value = "url") String url,
-                          @RequestParam (value = "altText") String altText,*/ @RequestParam (value = "itemName") String name,
-                          @RequestParam (value = "cost") String cost, Model model){
+    public String addItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "url") String url,
+                          @RequestParam (value = "altText") String altText, @RequestParam (value = "itemName") String name,
+                          @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory,Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
 
 
         if (shop.isPresent()){
-            //Images image = new Images(url, altText);
+            Images image = new Images(url, altText);
             List<Images> imagesToAdd = new ArrayList<Images>();
-            //imagesToAdd.add(image);
+            imagesToAdd.add(image);
 
-            Item finalToAdd = new Item(name, imagesToAdd, cost);
-
+            Item finalToAdd = new Item(name, imagesToAdd, cost, inventory);
 
             Shop finalShop = shop.get();
             finalShop.addItem(finalToAdd);
@@ -96,7 +95,7 @@ public class ThymeController {
     }
 
     @PostMapping("/removeItem")
-    public String removeItem(@RequestParam (value = "shopID") Integer shopId, @RequestParam (value = "itemId") Integer itemId,
+    public String removeItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "itemId") Integer itemId,
                              Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
 
