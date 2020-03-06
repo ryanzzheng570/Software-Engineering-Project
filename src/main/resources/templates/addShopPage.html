@@ -25,6 +25,9 @@
             <td>
                 <button type="submit" name="shopId" th:value="${shop.id}">Go to your Shop</button>
             </td>
+            <td>
+                <input type="button" value="View as Customer" th:onclick="|location.href='/goToShop?shopId=${shop.id}'|"/>
+            </td>
         </tr>
     </table>
 </form>

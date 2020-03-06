@@ -144,7 +144,7 @@ public class Shop {
                 toRet += ", ";
             }
             toRet = toRet.substring(0, toRet.length() - 2);
-            toRet += "]";
+            toRet += "]\n";
         }
 
         for (Item item : this.items) {

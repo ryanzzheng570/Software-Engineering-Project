@@ -35,4 +35,10 @@ public class HttpRequestTest {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/search",
                 String.class)).contains("Search for Shops");
     }
+
+    @Test
+    public void goToMerchantSearchPage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/YourShopPage",
+                String.class)).contains("Shop");
+    }
 }

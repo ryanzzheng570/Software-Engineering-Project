@@ -42,7 +42,8 @@ public class Images {
     public String toString() {
         String toRet = "";
 
-        toRet += this.altText;
+        toRet += "URL: " + this.url + "\n";
+        toRet += "ALT: " + this.altText + "\n";
 
         return(toRet);
     }

@@ -84,6 +84,16 @@ $(document).ready(function() {
                 merchantViewCell.appendChild(merchantButton);
                 newRow.appendChild(merchantViewCell);
 
+                var custViewCell = document.createElement("td");
+                var custButton = document.createElement("input");
+                custButton.type = "button";
+                custButton.value = "View as Customer";
+                custButton.addEventListener('click', function() {
+                    location.href = "/goToShop?shopId=" + data.id;
+                });
+                custViewCell.appendChild(custButton);
+                newRow.appendChild(custViewCell);
+
                 $("#shopIdTable").append(newRow);
             });
         }
