@@ -16,11 +16,14 @@ $(document).ready(function() {
                     let tags = "";
                     for(let j = 0; j < data[i].tags.length; j++) {
                         tags += data[i].tags[j].tagName;
+                        if (j != data[i].tags.length -1) {
+                            tags += ", ";
+                        }
                     }
                     let str = "Shop ID: " + data[i].id + ", Shop Name: " + data[i].shopName + ", Shop Tags: " + tags;
 
                     let shopUrl = `/goToShop?shopId=${data[i].id}`;
-                    let button = `<input type="button" value="View Shop as Customer" onclick="location.href='${shopUrl}'"></input>`;
+                    let button = `<input type="button" value="View Shop as Customer" style="margin-left: 20px" onclick="location.href='${shopUrl}'"></input>`;
                     $("#results").append(`<p style="display: inline-block">${str}</p>${button}</br>`);
                 }
             }
