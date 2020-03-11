@@ -1,10 +1,9 @@
-package ShopifyProj;
+package ShopifyProj.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,17 +17,17 @@ public class Item {
 
     private int inventory;
 
-    private List<Images> images;
+    private List<Image> images;
     private String cost;
 
     private static final AtomicLong counter = new AtomicLong();
 
     @Autowired
     public Item() {
-        this("", new ArrayList<Images>(), "", 0);
+        this("", new ArrayList<Image>(), "", 0);
     }
 
-    public Item(String name, List<Images> images, String cost, int inventory){
+    public Item(String name, List<Image> images, String cost, int inventory){
         this.id = Math.toIntExact(counter.incrementAndGet());
 
         this.itemName = name;
@@ -71,7 +70,7 @@ public class Item {
     }
 
 
-    public void setImages(List<Images> newImages){ this.images = newImages; }
+    public void setImages(List<Image> newImages){ this.images = newImages; }
 
     public void setUrl(int imageNum, String newUrl) {
         this.images.get(imageNum).setUrl(newUrl);
@@ -80,7 +79,7 @@ public class Item {
     public void setAltText(int imageNum, String newAltText) { this.images.get(imageNum).setAltText(newAltText); }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public List<Images> getImages() {return images;}
+    public List<Image> getImages() {return images;}
 
     public String getUrl(int imageNum) {return this.images.get(imageNum).getUrl(); }
 
@@ -99,7 +98,7 @@ public class Item {
         String toRet = "";
 
         toRet += this.itemName + "\n";
-        for (Images image : this.images) {
+        for (Image image : this.images) {
             toRet += "Image: " + image.toString() + "\n";
         }
 

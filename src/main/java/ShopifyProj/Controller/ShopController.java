@@ -1,5 +1,9 @@
-package ShopifyProj;
+package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Item;
+import ShopifyProj.Model.Shop;
+import ShopifyProj.Repository.ShopRepository;
+import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class ShopController {
@@ -36,13 +39,13 @@ public class ShopController {
         model.addAttribute("shops", getShops());
         model.addAttribute("shop", new Shop());
 
-        return "addShopPage";
+        return "AddShopPage";
     }
 
-    @GetMapping("/goToShop")
+    @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         model.addAttribute("shop", getShopById(aShopId));
-        return "shopPage";
+        return "CustomerShopPage";
     }
 
     @PostMapping("/addShop")
@@ -65,7 +68,7 @@ public class ShopController {
         return newShop;
     }
 
-    @GetMapping("/YourShopPage")
+    @GetMapping("/goToShopMerchantView")
     public String displayYourShop(@RequestParam(value = "shopId") Integer shopId, Model model){
 
         Shop toView = null;

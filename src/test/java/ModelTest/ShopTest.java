@@ -1,8 +1,9 @@
-import ShopifyProj.Images;
-import ShopifyProj.Shop;
-import ShopifyProj.Item;
-import ShopifyProj.Shop;
-import ShopifyProj.Tag;
+package ModelTest;
+
+import ShopifyProj.Model.Image;
+import ShopifyProj.Model.Shop;
+import ShopifyProj.Model.Item;
+import ShopifyProj.Model.Tag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class ShopTest {
 
     @Test
     public void testAddItem(){
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
 
         testShop.addItem(newItem);
 
@@ -36,22 +37,30 @@ public class ShopTest {
 
     @Test
     public void testRemoveItem(){
-        Item newItem = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
 
 
         testShop.addItem(newItem);
         testShop.addItem(newItem2);
-        testShop.removeItemWithId(newItem.getId());
-
+        assertEquals(testShop.getItem(newItem.getId()), newItem);
         assertEquals(testShop.getItem(newItem2.getId()), newItem2);
+        assertEquals(testShop.getItems().size(), 2);
+
+        int idToRem = newItem.getId();
+
+        testShop.removeItemWithId(idToRem);
+
+        assertEquals(testShop.getItem(idToRem), null);
+        assertEquals(testShop.getItem(newItem2.getId()), newItem2);
+        assertEquals(testShop.getItems().size(), 1);
     }
 
     @Test
     public void testClearItems(){
-        Item item1 = new Item("ITEM_1", new ArrayList<Images>(), "0.00", 0);
-        Item item2 = new Item("ITEM_2", new ArrayList<Images>(), "0.00", 0);
-        Item item3 = new Item("ITEM_3", new ArrayList<Images>(), "0.00", 0);
+        Item item1 = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item item2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
+        Item item3 = new Item("ITEM_3", new ArrayList<Image>(), "0.00", 0);
 
         testShop.addItem(item1);
         testShop.addItem(item2);
@@ -81,9 +90,19 @@ public class ShopTest {
 
         testShop.addTag(newTag);
         testShop.addTag(newTag2);
+
+        assertEquals(testShop.getTag(newTag.getId()), newTag);
+        assertEquals(testShop.getTag(newTag2.getId()), newTag2);
+        assertEquals(testShop.getTags().size(), 2);
+
+        int idToRem = newTag.getId();
+
         testShop.removeTagWithId(newTag.getId());
 
+        assertEquals(testShop.getTag(idToRem), null);
         assertEquals(testShop.getTag(newTag2.getId()), newTag2);
+        assertEquals(testShop.getTags().size(), 1);
+
     }
 
     @Test

@@ -1,4 +1,4 @@
-package ShopifyProj;
+package ShopifyProj.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class HomeController {
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        return "homepage";
+        return "HomePage";
     }
 
 }

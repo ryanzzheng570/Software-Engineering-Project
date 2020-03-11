@@ -1,16 +1,15 @@
-package ShopifyProj;
+package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Image;
+import ShopifyProj.Model.Item;
+import ShopifyProj.Model.Shop;
+import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
-import javax.swing.text.html.Option;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +19,9 @@ import java.util.Optional;
 public class ItemController {
     @Autowired
     private ShopRepository shopRepo;
+
+    @Autowired
+    private ShopController shopCont;
 
     private String parseCostInput(String cost) {
         System.out.println("HERE");
@@ -61,25 +63,24 @@ public class ItemController {
 
 
         if (shop.isPresent()){
-            List<Images> imagesToAdd = new ArrayList<Images>();
+            List<Image> imageToAdd = new ArrayList<Image>();
 
             if (!url.equals("")) {
-                Images image = new Images(url, altText);
-                imagesToAdd.add(image);
+                Image image = new Image(url, altText);
+                imageToAdd.add(image);
                 System.out.println("ADDING IMAGE" + image.toString());
             }
 
             String newCost = parseCostInput(cost);
 
-            Item finalItemToAdd = new Item(name, imagesToAdd, newCost, inventory);
+            Item finalItemToAdd = new Item(name, imageToAdd, newCost, inventory);
 
             Shop finalShop = shop.get();
             finalShop.addItem(finalItemToAdd);
             shopRepo.save(finalShop);
         }
 
-        ShopController temp = new ShopController();
-        return temp.displayYourShop(shopId, model);
+        return shopCont.displayYourShop(shopId, model);
     }
 
     @PostMapping("/removeItem")
@@ -97,8 +98,7 @@ public class ItemController {
             }
         }
 
-        ShopController temp = new ShopController();
-        return temp.displayYourShop(shopId, model);
+        return shopCont.displayYourShop(shopId, model);
     }
 
 }

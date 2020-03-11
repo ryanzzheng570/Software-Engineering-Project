@@ -1,16 +1,15 @@
-package ShopifyProj;
+package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Shop;
+import ShopifyProj.Repository.ShopRepository;
+import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
 public class SearchController {
@@ -19,7 +18,7 @@ public class SearchController {
 
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
-        return "search";
+        return "SearchPage";
     }
 
     @PostMapping("/search")
