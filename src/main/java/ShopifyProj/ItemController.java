@@ -17,71 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
-public class ThymeController {
+public class ItemController {
     @Autowired
     private ShopRepository shopRepo;
-    @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
-    private MerchantRepository merchantRepository;
-
-    private List<Shop> getShops() {
-        List<Shop> shops = new ArrayList<Shop>();
-        for (Shop shop : shopRepo.findAll()) {
-            shops.add(shop);
-        }
-
-        return shops;
-
-    }
-
-    private Shop getShopById(int aShopId) {
-        return shopRepo.findById(aShopId);
-    }
-
-    @GetMapping("/")
-    public String viewHomePage(Model model) {
-        return "homepage";
-    }
-
-    @GetMapping("/goToAddShopPage")
-    public String viewAddShopPage(Model model) {
-        model.addAttribute("shops", getShops());
-        model.addAttribute("shop", new Shop());
-
-        return "addShopPage";
-    }
-
-    @GetMapping("/search")
-    public String viewSearchPage(Model model) {
-        return "search";
-    }
-
-    @GetMapping("/goToShop")
-    public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        model.addAttribute("shop", getShopById(aShopId));
-        return "shopPage";
-    }
-
-    @GetMapping("/YourShopPage")
-    public String displayYourShop(@RequestParam(value = "shopId") Integer shopId, Model model){
-
-        Shop toView = null;
-
-        Optional<Shop> theShop = shopRepo.findById(shopId);
-        if(theShop.isPresent()){
-            toView = theShop.get();
-            System.out.println(toView);
-        }else {
-            System.out.println(String.format("No shop found with ID %d", shopId));
-        }
-
-        model.addAttribute("shop", toView);
-        model.addAttribute("item", new Item());
-
-
-        return "MerchantShopPage";
-    }
 
     private String parseCostInput(String cost) {
         System.out.println("HERE");
@@ -140,8 +78,8 @@ public class ThymeController {
             shopRepo.save(finalShop);
         }
 
-
-        return displayYourShop(shopId, model);
+        ShopController temp = new ShopController();
+        return temp.displayYourShop(shopId, model);
     }
 
     @PostMapping("/removeItem")
@@ -159,19 +97,8 @@ public class ThymeController {
             }
         }
 
-        return displayYourShop(shopId, model);
-    }
-
-    @GetMapping("/addNewMerchant")
-    public String viewAddNewMerchantPage(Model model) {
-        model.addAttribute("merchant", new Merchant());
-        return "addMerchantPage";
-    }
-
-    @GetMapping("/createCustomerAccount")
-    public String viewCreateCustomerAccountPage(Model model) {
-        model.addAttribute("customer", new Customer());
-        return "createCustomerAccount";
+        ShopController temp = new ShopController();
+        return temp.displayYourShop(shopId, model);
     }
 
 }

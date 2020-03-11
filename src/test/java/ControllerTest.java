@@ -13,13 +13,13 @@ public class ControllerTest {
     private ShopController shopCont;
 
     @Autowired
-    private ThymeController thymeCont;
+    private HomeController thymeCont;
 
     @Autowired
-    private CustomerWebController custCont;
+    private CustomerController custCont;
 
     @Autowired
-    private MerchantWebController merchCont;
+    private MerchantController merchCont;
 
     @Test
     public void shopContextLoads() throws Exception {

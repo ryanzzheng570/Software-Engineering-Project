@@ -1,0 +1,46 @@
+package ShopifyProj;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicLong;
+
+@Controller
+public class SearchController {
+    @Autowired
+    private ShopRepository shopRepo;
+
+    @GetMapping("/search")
+    public String viewSearchPage(Model model) {
+        return "search";
+    }
+
+    @PostMapping("/search")
+    public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
+        ArrayList<Shop> matchingShops = new ArrayList<>();
+        for (Shop shop : shopRepo.findAll()) {
+            boolean isAdded = false;
+
+            Set<Tag> tags = shop.getTags();
+            for (Tag t : tags) {
+                if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
+                    matchingShops.add(shop);
+                    isAdded = true;
+                }
+            }
+
+            if (shop.getShopName().equals(query) && isAdded == false) {
+                matchingShops.add(shop);
+            }
+        }
+        return matchingShops;
+    }
+
+}
