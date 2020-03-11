@@ -17,6 +17,8 @@ import java.util.Optional;
 
 @Controller
 public class ItemController {
+    private static final int MAX_URL_LEN = 255;
+
     @Autowired
     private ShopRepository shopRepo;
 
@@ -54,21 +56,16 @@ public class ItemController {
                           @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory, Model model){
         Optional<Shop> shop = shopRepo.findById(shopId);
 
-        System.out.println(shopId);
-        System.out.println(url);
-        System.out.println(altText);
-        System.out.println(name);
-        System.out.println(cost);
-        System.out.println(inventory);
-
-
         if (shop.isPresent()){
             List<Image> imageToAdd = new ArrayList<Image>();
 
             if (!url.equals("")) {
-                Image image = new Image(url, altText);
-                imageToAdd.add(image);
-                System.out.println("ADDING IMAGE" + image.toString());
+                if (url.length() > MAX_URL_LEN) {
+                    System.out.println("ERROR: Cannot save image. URL too long.");
+                } else {
+                    Image image = new Image(url, altText);
+                    imageToAdd.add(image);
+                }
             }
 
             String newCost = parseCostInput(cost);
