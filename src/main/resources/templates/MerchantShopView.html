@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>Your Shop Page"</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Your Shop Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
 <h1>Shop</h1>
@@ -23,32 +23,33 @@
                 <th>Cost</th>
             </tr>
             <tr>
-                <td th:text="${item.itemName}" />
+                <td style="text-align:center" th:text="${item.itemName}"/>
 
-                <td th:if="${not #lists.isEmpty(item.images)}">
+                <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
                     <a th:href="${item.images[0]?.url}">
-                        <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}" style="width:200px;height:200px;border:0;">
+                        <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
+                             style="width:200px;height:200px;border:0;">
                     </a>
                 </td>
 
-                <td th:text="${item.inventory}" />
+                <td style="text-align:center" th:text="${item.inventory}"/>
 
-                <td th:text="${item.cost}" />
-                <td><input type="submit" value="Remove Item" /></td>
+                <td style="text-align:center" th:text="${item.cost}"/>
+                <td style="text-align:center"><input type="submit" value="Remove Item"/></td>
             </tr>
         </table>
-        <br />
+        <br/>
     </form>
 </tr>
 
 
-<br />
-<br />
-<br />
-<br />
+<br/>
+<br/>
+<br/>
+<br/>
 <table>
     <tr>
-    <th><strong>Add Item</strong></th>
+        <th><strong>Add Item</strong></th>
     </tr>
     <form action="#" th:action="@{/addItem}" th:object="${item}" method="post">
         <input type="hidden" th:value="${shop.id}" name="shopId"/>
@@ -62,9 +63,6 @@
                 <td>Alternative Text Description <input type="text" name="altText"/></td>
             </tr>
 
-            <div style="clear:both">
-            </div>
-
             <tr>
                 <td>Quantity: <input type="text" th:field="*{inventory}"/></td>
             </tr>
@@ -74,15 +72,15 @@
             </tr>
 
             <tr>
-                <td><input type="submit" value="Add Item" /></td>
+                <td><input type="submit" value="Add Item"/></td>
             </tr>
         </table>
     </form>
 </table>
-<br />
-<br />
-<br />
-<br />
+<br/>
+<br/>
+<br/>
+<br/>
 
 <form action="#" th:action="@{/}">
     <input type="submit" value="Go To Home Page"/>
