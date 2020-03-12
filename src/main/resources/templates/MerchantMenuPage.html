@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <script type="text/javascript"
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+
+    <title>Merchant Menu Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<h1>Merchant Menu Page</h1>
+
+<h3>Your Current Shops:</h3>
+<table>
+    <tr>
+        <th>Shop ID</th>
+        <th>Name</th>
+        <th>Tags</th>
+    </tr>
+
+    <tr th:each="shop: ${shops}">
+        <td style="text-align:center" th:text="${shop.id}"></td>
+        <td style="text-align:center" th:text="${shop.shopName}"></td>
+        <td style="text-align:center" th:text="${shop.tags}"></td>
+        <td style="text-align:center">
+            <input type="button" value="Edit Shop"
+                   th:onclick="|location.href='/goToEditShopPage?shopId=${shop.id}'|"/>
+        </td>
+    </tr>
+
+</table>
+
+<form action="#" th:action="@{/goToAddShopPage}">
+    <input type="submit" value="Go To Add Shop Page"/>
+</form>
+
+<form action="#" th:action="@{/}">
+    <input type="submit" value="Go To Home Page"/>
+</form>
+
+</body>
+</html>

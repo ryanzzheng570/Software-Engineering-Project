@@ -20,26 +20,8 @@ public class ShopController {
     @Autowired
     private ShopRepository shopRepo;
 
-    private Shop getShopById(int aShopId) {
+    public Shop getShopById(int aShopId) {
         return shopRepo.findById(aShopId);
-    }
-
-    private List<Shop> getShops() {
-        List<Shop> shops = new ArrayList<Shop>();
-        for (Shop shop : shopRepo.findAll()) {
-            shops.add(shop);
-        }
-
-        return shops;
-
-    }
-
-    @GetMapping("/goToAddShopPage")
-    public String viewAddShopPage(Model model) {
-        model.addAttribute("shops", getShops());
-        model.addAttribute("shop", new Shop());
-
-        return "CreateShopPage";
     }
 
     @GetMapping("/goToShopCustomerView")
