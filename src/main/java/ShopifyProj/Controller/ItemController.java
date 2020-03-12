@@ -26,7 +26,6 @@ public class ItemController {
     private ShopController shopCont;
 
     private String parseCostInput(String cost) {
-        System.out.println("HERE");
         cost = cost.replaceAll("[$]", "");
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
@@ -38,14 +37,12 @@ public class ItemController {
         } catch (NumberFormatException e) {
             numeric = false;
         }
-        System.out.println(numeric);
 
         if (numeric){
             cost = formatter.format(check);
         }else{
             cost = "Invalid Cost Input";
         }
-        System.out.println("DONE");
         return(cost);
     }
 
@@ -87,9 +84,7 @@ public class ItemController {
 
         if (shop.isPresent()){
             Shop finalShop = shop.get();
-            System.out.println(itemId + " Id before getting item");
             if (finalShop.getItem(itemId) != null){
-                System.out.println(finalShop.getItem(itemId).getId() + " Id after getting item");
                 finalShop.removeItemWithId(itemId);
                 shopRepo.save(finalShop);
             }
