@@ -41,7 +41,7 @@ public class ThymeController {
 
     @GetMapping("/")
     public String viewHomePage(Model model) {
-        return "homepage";
+        return "Homepage";
     }
 
     @GetMapping("/goToAddShopPage")
@@ -49,18 +49,18 @@ public class ThymeController {
         model.addAttribute("shops", getShops());
         model.addAttribute("shop", new Shop());
 
-        return "addShopPage";
+        return "CreateShop";
     }
 
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
-        return "search";
+        return "ShopSearch";
     }
 
     @GetMapping("/goToShop")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         model.addAttribute("shop", getShopById(aShopId));
-        return "shopPage";
+        return "CustomerShopView";
     }
 
     @GetMapping("/YourShopPage")
@@ -80,7 +80,7 @@ public class ThymeController {
         model.addAttribute("item", new Item());
 
 
-        return "MerchantShopPage";
+        return "MerchantShopView";
     }
 
     private String parseCostInput(String cost) {
