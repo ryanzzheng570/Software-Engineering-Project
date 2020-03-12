@@ -4,7 +4,7 @@
     <script type="text/javascript"
             th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-    <title>Home Page</title>
+    <title>Create a Shop</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
@@ -19,14 +19,15 @@
             <th>Tags</th>
         </tr>
         <tr th:each="shop: ${shops}">
-            <td th:text="${shop.id}"></td>
-            <td th:text="${shop.shopName}"></td>
-            <td th:text="${shop.tags}"></td>
-            <td>
+            <td style="text-align:center" th:text="${shop.id}"></td>
+            <td style="text-align:center" th:text="${shop.shopName}"></td>
+            <td style="text-align:center" th:text="${shop.tags}"></td>
+            <td style="text-align:center">
                 <button type="submit" name="shopId" th:value="${shop.id}">Go to your Shop</button>
             </td>
-            <td>
-                <input type="button" value="View as Customer" th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
+            <td style="text-align:center">
+                <input type="button" value="View as Customer"
+                       th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
             </td>
         </tr>
     </table>
@@ -39,13 +40,13 @@
     <p><input type="submit" value="Add Shop"/></p>
 </form>
 
-<p><input type="button" value="Reset Form" id="resetForm" /></p>
+<p><input type="button" value="Reset Form" id="resetForm"/></p>
 
 <form action="#" th:action="@{/}">
     <input type="submit" value="Go To Home Page"/>
 </form>
 
-<script type="text/javascript" th:src="@{/js/AddShopController.js}"></script>
+<script type="text/javascript" th:src="@{/js/CreateShopController.js}"></script>
 
 </body>
 </html>

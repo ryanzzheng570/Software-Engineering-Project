@@ -39,13 +39,13 @@ public class ShopController {
         model.addAttribute("shops", getShops());
         model.addAttribute("shop", new Shop());
 
-        return "AddShopPage";
+        return "CreateShopPage";
     }
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         model.addAttribute("shop", getShopById(aShopId));
-        return "CustomerShopPage";
+        return "CustomerShopViewPage";
     }
 
     @PostMapping("/addShop")
@@ -84,6 +84,6 @@ public class ShopController {
         model.addAttribute("shop", toView);
         model.addAttribute("item", new Item());
 
-        return "MerchantShopPage";
+        return "MerchantShopViewPage";
     }
 }

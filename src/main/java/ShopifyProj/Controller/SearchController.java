@@ -18,7 +18,7 @@ public class SearchController {
 
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
-        return "SearchPage";
+        return "ShopSearchPage";
     }
 
     @PostMapping("/search")
