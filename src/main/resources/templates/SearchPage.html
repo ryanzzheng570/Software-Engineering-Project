@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <meta charset="UTF-8">
+    <title>Search for Shops</title>
+</head>
+<body>
+<h1>Search for Shops</h1>
+<form th:action="@{/search}" method="post" id="searchShopForm">
+    <label for="searchField">Search</label><br>
+    <input type="text" id="searchField" name="searchField"><br>
+    <p><input type="submit" value="Search" /></p>
+</form>
+
+<h1>Search Results</h1>
+<div id="results">
+</div>
+
+<form action="#" th:action="@{/}">
+    <input type="submit" value="Go To Home Page"/>
+</form>
+
+<script type="text/javascript" th:src="@{/js/SearchController.js}"></script>
+
+</body>
+</html>
