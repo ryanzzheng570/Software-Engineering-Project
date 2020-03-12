@@ -11,7 +11,7 @@
 <h1>Add Shop Page</h1>
 
 <h3>Your Current Shops:</h3>
-<form action="#" th:action="@{/YourShopPage}">
+<form action="#" th:action="@{/goToShopMerchantView}">
     <table id="shopIdTable">
         <tr>
             <th>Shop ID</th>
@@ -27,7 +27,7 @@
             </td>
             <td style="text-align:center">
                 <input type="button" value="View as Customer"
-                       th:onclick="|location.href='/goToShop?shopId=${shop.id}'|"/>
+                       th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
             </td>
         </tr>
     </table>

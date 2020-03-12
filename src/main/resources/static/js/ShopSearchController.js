@@ -22,9 +22,24 @@ $(document).ready(function() {
                         }
                     }
                     tags += "]";
-                    let shopUrl = `/goToShop?shopId=${data[i].id}`;
-                    let button = `<input type="button" value="View Shop as Customer" style="margin-left: 20px" onclick="location.href='${shopUrl}'"></input>`;
-                    let tr = "<tr><td>" + data[i].id + "</td><td>" + data[i].shopName + "</td><td>" + tags + "</td><td>" + button + "</td></tr>";
+
+                    let shopUrl = "/goToShopCustomerView?shopId=" + data[i].id;
+
+                    let button = "<input "
+                    button += "type=\"button\" ";
+                    button += "value=\"View Shop as Customer\" ";
+                    button += "style=\"margin-left: 20px\" ";
+                    button += "onclick=\"location.href='" + shopUrl + "'\"";
+                    button += ">";
+                    button += "</input>";
+
+                    let tr = "<tr>";
+                    tr += "<td style=\"text-align:center\">" + data[i].id + "</td>";
+                    tr += "<td style=\"text-align:center\">" + data[i].shopName + "</td>";
+                    tr += "<td style=\"text-align:center\">" + tags + "</td>";
+                    tr += "<td style=\"text-align:center\">" + button + "</td></tr>";
+                    tr += "</tr>";
+
                     $("#results-table").append(tr);
                 }
             }

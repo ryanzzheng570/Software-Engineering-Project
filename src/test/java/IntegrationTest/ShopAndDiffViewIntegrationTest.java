@@ -1,5 +1,6 @@
 package ShopifyProj;
 
+import ShopifyProj.Repository.ShopRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,13 +16,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class WebApplicationTest {
-
+public class ShopAndDiffViewIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ShopRepository shopRepo;
+
+    @Test
+    public void addBasicShop() throws Exception {
+        String name = "TEST_SHOP";
+
+        String requestStr = String.format("/addShop?shopName=%s", name);
+
+        this.mockMvc.perform(post(requestStr));
+        this.mockMvc.perform(get("/goToAddShopPage")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(name)));
+    }
+
+    @Test
+    public void addShopOneTags() throws Exception {
+        String name = "TEST_SHOP";
+        String tag1 = "TAG_1";
+
+        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+
+        this.mockMvc.perform(post(requestStr));
+        this.mockMvc.perform(get("/goToAddShopPage")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(tag1)));
+    }
+
+    @Test
+    public void addShopWithTwoTags() throws Exception {
+        String name = "TEST_SHOP";
+        String tag1 = "TAG_1";
+        String tag2 = "TAG_2";
+
+        String requestStr = String.format("/addShop?shopName=%s&tag=%s&tag=%s", name, tag1, tag2);
+
+        this.mockMvc.perform(post(requestStr));
+        this.mockMvc.perform(get("/goToAddShopPage")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(tag1)))
+                .andExpect(content().string(containsString(tag2)));
+    }
 
     @Test
     public void goToNewShop() throws Exception {
@@ -31,11 +73,11 @@ public class WebApplicationTest {
 
         this.mockMvc.perform(post(addShopQuery));
 
-        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
 
-        this.mockMvc.perform(get("/YourShopPage?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopMerchantView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string((containsString("Shop"))));
     }
@@ -62,7 +104,7 @@ public class WebApplicationTest {
                 inventory);
         this.mockMvc.perform(post(addItemQuery));
 
-        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string((containsString(shopName))))
                 .andExpect(content().string((containsString(tagOne))))
@@ -71,7 +113,7 @@ public class WebApplicationTest {
                 .andExpect(content().string((containsString(cost))))
                 .andExpect(content().string((containsString(inventory))));
 
-        this.mockMvc.perform(get("/YourShopPage?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopMerchantView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
                 //.andExpect(content().string((containsString(shopName))))
                 .andExpect(content().string((containsString(tagOne))))
@@ -88,7 +130,7 @@ public class WebApplicationTest {
 
         this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
 
-        this.mockMvc.perform(get("/goToShop?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string((containsString(noItemsMessage))));
     }

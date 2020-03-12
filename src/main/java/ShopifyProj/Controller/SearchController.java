@@ -1,41 +1,24 @@
-package ShopifyProj;
+package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Shop;
+import ShopifyProj.Repository.ShopRepository;
+import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicLong;
 
-@RestController
-public class ShopController {
+@Controller
+public class SearchController {
     @Autowired
     private ShopRepository shopRepo;
 
-    @PostMapping("/addShop")
-    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
-                                      @RequestParam(value = "tag") Optional<List<String>> tags) {
-        Set<Tag> tagSet = new HashSet<Tag>();
-
-        if (tags.isPresent()) {
-            for (String tag : tags.get()) {
-                if (!tag.equals("")){
-                    tagSet.add(new Tag(tag));
-                }
-            }
-        }
-
-        Shop newShop = new Shop(name, Optional.of(tagSet));
-
-        shopRepo.save(newShop);
-
-        return newShop;
+    @GetMapping("/search")
+    public String viewSearchPage(Model model) {
+        return "ShopSearchPage";
     }
 
     @PostMapping("/search")
@@ -52,7 +35,6 @@ public class ShopController {
                 if(t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery)) {
                     matchingShops.add(shop);
                     isAdded = true;
-                    break;
                 }
             }
 

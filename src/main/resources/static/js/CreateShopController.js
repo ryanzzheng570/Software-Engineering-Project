@@ -55,11 +55,13 @@ $(document).ready(function() {
                 var newRow = document.createElement("tr");
 
                 var idCell = document.createElement("td");
+                idCell.style = "text-align:center";
                 var idText = document.createTextNode(data.id);
                 idCell.appendChild(idText);
                 newRow.appendChild(idCell);
 
                 var nameCell = document.createElement("td");
+                nameCell.style = "text-align:center";
                 var nameText = document.createTextNode(data.shopName);
                 nameCell.appendChild(nameText);
                 newRow.appendChild(nameCell);
@@ -71,11 +73,13 @@ $(document).ready(function() {
                 }
 
                 var tagCell = document.createElement("td");
+                tagCell.style = "text-align:center";
                 var tagText = document.createTextNode("[" + tags + "]");
                 tagCell.appendChild(tagText);
                 newRow.appendChild(tagCell);
 
                 var merchantViewCell = document.createElement("td");
+                merchantViewCell.style = "text-align:center";
                 var merchantButton = document.createElement("button");
                 merchantButton.type = "submit";
                 merchantButton.name = "shopId";
@@ -85,11 +89,12 @@ $(document).ready(function() {
                 newRow.appendChild(merchantViewCell);
 
                 var custViewCell = document.createElement("td");
+                custViewCell.style = "text-align:center";
                 var custButton = document.createElement("input");
                 custButton.type = "button";
                 custButton.value = "View as Customer";
                 custButton.addEventListener('click', function() {
-                    location.href = "/goToShop?shopId=" + data.id;
+                    location.href = "/goToShopCustomerView?shopId=" + data.id;
                 });
                 custViewCell.appendChild(custButton);
                 newRow.appendChild(custViewCell);

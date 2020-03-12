@@ -1,4 +1,4 @@
-package ShopifyProj;
+package ShopifyProj.Model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Entity
-public class Images {
+public class Image {
     private int id;
     private String url;
     private String altText;
@@ -17,9 +17,9 @@ public class Images {
     private static final AtomicLong counter = new AtomicLong();
 
     @Autowired
-    public Images() { this("", ""); }
+    public Image() { this("", ""); }
 
-    public Images(String url, String altText){
+    public Image(String url, String altText){
         this.id = Math.toIntExact(counter.incrementAndGet());
         this.url = url;
         this.altText = altText;
