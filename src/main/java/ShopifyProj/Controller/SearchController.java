@@ -24,18 +24,21 @@ public class SearchController {
     @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
         ArrayList<Shop> matchingShops = new ArrayList<>();
+
+        String lowercaseQuery = query.toLowerCase();
+
         for (Shop shop : shopRepo.findAll()) {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();
             for (Tag t : tags) {
-                if(t.getTagName().equals(query) || t.getTagName().contains(query)) {
+                if(t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery)) {
                     matchingShops.add(shop);
                     isAdded = true;
                 }
             }
 
-            if (shop.getShopName().equals(query) && isAdded == false) {
+            if (shop.getShopName().equalsIgnoreCase(lowercaseQuery) || shop.getShopName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
                 matchingShops.add(shop);
             }
         }
