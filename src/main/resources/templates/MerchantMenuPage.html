@@ -11,24 +11,38 @@
 <h1>Merchant Menu Page</h1>
 
 <h3>Your Current Shops:</h3>
-<table>
-    <tr>
-        <th>Shop ID</th>
-        <th>Name</th>
-        <th>Tags</th>
-    </tr>
+<div th:if="${#lists.isEmpty(shops)}">
+    <p>You currently do not have any shops!</p>
+</div>
+<div th:if="${not #lists.isEmpty(shops)}">
+    <table>
+        <tr>
+            <th>Shop ID</th>
+            <th>Name</th>
+            <th>Tags</th>
+        </tr>
 
-    <tr th:each="shop: ${shops}">
-        <td style="text-align:center" th:text="${shop.id}"></td>
-        <td style="text-align:center" th:text="${shop.shopName}"></td>
-        <td style="text-align:center" th:text="${shop.tags}"></td>
-        <td style="text-align:center">
-            <input type="button" value="Edit Shop"
-                   th:onclick="|location.href='/goToEditShopPage?shopId=${shop.id}'|"/>
-        </td>
-    </tr>
-
-</table>
+        <tr th:each="shop: ${shops}">
+            <td style="text-align:center" th:text="${shop.id}"></td>
+            <td style="text-align:center" th:text="${shop.shopName}"></td>
+            <td style="text-align:center" th:text="${shop.tags}"></td>
+            <td style="text-align:center">
+                <input type="button" value="Edit Shop"
+                       th:onclick="|location.href='/goToEditShopPage?shopId=${shop.id}'|"/>
+            </td>
+            <td style="text-align:center">
+                <input type="button" value="View as Customer"
+                       th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
+            </td>
+            <td style="text-align:center">
+                <form action="#" th:action="@{/deleteShop}" th:object="${shop}" method="post">
+                    <input type="hidden" th:value="${shop.id}" name="shopId"/>
+                    <input type="submit" value="Delete Shop"/>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
 
 <form action="#" th:action="@{/goToAddShopPage}">
     <input type="submit" value="Go To Add Shop Page"/>
