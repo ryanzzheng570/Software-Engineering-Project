@@ -1,58 +1,55 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <script type="text/javascript"
-            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
-    <title th:text="${shop.shopName}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
+    <head>
+        <script type="text/javascript"
+                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+        <title th:text="${shop.shopName}"></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
 
-<h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
+    <body>
+        <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
 
-<div id="emptyItemSection" name="emptyItemSection" th:if="${shop.items.empty}">
-    <h2>Sorry, the merchant did not add items to their store yet!</h2>
-</div>
+        <div id="emptyItemSection" name="emptyItemSection" th:if="${shop.items.empty}">
+            <h2>Sorry, the merchant did not add items to their store yet!</h2>
+        </div>
 
-<div id="itemSection" name="itemSection" th:unless="${shop.items.empty}">
-    <h2>Items</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Quantity</th>
-            <th>Cost</th>
-        </tr>
-        <tr th:each="item: ${shop.items}">
-            <td style="text-align:center" th:text="${item.itemName}"/>
+        <div id="itemSection" name="itemSection" th:unless="${shop.items.empty}">
+            <h2>Items</h2>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                    <th>Cost</th>
+                </tr>
+                <tr th:each="item: ${shop.items}">
+                    <td style="text-align:center" th:text="${item.itemName}"/>
 
-            <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
-                <a th:href="${item.images[0]?.url}">
-                    <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
-                         style="width:200px;height:200px;border:0;">
-                </a>
-            </td>
-            <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+                    <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
+                        <a th:href="${item.images[0]?.url}">
+                            <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
+                                 style="width:200px;height:200px;border:0;">
+                        </a>
+                    </td>
+                    <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-            <td style="text-align:center" th:text="${item.inventory}"/>
+                    <td style="text-align:center" th:text="${item.inventory}"/>
 
-            <td style="text-align:center" th:text="${item.cost}"/>
-        </tr>
-    </table>
-</div>
+                    <td style="text-align:center" th:text="${item.cost}"/>
+                </tr>
+            </table>
+        </div>
 
-<div id="tagSection" name="tagSection" th:unless="${shop.tags.empty}">
-    <h3>Tags</h3>
-    <table>
-        <td th:each="tag: ${shop.tags}">
-            <h4 th:text="'&nbsp &nbsp &nbsp' + ${tag}"></h4>
-        </td>
-    </table>
-</div>
+        <div id="tagSection" name="tagSection" th:unless="${shop.tags.empty}">
+            <h3>Tags</h3>
+            <table>
+                <td th:each="tag: ${shop.tags}">
+                    <h4 th:text="'&nbsp &nbsp &nbsp' + ${tag}"></h4>
+                </td>
+            </table>
+        </div>
 
-<form action="#" th:action="@{/}">
-    <input type="submit" value="Go To Home Page"/>
-</form>
-
-</body>
+        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    </body>
 </html>

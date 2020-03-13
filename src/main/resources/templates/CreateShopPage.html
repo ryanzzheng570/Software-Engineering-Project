@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <script type="text/javascript"
-            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <head>
+        <script type="text/javascript"
+                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-    <title>Create a Shop</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
-<h1>Create Shop Page</h1>
+        <title>Create a Shop</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
 
-<h3>New Shop Information:</h3>
-<form action="#" th:action="@{/addShop}" th:object="${shop}" method="post">
-    <p>New Shop Name: <input type="text" th:field="*{shopName}"/></p>
+    <body>
+        <h1>Create Shop Page</h1>
 
-    <p><input type="submit" value="Create Shop"/></p>
-</form>
+        <h3>New Shop Information:</h3>
+        <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post">
+            <p>New Shop Name: <input type="text" th:field="*{shopName}"/></p>
 
-<form action="#" th:action="@{/}">
-    <input type="submit" value="Go To Home Page"/>
-</form>
+            <p><input type="submit" value="Create Shop"/></p>
+        </form>
 
-</body>
+        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    </body>
 </html>

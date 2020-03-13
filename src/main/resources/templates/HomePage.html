@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <script type="text/javascript"
-            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <head>
+        <script type="text/javascript"
+                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-    <title>Mini-Shopify Project</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-</head>
-<body>
-<h1>Home Page</h1>
+        <title>Mini-Shopify Project</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
 
-<form action="#" th:action="@{/goToMerchantMenuPage}">
-    <input type="submit" value="Go To Merchant Menu Page"/>
-</form>
+    <body>
 
-<form action="#" th:action="@{/search}">
-    <input type="submit" value="Go To Search Page"/>
-</form>
+        <h1>Home Page</h1>
+        <form action="#" th:action="@{/goToMerchantMenuPage}">
+            <input type="submit" value="Go To Merchant Menu Page"/>
+        </form>
 
-</body>
+        <form action="#" th:action="@{/search}">
+            <input type="submit" value="Go To Search Page"/>
+        </form>
+
+        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    </body>
 </html>
