@@ -16,34 +16,37 @@
 
 <div id="itemSection" name="itemSection" th:unless="${shop.items.empty}">
     <h2>Items</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Quantity</th>
-            <th>Cost</th>
-            <th>Checkout</th>
-        </tr>
-        <tr th:each="item: ${shop.items}">
-            <td style="text-align:center" th:text="${item.itemName}"/>
+    <form method="POST" id="cartForm" th:action="@{/addToCart}">
+        <table id="shopItems">
+            <tr>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Quantity</th>
+                <th>Cost</th>
+                <th>Checkout</th>
+            </tr>
+            <tr th:each="item: ${shop.items}">
+                <td style="text-align:center" name="itemName" th:text="${item.itemName}"/>
 
-            <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
-                <a th:href="${item.images[0]?.url}">
-                    <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
-                         style="width:200px;height:200px;border:0;">
-                </a>
-            </td>
-            <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+                <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
+                    <a th:href="${item.images[0]?.url}">
+                        <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
+                             style="width:200px;height:200px;border:0;">
+                    </a>
+                </td>
+                <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-            <td style="text-align:center" th:text="${item.inventory}"/>
+                <td style="text-align:center" name="itemInventory" th:text="${item.inventory}"/>
 
-            <td style="text-align:center" th:text="${item.cost}"/>
+                <td style="text-align:center" th:text="${item.cost}"/>
 
-            <td style="text-align:center">
-                <input type="checkbox" th:name="${item.itemName}" th:value="${item.itemName}">
-            </td>
-        </tr>
-    </table>
+                <td style="text-align:center">
+                    <input type="checkbox" th:name="${item.itemName}" th:value="${item.itemName}">
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Add to cart"/>
+    </form>
 </div>
 
 <div id="tagSection" name="tagSection" th:unless="${shop.tags.empty}">
@@ -58,6 +61,8 @@
 <form action="#" th:action="@{/}">
     <input type="submit" value="Go To Home Page"/>
 </form>
+
+<script type="text/javascript" th:src="@{/js/AddToCartController.js}"></script>
 
 </body>
 </html>

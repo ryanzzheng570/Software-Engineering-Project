@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <script type="text/javascript"
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <title>Checkout </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+    <h2>Cart</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Individual Cost</th>
+            <th>Total Cost</th>
+        </tr>
+    </table>
+
+
+    <h3>Payment Info</h3>
+    <label for="paymentName">Name</label><br>
+    <input type="text" id="paymentName" name="paymentName"><br>
+    <label for="ccNum">Credit Card Number</label><br>
+    <input type="text" id="ccNum" name="ccNum"><br>
+
+    <form action="#" th:action="@{/}">
+        <input type="submit" value="Cancel and go To Home Page"/>
+    </form>
+</body>
+</html>
