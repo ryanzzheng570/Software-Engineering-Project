@@ -35,7 +35,7 @@ public class ShopController {
     }
 
     @PostMapping("/changeShopName")
-    public String changeShopName(@RequestParam(value = "shopId") int shopId,
+    public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") int shopId,
                                  @RequestParam(value = "shopName") String newName,
                                  Model model) {
         Shop shopToEdit = null;
@@ -51,13 +51,13 @@ public class ShopController {
 
         shopRepo.save(shopToEdit);
 
-        return displayYourShop(shopId, model);
+        return shopToEdit;
     }
 
     @PostMapping("/removeTag")
-    public String removeTag(@RequestParam(value = "shopId") int shopId,
-                           @RequestParam(value = "tagId") int tagId,
-                           Model model) {
+    public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") int shopId,
+                                        @RequestParam(value = "tagId") int tagId,
+                                        Model model) {
         Shop shopToEdit = null;
 
         Shop checkShop = shopRepo.findById(shopId);
@@ -71,13 +71,13 @@ public class ShopController {
 
         shopRepo.save(shopToEdit);
 
-        return displayYourShop(shopId, model);
+        return shopToEdit;
     }
 
     @PostMapping("/addTag")
-    public String removeTag(@RequestParam(value = "shopId") int shopId,
-                            @RequestParam(value = "tagName") String tagName,
-                            Model model) {
+    public @ResponseBody Tag addTag(@RequestParam(value = "shopId") int shopId,
+                                     @RequestParam(value = "tagName") String tagName,
+                                     Model model) {
         Shop shopToEdit = null;
 
         Shop checkShop = shopRepo.findById(shopId);
@@ -87,18 +87,12 @@ public class ShopController {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
-        shopToEdit.addTag(new Tag(tagName));
+        Tag toAdd = new Tag(tagName);
+        shopToEdit.addTag(toAdd);
 
         shopRepo.save(shopToEdit);
 
-        return displayYourShop(shopId, model);
-    }
-
-    @PostMapping("/deleteShop")
-    public String addShop(@RequestParam(value = "shopId") int shopId, Model model) {
-        shopRepo.deleteById(shopId);
-
-        return merchCont.viewMerchantMenuPage(model);
+        return toAdd;
     }
 
     @PostMapping("/addShop")
@@ -110,7 +104,7 @@ public class ShopController {
         return displayYourShop(newShop.getId(), model);
     }
 
-    @GetMapping("/goToShopMerchantView")
+    @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") Integer shopId, Model model){
 
         Shop toView = null;

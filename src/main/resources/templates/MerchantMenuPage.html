@@ -12,11 +12,11 @@
         <h1>Merchant Menu Page</h1>
 
         <h3>Your Current Shops:</h3>
-        <div th:if="${#lists.isEmpty(shops)}">
+        <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
             <p>You currently do not have any shops!</p>
         </div>
-        <div th:if="${not #lists.isEmpty(shops)}">
-            <table>
+        <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">
+        <table>
                 <tr>
                     <th>Shop ID</th>
                     <th>Name</th>
@@ -36,10 +36,7 @@
                                th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
                     </td>
                     <td style="text-align:center">
-                        <form action="#" th:action="@{/deleteShop}" th:object="${shop}" method="post">
-                            <input type="hidden" th:value="${shop.id}" name="shopId"/>
-                            <input type="submit" value="Delete Shop"/>
-                        </form>
+                        <input type="button" value="Delete Shop" class="deleteShopButton" th:id="'SHOP_' + ${shop.id}"/>
                     </td>
                 </tr>
             </table>
@@ -49,6 +46,7 @@
             <input type="submit" value="Go To Add Shop Page"/>
         </form>
 
+        <script type="text/javascript" th:src="@{/js/MerchantMenuController.js}"></script>
         <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
     </body>
 </html>

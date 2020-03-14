@@ -61,8 +61,10 @@ public class MerchantController {
         return "MerchantMenuPage";
     }
 
-    @GetMapping("/goToEditShopPage")
-    public String viewEditShopPage(@RequestParam(value = "shopId") int aShopId, Model model) {
-        return shopCont.displayYourShop(aShopId, model);
+    @PostMapping("/deleteShop")
+    public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") int shopId, Model model) {
+        shopRepo.deleteById(shopId);
+
+        return getShops().isEmpty();
     }
 }
