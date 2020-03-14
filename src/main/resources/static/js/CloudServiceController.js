@@ -1,3 +1,7 @@
+// To use this, add:
+//    <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
+// to the HTML file that calls it, and within the JavaScript call:
+//    ExampleCloudFunctionCall("Pass!");
 async function ExampleCloudFunctionCall(someData) {
     var response = await callCloudFunction("exampleCloudFunction", {inputData: someData});
     console.log(response.data)

@@ -5,6 +5,8 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 const database = admin.database();
 
+// !--- PLACE ALL FUNCTIONS BELOW HERE ---!
+
 exports.exampleCloudFunction = functions.https.onCall((data, context) => {
 
     //    When login works
