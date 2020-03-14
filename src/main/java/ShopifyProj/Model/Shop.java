@@ -1,5 +1,7 @@
 package ShopifyProj.Model;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,7 @@ public class Shop {
 
     private Set<Tag> tags;
 
-    private List<Item> items;
+    private Set<Item> items;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -25,7 +27,7 @@ public class Shop {
     @Autowired
     public Shop() {
         this(DEFAULT_SHOP_NAME,
-                Optional.of(new HashSet<>()));
+                Optional.of(new HashSet<Tag>()));
     }
 
     public Shop(String shopName, Optional<Set<Tag>> tags) {
@@ -39,7 +41,7 @@ public class Shop {
             this.tags = new HashSet<>();
         }
 
-        this.items = new ArrayList<Item>();
+        this.items = new HashSet<Item>();
     }
 
     @Id
@@ -64,15 +66,15 @@ public class Shop {
     }
 
     @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public List<Item> getItems() {
+    public Set<Item> getItems() {
         return (this.items);
     }
 
-    public void setItems(List<Item> newItemLst) {
+    public void setItems(Set<Item> newItemLst) {
         this.items = newItemLst;
     }
 
-    public void clearItems() { this.items = new ArrayList<Item>(); }
+    public void clearItems() { this.items = new HashSet<Item>(); }
 
     public Item getItem(int id) {
         for (Item item : this.items) {

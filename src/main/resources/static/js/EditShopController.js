@@ -111,6 +111,7 @@ function removeItem(btn, shopId, itemId) {
 }
 
 function addItemHandler(e){
+    console.log("ADDING ITEM");
     if (e.preventDefault) {
         e.preventDefault();
     }

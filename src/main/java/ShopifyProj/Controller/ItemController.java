@@ -1,12 +1,14 @@
 package ShopifyProj.Controller;
 
-import ShopifyProj.Model.Image;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import ShopifyProj.Model.Image;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,7 +51,7 @@ public class ItemController {
 
 
     @PostMapping("/addItem")
-    public @ResponseBody Item addItem(@RequestParam (value = "shopId") Integer shopId,
+    public @ResponseBody Item addItem(@RequestParam (value = "shopId") int shopId,
                                       @RequestParam (value = "url") String url,
                                       @RequestParam (value = "altText") String altText,
                                       @RequestParam (value = "itemName") String name,
@@ -58,8 +60,8 @@ public class ItemController {
                                       Model model){
         Item itemToAdd = null;
 
-        Optional<Shop> shop = shopRepo.findById(shopId);
-        if (shop.isPresent()){
+        Shop shop = shopRepo.findById(shopId);
+        if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
             if (!url.equals("")) {
@@ -75,30 +77,27 @@ public class ItemController {
 
             itemToAdd = new Item(name, imageToAdd, newCost, inventory);
 
-            Shop finalShop = shop.get();
-            finalShop.addItem(itemToAdd);
-            shopRepo.save(finalShop);
+            shop.addItem(itemToAdd);
+            shopRepo.save(shop);
         }
 
         return itemToAdd;
     }
 
     @PostMapping("/removeItem")
-    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") Integer shopId,
-                                         @RequestParam (value = "itemId") Integer itemId,
+    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") int shopId,
+                                         @RequestParam (value = "itemId") int itemId,
                                          Model model){
-        Shop shopToMod = null;
 
-        Optional<Shop> checkShop = shopRepo.findById(shopId);
-        if (checkShop.isPresent()){
-            shopToMod = checkShop.get();
-            if (shopToMod.getItem(itemId) != null){
-                shopToMod.removeItemWithId(itemId);
-                shopRepo.save(shopToMod);
+        Shop checkShop = shopRepo.findById(shopId);
+        if (checkShop != null){
+            if (checkShop.getItem(itemId) != null){
+                checkShop.removeItemWithId(itemId);
+                shopRepo.save(checkShop);
             }
         }
 
-        return shopToMod;
+        return checkShop;
     }
 
 }

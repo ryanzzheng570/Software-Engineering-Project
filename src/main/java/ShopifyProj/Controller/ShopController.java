@@ -2,19 +2,15 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.MerchantRepository;
 import ShopifyProj.Repository.ShopRepository;
-import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.ArrayList;
 
 @Controller
 public class ShopController {
@@ -24,13 +20,11 @@ public class ShopController {
     @Autowired
     private ShopRepository shopRepo;
 
-    public Shop getShopById(int aShopId) {
-        return shopRepo.findById(aShopId);
-    }
-
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        model.addAttribute("shop", getShopById(aShopId));
+        Shop toShow = shopRepo.findById((aShopId));
+        model.addAttribute("shop", toShow);
+        System.out.println(toShow);
         return "CustomerShopViewPage";
     }
 
@@ -38,59 +32,47 @@ public class ShopController {
     public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") int shopId,
                                  @RequestParam(value = "shopName") String newName,
                                  Model model) {
-        Shop shopToEdit = null;
-
         Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop != null) {
-            shopToEdit = checkShop;
-        } else {
+        if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
-        shopToEdit.setShopName(newName);
+        checkShop.setShopName(newName);
 
-        shopRepo.save(shopToEdit);
+        shopRepo.save(checkShop);
 
-        return shopToEdit;
+        return checkShop;
     }
 
     @PostMapping("/removeTag")
     public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") int shopId,
                                         @RequestParam(value = "tagId") int tagId,
                                         Model model) {
-        Shop shopToEdit = null;
-
         Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop != null) {
-            shopToEdit = checkShop;
-        } else {
+        if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
-        shopToEdit.removeTagWithId(tagId);
+        checkShop.removeTagWithId(tagId);
 
-        shopRepo.save(shopToEdit);
+        shopRepo.save(checkShop);
 
-        return shopToEdit;
+        return checkShop;
     }
 
     @PostMapping("/addTag")
     public @ResponseBody Tag addTag(@RequestParam(value = "shopId") int shopId,
                                      @RequestParam(value = "tagName") String tagName,
                                      Model model) {
-        Shop shopToEdit = null;
-
         Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop != null) {
-            shopToEdit = checkShop;
-        } else {
+        if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
         Tag toAdd = new Tag(tagName);
-        shopToEdit.addTag(toAdd);
+        checkShop.addTag(toAdd);
 
-        shopRepo.save(shopToEdit);
+        shopRepo.save(checkShop);
 
         return toAdd;
     }
@@ -105,19 +87,13 @@ public class ShopController {
     }
 
     @GetMapping("/goToEditShopPage")
-    public String displayYourShop(@RequestParam(value = "shopId") Integer shopId, Model model){
-
-        Shop toView = null;
-
-        Optional<Shop> theShop = shopRepo.findById(shopId);
-        if(theShop.isPresent()){
-            toView = theShop.get();
-            System.out.println(toView);
-        }else {
+    public String displayYourShop(@RequestParam(value = "shopId") int shopId, Model model){
+        Shop theShop = shopRepo.findById(shopId);
+        if (theShop == null){
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
-        model.addAttribute("shop", toView);
+        model.addAttribute("shop", theShop);
         model.addAttribute("item", new Item());
         model.addAttribute("tag", new Tag());
 
