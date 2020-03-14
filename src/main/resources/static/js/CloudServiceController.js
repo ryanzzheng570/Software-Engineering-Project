@@ -1,5 +1,5 @@
 async function ExampleCloudFunctionCall(someData) {
-    var response = await callCloudFunction("exampleCloudFunction", {data: someData});
+    var response = await callCloudFunction("exampleCloudFunction", {inputData: someData});
     console.log(response.data)
 }
 
