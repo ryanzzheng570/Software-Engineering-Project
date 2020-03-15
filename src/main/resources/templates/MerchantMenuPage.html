@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <script type="text/javascript"
+                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+
+        <title>Merchant Menu Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    </head>
+
+    <body>
+        <h1>Merchant Menu Page</h1>
+
+        <h3>Your Current Shops:</h3>
+        <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
+            <p>You currently do not have any shops!</p>
+        </div>
+        <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">
+        <table>
+                <tr>
+                    <th>Shop ID</th>
+                    <th>Name</th>
+                    <th>Tags</th>
+                </tr>
+
+                <tr th:each="shop: ${shops}">
+                    <td style="text-align:center" th:text="${shop.id}"></td>
+                    <td style="text-align:center" th:text="${shop.shopName}"></td>
+                    <td style="text-align:center" th:text="${shop.tags}"></td>
+                    <td style="text-align:center">
+                        <input type="button" value="Edit Shop"
+                               th:onclick="|location.href='/goToEditShopPage?shopId=${shop.id}'|"/>
+                    </td>
+                    <td style="text-align:center">
+                        <input type="button" value="View as Customer"
+                               th:onclick="|location.href='/goToShopCustomerView?shopId=${shop.id}'|"/>
+                    </td>
+                    <td style="text-align:center">
+                        <input type="button" value="Delete Shop" class="deleteShopButton" th:id="'SHOP_' + ${shop.id}"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <form action="#" th:action="@{/goToAddShopPage}">
+            <input type="submit" value="Go To Add Shop Page"/>
+        </form>
+
+        <script type="text/javascript" th:src="@{/js/MerchantMenuController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    </body>
+</html>

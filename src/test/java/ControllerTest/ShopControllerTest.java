@@ -21,12 +21,6 @@ public class ShopControllerTest {
     private ShopController shopCont;
 
     @Test
-    public void goToAddShopPage() throws Exception {
-        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToAddShopPage",
-                String.class)).contains("Add Shop Page");
-    }
-
-    @Test
     public void goToMerchantSearchPage() throws Exception {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToShopMerchantView",
                 String.class)).contains("Shop");
