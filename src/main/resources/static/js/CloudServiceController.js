@@ -11,6 +11,11 @@ async function AddItemToStore(aItem) {
     await callCloudFunction("addItemToStore", aItem);
 }
 
+async function GetItemsFromStore(aStoreID) {
+    var response = await callCloudFunction("getItemsFromStore", aStoreID);
+    return response;
+}
+
 // !--- PLACE ALL CLOUD SERVICE CALLS ABOVE HERE --- SHOULD NOT HAVE TO CHANGE ANYTHING BELOW ---!
 
 document.writeln('<script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>');

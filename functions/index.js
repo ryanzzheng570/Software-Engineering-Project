@@ -28,6 +28,32 @@ exports.addItemToStore = functions.https.onCall((data, context) => {
 
 });
 
+exports.getItemsFromStore = functions.https.onCall((data, context) => {
+
+    const SHOP_ID = data.shopID;
+
+    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
+            if(snapshot.val()) {
+                const res = snapshot.val();
+                var retItems = [];
+                var retTags = [];
+                for(var item in res) {
+                    if(res[item].name) {
+                        retItems.push(res[item])
+                    }
+                }
+                for(var tag in res.tag) {
+                    retTags.push(res.tag[tag])
+                }
+                return {items: retItems, name: res.name, tags: retTags}
+            }
+            return {data: "Something went wrong!"};
+        });
+    return returnVal;
+
+});
+
+
 exports.exampleCloudFunction = functions.https.onCall((data, context) => {
 
     //    When login works
