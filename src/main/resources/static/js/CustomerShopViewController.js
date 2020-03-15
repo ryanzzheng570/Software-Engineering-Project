@@ -1,11 +1,11 @@
 $(document).ready(function() {
 
     const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
-    loadItems(STORE_ID);
+    loadPage(STORE_ID);
 
 })
 
-async function loadItems(aStoreID) {
+async function loadPage(aStoreID) {
     const resp = await GetItemsFromStore({shopID: aStoreID});
     const items = resp.data.items;
     const tags = resp.data.tags;
@@ -33,6 +33,12 @@ async function loadItems(aStoreID) {
         itemHTML += '<td style="text-align:center" name="itemInventory">' + items[id].inventory + '</td>';
 
         itemHTML += '<td style="text-align:center">$' + items[id].cost + '</td>';
+
+        if(items[id].inventory != 0) {
+            itemHTML += '<td style="text-align:center"><input type=number placeholder=0 min=0 max=' + items[id].inventory + ' /></td>';
+        } else {
+            itemHTML += '<td style="text-align:center"><input type=number placeholder=0 readonly min=0 max=' + items[id].inventory + ' /></td>';
+        }
 
         itemHTML += '</tr>'
 
