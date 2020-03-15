@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
-        <title th:text="${shop.shopName}"></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
+
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
 
     <div id="pageTitle"></div>
     <div id="shopID" style="display:none">
         <p th:text="${shopID}" />
     </div>
-    <body>
-        <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
 
-        <div id="noItems"></div>
-        <form method="post" id="cartForm" th:action="@{/addToCart}">
-            <div id="itemSection"></div>
-            <br>
-            <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart" />
-        </form>
-
-        <br><br><br>
-        <div id="tagSection"></div>
+    <div id="noItems"></div>
+    <form method="post" id="cartForm" th:action="@{/addToCart}">
+        <div id="itemSection"></div>
         <br>
-        <form action="#" th:action="@{/}">
-            <input type="submit" value="Go To Home Page" />
-        </form>
+        <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart" />
+    </form>
 
-        <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-        <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
-        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-    </body>
+    <br><br><br>
+    <div id="tagSection"></div>
+    <br>
+    <form action="#" th:action="@{/}">
+        <input type="submit" value="Go To Home Page" />
+    </form>
+
+    <script type="text/javascript" src="/js/CloudServiceController.js"></script>
+    <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
+    <script type="text/javascript" src="/js/SidebarController.js"></script>
+
+</body>
 
 </html>
