@@ -14,24 +14,23 @@
     <body>
         <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
 
-    <div id="noItems"></div>
-    <form method="post" id="cartForm" th:action="@{/addToCart}">
-        <div id="itemSection"></div>
+        <div id="noItems"></div>
+        <form method="post" id="cartForm" th:action="@{/addToCart}">
+            <div id="itemSection"></div>
+            <br>
+            <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart" />
+        </form>
+
+        <br><br><br>
+        <div id="tagSection"></div>
         <br>
-        <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart" />
-    </form>
+        <form action="#" th:action="@{/}">
+            <input type="submit" value="Go To Home Page" />
+        </form>
 
-    <br><br><br>
-    <div id="tagSection"></div>
-    <br>
-    <form action="#" th:action="@{/}">
-        <input type="submit" value="Go To Home Page" />
-    </form>
-
-    <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-    <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
-
-</body>
-
+        <script type="text/javascript" src="/js/CloudServiceController.js"></script>
+        <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
         <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    </body>
+
 </html>
