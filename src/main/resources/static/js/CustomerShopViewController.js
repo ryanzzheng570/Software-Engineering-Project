@@ -1,24 +1,14 @@
-$(document).ready(function() {
-
-   const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
-   loadPage(STORE_ID);
-
-   $("#cartForm").submit(function(e) {
-           if (e.preventDefault) {
-               e.preventDefault();
-           }
-           $.ajax({
-               url: "/addToCart?" + "item=HelloWorld",
-               type: "POST",
-               dataType: "json"
-           }).then(function(data) {
-
-           })
-   })
+$(document).ready(function () {
+    // Will use this when adding stores to database is setup
+    //   const STORE_ID = document.getElementById("shopID").childNodes[1].innerText;
+    const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
+    loadPage(STORE_ID);
 })
 
 async function loadPage(aStoreID) {
-    const resp = await GetItemsFromStore({shopID: aStoreID});
+    const resp = await GetItemsFromStore({
+        shopID: aStoreID
+    });
     const items = resp.data.items;
     const tags = resp.data.tags;
     document.title = resp.data.name;
@@ -26,7 +16,7 @@ async function loadPage(aStoreID) {
 
     var itemHTML = "";
 
-    if(items.length === 0) {
+    if (items.length === 0) {
         $('#noItems').html('<h2>Sorry, the merchant did not add items to their store yet!</h2>');
         $('shoppingCart').css('display', 'none');
 
@@ -35,7 +25,7 @@ async function loadPage(aStoreID) {
         $('#shoppingCart').css('display', 'inline');
     }
 
-    for(var id in items) {
+    for (var id in items) {
         itemHTML += '<tr><td style="text-align:center" name="itemName">' + items[id].name + '</td>';
 
         if (items[id].url === "") {
@@ -48,7 +38,7 @@ async function loadPage(aStoreID) {
 
         itemHTML += '<td style="text-align:center">$' + items[id].cost + '</td>';
 
-        if(items[id].inventory != 0) {
+        if (items[id].inventory != 0) {
             itemHTML += '<td style="text-align:center"><input name=item value="' + items[id].id + '" type=checkbox /></td>';
         } else {
             itemHTML += '<td style="text-align:center"><input name=item value="' + items[id].id + '" type=checkbox disabled /></td>';
@@ -57,14 +47,14 @@ async function loadPage(aStoreID) {
         itemHTML += '</tr>'
 
     }
-    itemHTML += '</table>'
+    itemHTML += '</table><td style="text-align:center"><input name=store value="' + aStoreID + '" type=hidden /></td>';
 
     $('#itemSection').html(itemHTML);
 
     var tagHTML = '';
-    if(tags.length != 0) {
+    if (tags.length != 0) {
         tagHTML += '<h5>Tag(s)</h5><h6>'
-        for(var t in tags) {
+        for (var t in tags) {
             tagHTML += '&nbsp&nbsp&nbsp' + tags[t];
         }
         tagHTML += '</h6>';
@@ -72,5 +62,3 @@ async function loadPage(aStoreID) {
     $('#tagSection').html(tagHTML);
 
 }
-
-

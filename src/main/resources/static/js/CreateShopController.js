@@ -28,10 +28,10 @@ function resetForm() {
     elem.insertBefore(tableElem, elem.firstChild);
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     resetForm();
 
-    $("#addShopForm").submit(function(e) {
+    $("#addShopForm").submit(function (e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
@@ -39,7 +39,7 @@ $(document).ready(function() {
         var info = $("#addShopForm").serializeArray();
         var infoJson = {};
 
-        for (var i = 0; i < info.length; i++){
+        for (var i = 0; i < info.length; i++) {
             var curr = info[i];
             infoJson[curr["name"]] = curr["value"];
         }
@@ -51,7 +51,7 @@ $(document).ready(function() {
                 url: "/addShop?" + $("#addShopForm").serialize(),
                 type: "POST",
                 dataType: "json"
-            }).then(function(data) {
+            }).then(function (data) {
                 var newRow = document.createElement("tr");
 
                 var idCell = document.createElement("td");
@@ -67,7 +67,7 @@ $(document).ready(function() {
                 newRow.appendChild(nameCell);
 
                 var tags = [];
-                for (var tagInd = 0; tagInd < data.tags.length; tagInd++){
+                for (var tagInd = 0; tagInd < data.tags.length; tagInd++) {
                     var currTagName = data.tags[tagInd].tagName;
                     tags.push(currTagName);
                 }
@@ -93,7 +93,7 @@ $(document).ready(function() {
                 var custButton = document.createElement("input");
                 custButton.type = "button";
                 custButton.value = "View as Customer";
-                custButton.addEventListener('click', function() {
+                custButton.addEventListener('click', function () {
                     location.href = "/goToShopCustomerView?shopId=" + data.id;
                 });
                 custViewCell.appendChild(custButton);
@@ -104,7 +104,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#addTag").click(function(e) {
+    $("#addTag").click(function (e) {
         if (e.preventDefault) {
             e.preventDefault();
         }
@@ -130,7 +130,7 @@ $(document).ready(function() {
         var inputButton = document.createElement("input");
         inputButton.type = "button";
         inputButton.value = "Remove Tag";
-        inputButton.addEventListener('click', function() {
+        inputButton.addEventListener('click', function () {
             var row = document.getElementById(rowId);
             row.parentNode.removeChild(row);
         });
@@ -142,7 +142,7 @@ $(document).ready(function() {
         globals.tagCounter += 1;
     });
 
-    $("#resetForm").click(function(e) {
+    $("#resetForm").click(function (e) {
         if (e.preventDefault) {
             e.preventDefault();
         }

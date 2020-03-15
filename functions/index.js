@@ -7,6 +7,28 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
+exports.getItemsFromStoreByIds = functions.https.onCall((data, context) => {
+
+    const SHOP_ID = data.shopID;
+    const ITEM_IDS = data.itemIDs;
+
+    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const res = snapshot.val();
+            var retItems = [];
+            for (var id in ITEM_IDS) {
+                var temp = res[ITEM_IDS[id]];
+                temp.id = ITEM_IDS[id];
+                retItems.push(temp)
+            }
+            return { items: retItems, name: res.name }
+        }
+        return { data: "Something went wrong!" };
+    });
+    return returnVal;
+
+});
+
 exports.addItemToStore = functions.https.onCall((data, context) => {
 
     const SHOP_ID = data.shopID;
@@ -33,24 +55,24 @@ exports.getItemsFromStore = functions.https.onCall((data, context) => {
     const SHOP_ID = data.shopID;
 
     var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
-            if(snapshot.val()) {
-                const res = snapshot.val();
-                var retItems = [];
-                var retTags = [];
-                for(var item in res) {
-                    if(res[item].name) {
-                        var temp = res[item];
-                        temp.id = item;
-                        retItems.push(temp)
-                    }
+        if (snapshot.val()) {
+            const res = snapshot.val();
+            var retItems = [];
+            var retTags = [];
+            for (var item in res) {
+                if (res[item].name) {
+                    var temp = res[item];
+                    temp.id = item;
+                    retItems.push(temp)
                 }
-                for(var tag in res.tag) {
-                    retTags.push(res.tag[tag])
-                }
-                return {items: retItems, name: res.name, tags: retTags}
             }
-            return {data: "Something went wrong!"};
-        });
+            for (var tag in res.tag) {
+                retTags.push(res.tag[tag])
+            }
+            return { items: retItems, name: res.name, tags: retTags }
+        }
+        return { data: "Something went wrong!" };
+    });
     return returnVal;
 
 });
@@ -67,10 +89,10 @@ exports.exampleCloudFunction = functions.https.onCall((data, context) => {
     database.ref('/testing/exampleCloudFunction').set(data.inputData);
 
     var returnVal = database.ref("/testing/").once("value").then((snapshot) => {
-        if(snapshot.val()) {
-            return {text: snapshot.val()}
+        if (snapshot.val()) {
+            return { text: snapshot.val() }
         }
-        return {text: "Something went wrong!"};
+        return { text: "Something went wrong!" };
     });
     return returnVal;
 

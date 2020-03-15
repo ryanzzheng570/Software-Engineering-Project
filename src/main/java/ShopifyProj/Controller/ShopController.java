@@ -44,7 +44,7 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        model.addAttribute("shop", getShopById(aShopId));
+        model.addAttribute("shopID", aShopId);
         return "CustomerShopViewPage";
     }
 

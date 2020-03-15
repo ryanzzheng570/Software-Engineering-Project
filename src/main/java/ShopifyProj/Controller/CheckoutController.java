@@ -21,8 +21,14 @@ public class CheckoutController {
     private CustomerRepository customerRepository;
 
     @PostMapping("/addToCart")
-    public String addToCart( @RequestParam(value = "item") String item,Model model) {
-//        System.out.println(items);
+    public String addToCart(@RequestParam(value = "item") String[] items, @RequestParam(value = "store") String store, Model model) {
+        // You have an array of item IDs, and the store ID
+        System.out.println("Store: " + store);
+        String itemIds = "";
+        for(int a= 0; a < items.length; a++) {
+            itemIds += items[a] + " ";
+        }
+        System.out.println("Items: " + itemIds);
 //        Optional<Customer> customer = customerRepository.findById(customerId);
 //        Set<Item> customerCart;
 //

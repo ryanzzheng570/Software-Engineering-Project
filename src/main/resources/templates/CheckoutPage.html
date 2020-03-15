@@ -3,10 +3,10 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <head>
-    <script type="text/javascript"
-            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
     <title>Checkout </title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
@@ -20,6 +20,10 @@
         </tr>
     </table>
 
+    <!--    Since the quantity is controlled here, use this type of input, where the min and initial -->
+    <!--    value are always 1, and the max is always the remaining inventory(put this under the -->
+    <!--    quantity in your table)-->
+    <input type="number" min="1" max="5" value="1" />
 
     <form action="#" method="POST" th:action="@{/checkout}">
         <h3>Payment Info</h3>
@@ -27,11 +31,12 @@
         <input type="text" id="paymentName" name="paymentName"><br>
         <label for="ccNum">Credit Card Number</label><br>
         <input type="text" id="ccNum" name="ccNum"><br>
-        <input style="margin-top:10px" type="submit" value="Checkout"/>
+        <input style="margin-top:10px" type="submit" value="Checkout" />
     </form>
 
     <form action="#" th:action="@{/}">
-        <input type="submit" value="Cancel and go To Home Page"/>
+        <input type="submit" value="Cancel and go To Home Page" />
     </form>
 </body>
+
 </html>
