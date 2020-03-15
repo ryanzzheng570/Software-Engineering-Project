@@ -1,14 +1,17 @@
 package ShopifyProj.Controller;
 
-import ShopifyProj.Model.Image;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+
+import ShopifyProj.Model.Image;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -48,12 +51,17 @@ public class ItemController {
 
 
     @PostMapping("/addItem")
-    public String addItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "url") String url,
-                          @RequestParam (value = "altText") String altText, @RequestParam (value = "itemName") String name,
-                          @RequestParam (value = "cost") String cost, @RequestParam (value = "inventory") int inventory, Model model){
-        Optional<Shop> shop = shopRepo.findById(shopId);
+    public @ResponseBody Item addItem(@RequestParam (value = "shopId") int shopId,
+                                      @RequestParam (value = "url") String url,
+                                      @RequestParam (value = "altText") String altText,
+                                      @RequestParam (value = "itemName") String name,
+                                      @RequestParam (value = "cost") String cost,
+                                      @RequestParam (value = "inventory") int inventory,
+                                      Model model){
+        Item itemToAdd = null;
 
-        if (shop.isPresent()){
+        Shop shop = shopRepo.findById(shopId);
+        if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
             if (!url.equals("")) {
@@ -67,30 +75,29 @@ public class ItemController {
 
             String newCost = parseCostInput(cost);
 
-            Item finalItemToAdd = new Item(name, imageToAdd, newCost, inventory);
+            itemToAdd = new Item(name, imageToAdd, newCost, inventory);
 
-            Shop finalShop = shop.get();
-            finalShop.addItem(finalItemToAdd);
-            shopRepo.save(finalShop);
+            shop.addItem(itemToAdd);
+            shopRepo.save(shop);
         }
 
-        return shopCont.displayYourShop(shopId, model);
+        return itemToAdd;
     }
 
     @PostMapping("/removeItem")
-    public String removeItem(@RequestParam (value = "shopId") Integer shopId, @RequestParam (value = "itemId") Integer itemId,
-                             Model model){
-        Optional<Shop> shop = shopRepo.findById(shopId);
+    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") int shopId,
+                                         @RequestParam (value = "itemId") int itemId,
+                                         Model model){
 
-        if (shop.isPresent()){
-            Shop finalShop = shop.get();
-            if (finalShop.getItem(itemId) != null){
-                finalShop.removeItemWithId(itemId);
-                shopRepo.save(finalShop);
+        Shop checkShop = shopRepo.findById(shopId);
+        if (checkShop != null){
+            if (checkShop.getItem(itemId) != null){
+                checkShop.removeItemWithId(itemId);
+                shopRepo.save(checkShop);
             }
         }
 
-        return shopCont.displayYourShop(shopId, model);
+        return checkShop;
     }
 
 }

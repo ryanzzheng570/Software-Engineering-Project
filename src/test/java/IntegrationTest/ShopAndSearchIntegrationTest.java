@@ -41,7 +41,7 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopByName() throws Exception {
         //Create a shop
-        String name = "TEST_SHOP";
+        String name = "TEST_SHOP_BY_NAME";
         String tag1 = "TAG_1";
 
         String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
@@ -65,9 +65,13 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP123456";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by partial name
         String searchField = "234";
@@ -82,12 +86,16 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopByTag() throws Exception {
         //Create a shop
-        String name = "TEST_SHOP";
+        String name = "TEST_SHOP_BY_TAG";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by name
         String searchField = "TAG_1";
@@ -102,12 +110,16 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopByPartialTag() throws Exception {
         //Create a shop
-        String name = "TEST_SHOP";
+        String name = "TEST_SHOP_PARTIAL_TAG";
         String tag1 = "TAG_123456";
 
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by name
         String searchField = "234";
@@ -122,12 +134,16 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopUppercaseName() throws Exception {
         //Create a shop
-        String name = "BookShop";
+        String name = "BookShop_UPPERCASE";
         String tag1 = "test";
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
 
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
         String searchField = "bookshop";
@@ -142,12 +158,16 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopUppercaseTag() throws Exception {
         //Create a shop
-        String name = "BookShop";
+        String name = "BookShop_UPPERCASE_TAG";
         String tag1 = "TEST";
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
 
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
         String searchField = "test";
@@ -164,10 +184,14 @@ public class ShopAndSearchIntegrationTest {
         //Create a shop
         String name = "book";
         String tag1 = "test";
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
 
-
+        String requestStr = String.format("/addShop?shopName=%s", name);
         this.mockMvc.perform(post(requestStr));
+
+        int shopId = shopRepo.findByShopName(name).getId();
+
+        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
         String searchField = "BoOk";

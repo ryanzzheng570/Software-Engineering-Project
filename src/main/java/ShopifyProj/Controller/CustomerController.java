@@ -13,8 +13,7 @@ public class CustomerController {
     private CustomerRepository customerRepository;
 
     @PostMapping("/createCustomerAccount")
-    public @ResponseBody
-    Customer createCustomerAccount(@ModelAttribute Customer newCustomer, Model model) {
+    public @ResponseBody Customer createCustomerAccount(@ModelAttribute Customer newCustomer, Model model) {
         customerRepository.save(newCustomer);
         return newCustomer;
     }
