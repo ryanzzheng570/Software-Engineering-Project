@@ -26,19 +26,13 @@ public class CheckoutController {
         System.out.println("Store: " + store);
         String itemIds = "";
         for(int a= 0; a < items.length; a++) {
-            itemIds += items[a] + " ";
+            itemIds += items[a];
+            if (a != items.length -1) {
+                itemIds += "$";
+            }
         }
         System.out.println("Items: " + itemIds);
-//        Optional<Customer> customer = customerRepository.findById(customerId);
-//        Set<Item> customerCart;
-//
-//        if(customer.isPresent()){
-//            customerCart = customer.getCart();
-//            System.out.println(customerCart);
-//        }else {
-//            System.out.println(String.format("No customer found with ID %d", customerId));
-//        }
-
+        model.addAttribute("itemIds", itemIds);
         return "CheckoutPage";
     }
 

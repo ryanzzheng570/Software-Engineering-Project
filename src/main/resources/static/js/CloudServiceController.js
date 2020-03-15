@@ -13,6 +13,11 @@ async function AddItemToStore(aItem) {
     await callCloudFunction("addItemToStore", aItem);
 }
 
+async function GetItemsFromStoreByIds(aStoreID, itemIDs) {
+    var response = await callCloudFunction("getItemsFromStoreByIds", aStoreID, itemIDs);
+    return response;
+}
+
 async function GetItemsFromStore(aStoreID) {
     var response = await callCloudFunction("getItemsFromStore", aStoreID);
     return response;

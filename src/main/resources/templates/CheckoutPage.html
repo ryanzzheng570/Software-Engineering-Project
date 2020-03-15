@@ -11,20 +11,11 @@
 
 <body>
     <h2>Cart</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Individual Cost</th>
-            <th>Total Cost</th>
-        </tr>
-    </table>
+    <div id="cartSection"></div>
+    <div id="noItems"></div>
 
-    <!--    Since the quantity is controlled here, use this type of input, where the min and initial -->
-    <!--    value are always 1, and the max is always the remaining inventory(put this under the -->
-    <!--    quantity in your table)-->
-    <input type="number" min="1" max="5" value="1" />
-
+    <p id="itemIds" style="display:none" th:text="${itemIds}"/>
+    <p id="totalCost">Total Cost: </p>
     <form action="#" method="POST" th:action="@{/checkout}">
         <h3>Payment Info</h3>
         <label for="paymentName">Name</label><br>
