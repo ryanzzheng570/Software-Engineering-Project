@@ -9,8 +9,10 @@
 <div id="pageTitle"></div>
 
 <div id="noItems"></div>
-<form action="#" th:action="@{/goToAddShopPage}">
+<form id="cartForm" action="#" th:action="@{/addToCart}">
     <div id="itemSection"></div>
+    <br>
+    <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart"/>
 </form>
 
 <br><br><br>

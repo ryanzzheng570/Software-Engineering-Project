@@ -21,7 +21,8 @@ public class CheckoutController {
     private CustomerRepository customerRepository;
 
     @PostMapping("/addToCart")
-    public String addToCart(Model model) {
+    public String addToCart( @RequestParam(value = "item") String item,Model model) {
+//        System.out.println(items);
 //        Optional<Customer> customer = customerRepository.findById(customerId);
 //        Set<Item> customerCart;
 //

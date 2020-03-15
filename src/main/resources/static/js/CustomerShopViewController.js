@@ -1,8 +1,20 @@
 $(document).ready(function() {
 
-    const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
-    loadPage(STORE_ID);
+   const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
+   loadPage(STORE_ID);
 
+   $("#cartForm").submit(function(e) {
+           if (e.preventDefault) {
+               e.preventDefault();
+           }
+           $.ajax({
+               url: "/addToCart?" + "item=HelloWorld",
+               type: "POST",
+               dataType: "json"
+           }).then(function(data) {
+
+           })
+   })
 })
 
 async function loadPage(aStoreID) {
@@ -16,12 +28,14 @@ async function loadPage(aStoreID) {
 
     if(items.length === 0) {
         $('#noItems').html('<h2>Sorry, the merchant did not add items to their store yet!</h2>');
+        $('shoppingCart').css('display', 'none');
+
     } else {
-        itemHTML += '<h2>Items</h2><table><tr><th>Name</th><th>Image</th><th>Quantity</th><th>Cost</th><th>Checkout</th></tr>';
+        itemHTML += '<h2>Items</h2><table><tr><th>Name</th><th>Image</th><th>Remaining</th><th>Cost</th><th>Checkout</th></tr>';
+        $('#shoppingCart').css('display', 'inline');
     }
 
     for(var id in items) {
-
         itemHTML += '<tr><td style="text-align:center" name="itemName">' + items[id].name + '</td>';
 
         if (items[id].url === "") {
@@ -35,9 +49,9 @@ async function loadPage(aStoreID) {
         itemHTML += '<td style="text-align:center">$' + items[id].cost + '</td>';
 
         if(items[id].inventory != 0) {
-            itemHTML += '<td style="text-align:center"><input type=number placeholder=0 min=0 max=' + items[id].inventory + ' /></td>';
+            itemHTML += '<td style="text-align:center"><input name=item value="' + items[id].id + '" type=checkbox /></td>';
         } else {
-            itemHTML += '<td style="text-align:center"><input type=number placeholder=0 readonly min=0 max=' + items[id].inventory + ' /></td>';
+            itemHTML += '<td style="text-align:center"><input name=item value="' + items[id].id + '" type=checkbox disabled /></td>';
         }
 
         itemHTML += '</tr>'

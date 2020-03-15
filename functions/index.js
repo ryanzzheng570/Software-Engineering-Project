@@ -39,7 +39,9 @@ exports.getItemsFromStore = functions.https.onCall((data, context) => {
                 var retTags = [];
                 for(var item in res) {
                     if(res[item].name) {
-                        retItems.push(res[item])
+                        var temp = res[item];
+                        temp.id = item;
+                        retItems.push(temp)
                     }
                 }
                 for(var tag in res.tag) {
