@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(document).ready(() => {
     // Will use this when adding stores to database is setup
     //   const STORE_ID = document.getElementById("shopID").childNodes[1].innerText;
     const STORE_ID = "-M2QECi8-MSD1yp8jzA9";
