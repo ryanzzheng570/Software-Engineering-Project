@@ -13,8 +13,8 @@ async function AddItemToStore(aItem) {
     await callCloudFunction("addItemToStore", aItem);
 }
 
-async function GetItemsFromStoreByIds(aStoreID, itemIDs) {
-    var response = await callCloudFunction("getItemsFromStoreByIds", aStoreID, itemIDs);
+async function GetItemsFromStoreByIds(IDs) {
+    var response = await callCloudFunction("getItemsFromStoreByIds", IDs);
     return response;
 }
 
@@ -23,8 +23,8 @@ async function GetItemsFromStore(aStoreID) {
     return response;
 }
 
-async function SetInventoriesToStore(aStoreID, itemIDs, quantities) {
-    var response = await callCloudFunction("setInventoriesToStore", aStoreID, itemIDs, quantities);
+async function SetInventoriesToStore(quantityData) {
+    var response = await callCloudFunction("setInventoriesToStore", quantityData);
     return response;
 }
 
