@@ -60,17 +60,19 @@ exports.purchaseItems = functions.https.onCall((data, context) => {
             const res = snapshot.val();
             for (var id in ITEM_IDS) {
                 var tempItem = res[ITEM_IDS[id]];
+                var itemID = ITEM_IDS[id];
                 var newInventoryCount = tempItem.inventory - QUANTITIES[id];
                 if (newInventoryCount < 0) {
-                    return { data: "Error - Not enough inventory!" };
+                    return { msg: "Error - Not enough inventory!" };
                 } else {
-
-                    //TODO: update the information
+                    database.ref("/store/" + SHOP_ID).child(itemID).update({
+                        inventory: newInventoryCount
+                    })
                 }
             }
-            return { data: "Success "};
+            return { msg: "Success" };
         }
-        return { data: "Something went wrong!" };
+        return { msg: "Something went wrong!" };
     });
     return returnVal;
 });

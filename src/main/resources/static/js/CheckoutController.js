@@ -86,10 +86,29 @@ function checkout() {
 }
 
 async function submit(aStoreID, itemIDs, quantities) {
+    let ccNum = $("#ccNum").val();
+    let name = $("#paymentName").val();
+
+    if (name == "") {
+        alert ("Please enter a name!");
+        return;
+    }
+    if (ccNum == "") {
+        alert ("Please enter a credit card number!");
+        return;
+    }
+
     const resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
     });
     console.log(resp.data)
+
+    if (resp.data.data == "Success") {
+        alert ("Thank you " + name + " for your purchase.");
+        window.history.back();
+    } else {
+        alert ("Error: there was a problem with the transaction");
+    }
 }
