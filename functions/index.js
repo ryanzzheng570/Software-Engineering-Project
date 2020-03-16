@@ -50,7 +50,7 @@ exports.addItemToStore = functions.https.onCall((data, context) => {
 
 });
 
-exports.setInventoriesToStore = functions.https.onCall((data, context) => {
+exports.purchaseItems = functions.https.onCall((data, context) => {
     const SHOP_ID = data.shopID;
     const ITEM_IDS = data.itemIDs;
     const QUANTITIES = data.quantities;

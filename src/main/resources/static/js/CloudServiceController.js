@@ -23,8 +23,8 @@ async function GetItemsFromStore(aStoreID) {
     return response;
 }
 
-async function SetInventoriesToStore(quantityData) {
-    var response = await callCloudFunction("setInventoriesToStore", quantityData);
+async function PurchaseItems(quantityData) {
+    var response = await callCloudFunction("purchaseItems", quantityData);
     return response;
 }
 

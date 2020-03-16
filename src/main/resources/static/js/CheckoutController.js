@@ -86,9 +86,10 @@ function checkout() {
 }
 
 async function submit(aStoreID, itemIDs, quantities) {
-    const resp = await SetInventoriesToStore({
+    const resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
     });
+    console.log(resp.data)
 }
