@@ -9,10 +9,9 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Entity
-public class Merchant {
+public class Merchant extends User{
     private int id;
     private List<Shop> shops;
-    private String name;
     private String contactPhoneNumber;
     private String email;
     private int rating;
@@ -20,13 +19,13 @@ public class Merchant {
     private static final AtomicLong counter = new AtomicLong();
 
     public Merchant() {
+        super();
     }
 
-    public Merchant(String name, String contactPhoneNumber, String email) {
+    public Merchant(String name, String contactPhoneNumber, String email, String password) {
+        super(name, password);
         this.id = Math.toIntExact(counter.incrementAndGet());
-
         this.shops = new ArrayList<Shop>();
-        this.name = name;
         this.contactPhoneNumber = contactPhoneNumber;
         this.email = email;
         //Begin with 0 rating
@@ -78,11 +77,11 @@ public class Merchant {
     }
 
     public String getName() {
-        return name;
+        return super.getUserName();
     }
 
     public void setName(String name) {
-        this.name = name;
+        super.setUserName(name);
     }
 
     public String getContactPhoneNumber() {
