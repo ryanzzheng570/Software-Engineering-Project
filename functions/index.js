@@ -53,24 +53,27 @@ exports.addItemToStore = functions.https.onCall((data, context) => {
 exports.setInventoriesToStore = functions.https.onCall((data, context) => {
     const SHOP_ID = data.shopID;
     const ITEM_IDS = data.itemIDs;
-    const QUANTITY_VALS = data.quantities;
+    const QUANTITIES = data.quantities;
 
-    // var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
-    //     if (snapshot.val()) {
-    //         const res = snapshot.val();
-    //         var retItems = [];
-    //         for (var id in ITEM_IDS) {
-    //             var temp = res[ITEM_IDS[id]];
-    //             temp.id = ITEM_IDS[id];
-    //             retItems.push(temp)
-    //         }
-    //         return { items: retItems, name: res.name }
-    //     }
-    //     return { data: "Something went wrong!" };
-    // });
-    // return returnVal;
+    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const res = snapshot.val();
+            for (var id in ITEM_IDS) {
+                var tempItem = res[ITEM_IDS[id]];
+                var newInventoryCount = tempItem.inventory - QUANTITIES[id];
+                if (newInventoryCount < 0) {
+                    return { data: "Error - Not enough inventory!" };
+                } else {
+
+                    //TODO: update the information
+                }
+            }
+            return { data: "Success "};
+        }
+        return { data: "Something went wrong!" };
+    });
+    return returnVal;
 });
-
 
 exports.getItemsFromStore = functions.https.onCall((data, context) => {
 

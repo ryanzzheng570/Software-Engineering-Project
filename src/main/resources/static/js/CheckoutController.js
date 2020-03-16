@@ -89,6 +89,6 @@ async function submit(aStoreID, itemIDs, quantities) {
     const resp = await SetInventoriesToStore({
         shopID: aStoreID,
         itemIDs: itemIDs,
-        quantityVals: quantities
+        quantities: quantities
     });
 }
