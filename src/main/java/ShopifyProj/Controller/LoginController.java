@@ -5,6 +5,7 @@ import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.User;
 import ShopifyProj.Repository.CustomerRepository;
 import ShopifyProj.Repository.MerchantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,10 @@ import java.util.List;
 
 @Controller
 public class LoginController {
+    @Autowired
     private MerchantRepository merchantRepository;
+
+    @Autowired
     private CustomerRepository customerRepository;
 
     @GetMapping("/login")
@@ -36,18 +40,18 @@ public class LoginController {
     }
 
     @PostMapping("/loginAsMerchant")
-    public @ResponseBody String signInAsMerchant(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password, Model model) {
+    public String signInAsMerchant(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password, Model model) {
         Iterable<Merchant> merchants = merchantRepository.findAll();
 
         //Navigate to appropriate page, use "Home" for now
-        return "Home";
+        return "HomePage";
     }
 
     @PostMapping("/loginAsCustomer")
-    public @ResponseBody String signInAsCustomer(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password, Model model) {
+    public String signInAsCustomer(@RequestParam(value = "userName") String userName, @RequestParam(value = "password") String password, Model model) {
         Iterable<Customer> customers = customerRepository.findAll();
 
         //Navigate to appropriate page, use "Home" for now
-        return "Home";
+        return "HomePage";
     }
 }
