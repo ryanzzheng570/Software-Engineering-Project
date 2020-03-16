@@ -23,6 +23,11 @@ async function GetItemsFromStore(aStoreID) {
     return response;
 }
 
+async function SetInventoriesToStore(aStoreID, itemIDs, quantityVals) {
+    var response = await callCloudFunction("setInventoriesToStore", aStoreID, itemIDs, quantityVals);
+    return response;
+}
+
 // !--- PLACE ALL CLOUD SERVICE CALLS ABOVE HERE --- SHOULD NOT HAVE TO CHANGE ANYTHING BELOW ---!
 
 document.writeln('<script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>');

@@ -36,15 +36,38 @@ public class CheckoutController {
         return "CheckoutPage";
     }
 
-    @PostMapping("/checkout")
-    public String checkout(@RequestParam(value = "paymentName") String paymentName,
-                           @RequestParam(value = "ccNum") int ccNum,
-                           Model model) {
-        System.out.println("in checkout");
-        System.out.println("paymentName " + paymentName);
-        System.out.println("ccNum " + ccNum);
-
-        return "CheckoutPage";  //TODO
-    }
+//    @PostMapping("/checkout")
+//    public String checkout(@RequestParam(value = "item") String[] items,
+//                           @RequestParam(value = "quantity") String[] quantity,
+//                           @RequestParam(value = "store") String store,
+//                           @RequestParam(value = "paymentName") String paymentName,
+//                           @RequestParam(value = "ccNum") int ccNum,
+//                           Model model) {
+//
+//        String itemIds = "";
+//        String quantities = "";
+//
+//        for(int i= 0; i < items.length; i++) {
+//            System.out.println("item "+ items[i]);
+//            System.out.println("quantity "+ quantity[i]);
+//            itemIds += items[i];
+//            quantities += quantity[i];
+//
+//            if (i != items.length -1) {
+//                itemIds += "$";
+//                quantities += "$";
+//            }
+//        }
+//
+//
+//        System.out.println("Store: " + store);
+//        System.out.println("paymentName " + paymentName);
+//        System.out.println("ccNum " + ccNum);
+//
+//        model.addAttribute("quantities", quantities);
+//        model.addAttribute("itemIds", itemIds);
+//        model.addAttribute("shopId", store);
+//        return "CheckoutCompletePage";
+//    }
 
 }

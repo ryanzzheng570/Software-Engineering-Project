@@ -50,6 +50,28 @@ exports.addItemToStore = functions.https.onCall((data, context) => {
 
 });
 
+exports.setInventoriesToStore = functions.https.onCall((data, context) => {
+    const SHOP_ID = data.shopID;
+    const ITEM_IDS = data.itemIDs;
+    const QUANTITY_VALS = data.quantities;
+
+    // var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
+    //     if (snapshot.val()) {
+    //         const res = snapshot.val();
+    //         var retItems = [];
+    //         for (var id in ITEM_IDS) {
+    //             var temp = res[ITEM_IDS[id]];
+    //             temp.id = ITEM_IDS[id];
+    //             retItems.push(temp)
+    //         }
+    //         return { items: retItems, name: res.name }
+    //     }
+    //     return { data: "Something went wrong!" };
+    // });
+    // return returnVal;
+});
+
+
 exports.getItemsFromStore = functions.https.onCall((data, context) => {
 
     const SHOP_ID = data.shopID;

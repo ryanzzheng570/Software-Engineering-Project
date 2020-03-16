@@ -16,7 +16,9 @@ function updateCost() {
             let dataCells = $(this).find('td');
             let quantity;
             $(this).closest('tr').find("input").each(function() {
-                quantity = this.value;
+                if(!isNaN(this.value)) {
+                    quantity = this.value;
+                }
             });
             let cost = dataCells[3].innerHTML.substr(1);
             totalCost += quantity * cost;
@@ -45,12 +47,48 @@ async function loadPage(aStoreID) {
 
     for (let item in items) {
         cartHTML += '<tr><td style="text-align:center" name="itemName">' + items[item].name + '</td>';
-        cartHTML += '<td style="text-align:center" name="itemQuantity"><input type="number" min="1" max="' + items[item].inventory + '" value="1" onchange="updateCost()"/></td>';
+        cartHTML += '<td style="text-align:center" name="itemQuantity"><input name="quantity" type="number" min="1" max="' + items[item].inventory + '" value="1" onchange="updateCost()"/></td>';
         cartHTML += '<td style="text-align:center" name="itemInventory">' + items[item].inventory + '</td>';
         cartHTML += '<td style="text-align:center">$' + items[item].cost + '</td>';
+        cartHTML += '<input name=item value="' + items[item].id + '" type=hidden /></td>';
     }
+    cartHTML +=  '</table><td style="text-align:center"><input id="storeID" name=store value="' + aStoreID + '" type=hidden /></td>'
     $('#cartSection').html(cartHTML);
 
     //Calculate cost using default quantity
     updateCost();
+}
+
+function checkout() {
+    let isFirstRow = true;
+    let itemIDs = [];
+    let quantities = [];
+
+    $("#cartTable tr").each(function(){
+        if (isFirstRow) {
+            isFirstRow = false;
+        }
+        else {
+            $(this).closest('tr').find("input").each(function() {
+                if(isNaN(this.value)) {
+                    console.log("itemId:", this.value);
+                    itemIDs.push(this.value);
+                }
+                else if(!isNaN(this.value)) {
+                    console.log("quantity:", this.value);
+                    quantities.push(this.value);
+                }
+            });
+        }
+    })
+    let storeId = $("#storeID").val();
+    submit(storeId, itemIDs, quantities);
+}
+
+async function submit(aStoreID, itemIDs, quantities) {
+    const resp = await SetInventoriesToStore({
+        shopID: aStoreID,
+        itemIDs: itemIDs,
+        quantityVals: quantities
+    });
 }

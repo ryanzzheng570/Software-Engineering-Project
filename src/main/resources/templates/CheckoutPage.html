@@ -11,19 +11,20 @@
 
 <body>
     <h2>Cart</h2>
-    <div id="cartSection"></div>
-    <div id="noItems"></div>
+<!--    <form action="#" method="POST" th:action="@{/checkout}">-->
 
-    <p id="itemIds" style="display:none" th:text="${itemIds}"/>
-    <p id="totalCost">Total Cost: </p>
-    <form action="#" method="POST" th:action="@{/checkout}">
+        <div id="cartSection"></div>
+        <div id="noItems"></div>
+
+        <p id="itemIds" style="display:none" th:text="${itemIds}"/>
+        <p id="totalCost">Total Cost: </p>
         <h3>Payment Info</h3>
         <label for="paymentName">Name</label><br>
         <input type="text" id="paymentName" name="paymentName"><br>
         <label for="ccNum">Credit Card Number</label><br>
         <input type="text" id="ccNum" name="ccNum"><br>
-        <input style="margin-top:10px" type="submit" value="Checkout" />
-    </form>
+        <input style="margin-top:10px" type="button" onclick="checkout()" value="Checkout" />
+<!--    </form>-->
 
     <form action="#" th:action="@{/}">
         <input type="submit" value="Cancel and go To Home Page" />
