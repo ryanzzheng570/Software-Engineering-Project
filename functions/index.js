@@ -7,28 +7,6 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
-exports.getItemsFromStoreByIds = functions.https.onCall((data, context) => {
-
-    const SHOP_ID = data.shopID;
-    const ITEM_IDS = data.itemIDs;
-
-    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
-        if (snapshot.val()) {
-            const res = snapshot.val();
-            var retItems = [];
-            for (var id in ITEM_IDS) {
-                var temp = res[ITEM_IDS[id]];
-                temp.id = ITEM_IDS[id];
-                retItems.push(temp)
-            }
-            return { items: retItems, name: res.name }
-        }
-        return { data: "Something went wrong!" };
-    });
-    return returnVal;
-
-});
-
 exports.addItemToStore = functions.https.onCall((data, context) => {
 
     const SHOP_ID = data.shopID;
@@ -46,7 +24,8 @@ exports.addItemToStore = functions.https.onCall((data, context) => {
         altText: ALT_TEXT,
     };
 
-    database.ref('/store/' + SHOP_ID).push(item);
+    const key = database.ref('/store/' + SHOP_ID+ '/item/').push(item).key;
+    return key;
 
 });
 
@@ -76,34 +55,6 @@ exports.purchaseItems = functions.https.onCall((data, context) => {
     });
     return returnVal;
 });
-
-exports.getItemsFromStore = functions.https.onCall((data, context) => {
-
-    const SHOP_ID = data.shopID;
-
-    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
-        if (snapshot.val()) {
-            const res = snapshot.val();
-            var retItems = [];
-            var retTags = [];
-            for (var item in res) {
-                if (res[item].name) {
-                    var temp = res[item];
-                    temp.id = item;
-                    retItems.push(temp)
-                }
-            }
-            for (var tag in res.tag) {
-                retTags.push(res.tag[tag])
-            }
-            return { items: retItems, name: res.name, tags: retTags }
-        }
-        return { data: "Something went wrong!" };
-    });
-    return returnVal;
-
-});
-
 
 exports.exampleCloudFunction = functions.https.onCall((data, context) => {
 
