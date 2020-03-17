@@ -198,11 +198,11 @@ public class ShopAndDiffViewIntegrationTest {
                 itemInventory);
         this.mockMvc.perform(post(addItemQuery));
 
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((containsString(itemName))))
-                .andExpect(content().string((containsString(itemCost))))
-                .andExpect(content().string((containsString(Integer.toString(itemInventory)))));
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((containsString(itemName))))
+//                .andExpect(content().string((containsString(itemCost))))
+//                .andExpect(content().string((containsString(Integer.toString(itemInventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -250,14 +250,14 @@ public class ShopAndDiffViewIntegrationTest {
                 item2Inventory);
         this.mockMvc.perform(post(addItemQuery));
 
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((containsString(item1Name))))
-                .andExpect(content().string((containsString(item1Cost))))
-                .andExpect(content().string((containsString(Integer.toString(item1Inventory)))))
-                .andExpect(content().string((containsString(item2Name))))
-                .andExpect(content().string((containsString(item2Cost))))
-                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((containsString(item1Name))))
+//                .andExpect(content().string((containsString(item1Cost))))
+//                .andExpect(content().string((containsString(Integer.toString(item1Inventory)))))
+//                .andExpect(content().string((containsString(item2Name))))
+//                .andExpect(content().string((containsString(item2Cost))))
+//                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -275,14 +275,14 @@ public class ShopAndDiffViewIntegrationTest {
                 itemId);
         this.mockMvc.perform(post(remItemQuery));
 
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((not(containsString(item1Name)))))
-                .andExpect(content().string((not(containsString(item1Cost)))))
-                .andExpect(content().string((not(containsString(Integer.toString(item1Inventory))))))
-                .andExpect(content().string((containsString(item2Name))))
-                .andExpect(content().string((containsString(item2Cost))))
-                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((not(containsString(item1Name)))))
+//                .andExpect(content().string((not(containsString(item1Cost)))))
+//                .andExpect(content().string((not(containsString(Integer.toString(item1Inventory))))))
+//                .andExpect(content().string((containsString(item2Name))))
+//                .andExpect(content().string((containsString(item2Cost))))
+//                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -302,9 +302,9 @@ public class ShopAndDiffViewIntegrationTest {
 
         this.mockMvc.perform(post(addShopQuery));
 
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
                 .andExpect(status().isOk())
@@ -341,14 +341,14 @@ public class ShopAndDiffViewIntegrationTest {
                 inventory);
         this.mockMvc.perform(post(addItemQuery));
 
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((containsString(shopName))))
-                .andExpect(content().string((containsString(tagOne))))
-                .andExpect(content().string((containsString(tagTwo))))
-                .andExpect(content().string((containsString(itemName))))
-                .andExpect(content().string((containsString(cost))))
-                .andExpect(content().string((containsString(inventory))));
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((containsString(shopName))))
+//                .andExpect(content().string((containsString(tagOne))))
+//                .andExpect(content().string((containsString(tagTwo))))
+//                .andExpect(content().string((containsString(itemName))))
+//                .andExpect(content().string((containsString(cost))))
+//                .andExpect(content().string((containsString(inventory))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -360,15 +360,15 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(content().string((containsString(inventory))));
     }
 
-    @Test
-    public void goToShopWithoutItems() throws Exception {
-        String shopName = "goToShopWithoutItems";
-        String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
-
-        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
-
-        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string((containsString(noItemsMessage))));
-    }
+//    @Test
+//    public void goToShopWithoutItems() throws Exception {
+//        String shopName = "goToShopWithoutItems";
+//        String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
+//
+//        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
+//
+//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+//                .andExpect(status().isOk())
+//                .andExpect(content().string((containsString(noItemsMessage))));
+//    }
 }

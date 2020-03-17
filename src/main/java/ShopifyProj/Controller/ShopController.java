@@ -2,7 +2,9 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
+import ShopifyProj.Model.TempShop;
 import ShopifyProj.Repository.ShopRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +13,7 @@ import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+
 
 @Controller
 public class ShopController {
@@ -22,9 +25,11 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        Shop toShow = shopRepo.findById((aShopId));
-        model.addAttribute("shop", toShow);
-        System.out.println(toShow);
+        // Until database sorted out
+        String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
+        model.addAttribute("shopID", aShopId2);
+        TempShop shop = FirebaseController.getShopFromID(aShopId2);
+        model.addAttribute("shop", FirebaseController.getShopFromID(aShopId2));
         return "CustomerShopViewPage";
     }
 

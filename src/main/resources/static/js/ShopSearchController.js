@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     $("#searchShopForm").submit(function (e) {
         e.preventDefault();
 
@@ -10,12 +10,11 @@ $(document).ready(function() {
             $("#results").empty();
             if (data.length == 0) {
                 $("#results").append('<p>Sorry, no shops were found</p>');
-            }
-            else {
+            } else {
                 $("#results").append('<table id="results-table"><tr><th>Shop ID</th><th>Shop Name</th><th>Shop Tags</th><th></th></tr>');
                 for (let i = 0; i < data.length; i++) {
                     let tags = "[";
-                    for(let j = 0; j < data[i].tags.length; j++) {
+                    for (let j = 0; j < data[i].tags.length; j++) {
                         tags += data[i].tags[j].tagName;
                         if (j != data[i].tags.length - 1) {
                             tags += ", ";

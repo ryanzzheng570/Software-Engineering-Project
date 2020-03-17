@@ -1,57 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
-        <title th:text="${shop.shopName}"></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
 
-    <body>
-        <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
+<head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${shop.name}"></title>
+</head>
 
-        <div id="emptyItemSection" name="emptyItemSection" th:if="${shop.items.empty}">
-            <h2>Sorry, the merchant did not add items to their store yet!</h2>
-        </div>
+<body>
 
-        <input type="text" th:value="${#lists.size(shop.items)}" id="shopNameBox"/>
+<div id="pageTitle"><h1 align="center" th:text="'Welcome to the online store for' + ${shop.name}"></h1></div>
 
-        <div id="itemSection" name="itemSection" th:unless="${shop.items.empty}">
-            <h2>Items</h2>
-            <table>
-                <tr>
-                    <th>Name</th>
-                    <th>Image</th>
-                    <th>Quantity</th>
-                    <th>Cost</th>
-                </tr>
-                <tr th:each="item: ${shop.items}">
-                    <td style="text-align:center" th:text="${item.itemName}"/>
+<div id="noItems" th:if="${#maps.isEmpty(shop.item)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>
+</div>
+<form method="post" id="cartForm" th:action="@{/addToCart}">
+    <div id="itemSection" th:unless="${#maps.isEmpty(shop.item)}"></div>
+    <h2>Items</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Remaining</th>
+            <th>Cost</th>
+            <th>Checkout</th>
+        </tr>
+        <tr th:each="item: ${shop.item}">
+            <td style="text-align:center" th:text="${item.value.name}"/>
 
-                    <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
-                        <a th:href="${item.images[0]?.url}">
-                            <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
-                                 style="width:200px;height:200px;border:0;">
-                        </a>
-                    </td>
-                    <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+            <td style="text-align:center" th:if="${item.value.url != ''}">
+                <a th:href="${item.value.url}">
+                    <img th:src="${item.value.url}" th:alt="${item.value.altText"
+                         style="width:200px;height:200px;border:0;">
+                </a>
+            </td>
+            <td style="text-align:center" th:if="${item.value.url == ''}">(NO IMAGE)</td>
 
-                    <td style="text-align:center" th:text="${item.inventory}"/>
+            <td style="text-align:center" th:text="${item.value.inventory}"/>
 
-                    <td style="text-align:center" th:text="${item.cost}"/>
-                </tr>
-            </table>
-        </div>
+            <td style="text-align:center" th:text="${item.value.cost}"/>
 
-        <div id="tagSection" name="tagSection" th:unless="${shop.tags.empty}">
-            <h3>Tags</h3>
-            <table>
-                <td th:each="tag: ${shop.tags}">
-                    <h4 th:text="'&nbsp &nbsp &nbsp' + ${tag}"></h4>
+            <div id="inventory" th:if="${item.value.inventory != 0}">
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox/></td>
+            </div>
+            <div id="noInventory" th:if="${item.value.inventory <= 0}">
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox disabled/>
                 </td>
-            </table>
-        </div>
+            </div>
 
-        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-    </body>
+        </tr>
+    </table>
+    <br>
+    <div id="shoppingCartButton" th:unless="${#maps.isEmpty(shop.item)}">
+        <input type="hidden" th:value="${shopID}" name="store"/>
+        <input id="shoppingCart" type="submit" value="Add to Cart"/>
+    </div>
+</form>
+
+<br><br><br>
+<div id="tagSection" th:unless="${#maps.isEmpty(shop.tag)}">
+    <h5>Tag(s)</h5>
+    <div style="display:inline;" th:each="tag: ${shop.tag}"><h6 style="display:inline;"
+                                                                th:text="'&nbsp &nbsp &nbsp' + ${tag.value}"></h6></div>
+</div>
+<br>
+<form action="#" th:action="@{/}">
+    <input type="submit" value="Go To Home Page"/>
+</form>
+
+<script type="text/javascript" src="/js/CloudServiceController.js"></script>
+<script type="text/javascript" src="/js/SidebarController.js"></script>
+
+</body>
+
 </html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
+    <title>Checkout </title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+    <h2>Cart</h2>
+
+        <div id="cartSection"></div>
+            <p id="itemIDs" th:text="${itemIDs}" style="display:none"><p/>
+             <table id="cartTable">
+                 <tr>
+                     <th>Name</th>
+                     <th>Quantity</th>
+                     <th>Inventory Remaining</th>
+                     <th>Individual Cost</th>
+                 </tr>
+                 <tr th:each="item: ${items}">
+                     <td style="text-align:center" th:text="${item.name}"/>
+                     <td style="text-align:center" name="itemQuantity">
+                         <input name="quantity" type="number" min="1" th:max="${item.inventory}" value="1" onchange="updateCost()"/>
+                     </td>
+                     <td style="text-align:center" name="itemInventory" th:text="${item.inventory}"></td>
+                     <td style="text-align:center" th:text="${item.cost}"></td>
+             </table>
+             <td style="text-align:center"><input id="storeID" name=store th:value="${storeID}" type=hidden />
+
+            <p id="totalCost">Total Cost: </p>
+            <h3>Payment Info</h3>
+            <label for="paymentName">Name</label><br>
+            <input type="text" id="paymentName" name="paymentName"><br>
+            <label for="ccNum">Credit Card Number</label><br>
+            <input type="text" id="ccNum" name="ccNum"><br>
+            <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
+
+    <form action="#" th:action="@{/}">
+        <input type="submit" value="Cancel and go To Home Page" />
+    </form>
+
+    <script type="text/javascript" src="/js/CloudServiceController.js"></script>
+    <script type="text/javascript" src="/js/CheckoutController.js"></script>
+
+</body>
+
+</html>
