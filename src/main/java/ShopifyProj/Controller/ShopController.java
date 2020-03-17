@@ -37,6 +37,7 @@ public class ShopController {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 TempShop shop = dataSnapshot.getValue(TempShop.class);
                 model.addAttribute("shop", shop);
+                model.addAttribute("shopID", aShopId2);
                 wait.countDown();
             }
             @Override

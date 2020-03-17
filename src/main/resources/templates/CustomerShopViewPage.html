@@ -25,6 +25,7 @@
             <th>Image</th>
             <th>Remaining</th>
             <th>Cost</th>
+            <th>Checkout</th>
         </tr>
         <tr th:each="item: ${shop.item}">
             <td style="text-align:center" th:text="${item.value.name}"/>
@@ -40,10 +41,20 @@
             <td style="text-align:center" th:text="${item.value.inventory}"/>
 
             <td style="text-align:center" th:text="${item.value.cost}"/>
+
+            <div id="inventory" th:if="${item.value.inventory != 0}">
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox /></td>
+            </div>
+            <div id="noInventory" th:if="${item.value.inventory <= 0}">
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox disabled/>
+                </td>
+            </div>
+
         </tr>
     </table>
     <br>
     <div id="shoppingCartButton" th:unless="${#maps.isEmpty(shop.item)}">
+        <input type="hidden" value="${shopID}" name="store" />
         <input id="shoppingCart" type="submit" value="Add to Cart"/><!--style="display:none"-->
     </div>
 </form>
