@@ -16,7 +16,7 @@
 <!--        <div id="noItems"></div>-->
 <!--        <div id="noItems" th:if="${#maps.isEmpty(shop.item)}"><h2>Nothing in cart</h2>-->
 
-<!--         <form method="post" id="checkoutForm" th:action="@{/checkout}">-->
+         <form method="post" id="checkoutForm" th:action="@{/checkout}">
              <table id="cartTable">
                  <tr>
                      <th>Name</th>
@@ -26,6 +26,7 @@
                  </tr>
                  <tr th:each="item: ${items}">
                      <td style="text-align:center" th:text="${item.name}"/>
+                     <input name="item" type="hidden" th:value="${item.name}">
                      <td style="text-align:center" name="itemQuantity">
                          <input name="quantity" type="number" min="1" th:max="${item.inventory}" value="1" onchange="updateCost()"/>
                      </td>
@@ -40,9 +41,9 @@
             <input type="text" id="paymentName" name="paymentName"><br>
             <label for="ccNum">Credit Card Number</label><br>
             <input type="text" id="ccNum" name="ccNum"><br>
-            <input style="margin-top:10px" type="button" onclick="checkout()" value="Checkout" />
+            <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
 
-<!--         </form>-->
+         </form>
 
     <form action="#" th:action="@{/}">
         <input type="submit" value="Cancel and go To Home Page" />

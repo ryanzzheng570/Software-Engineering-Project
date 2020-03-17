@@ -24,6 +24,16 @@ public class TempShop {
 
     public TempItem getItemByKey(String id) { return item.get(id); }
 
+    public String getItemIDByName(String name) {
+        for (Map.Entry<String,TempItem> item : item.entrySet()) {
+            if (item.getValue().getName().equals(name)) {
+                System.out.println("Found ID: " + item.getKey());
+                return item.getKey();
+            }
+        }
+        return null;
+    }
+
     public void setItem(Map<String, TempItem> item) {
         this.item = item;
     }

@@ -65,7 +65,7 @@ function updateCost() {
 
 function checkout() {
     let isFirstRow = true;
-    let itemIDs = [];
+    let itemNames = [];
     let quantities = [];
 
     $("#cartTable tr").each(function(){
@@ -73,12 +73,15 @@ function checkout() {
             isFirstRow = false;
         }
         else {
+            let dataCells = $(this).find('td');
+            itemNames.push(dataCells[0].innerText);
+
             $(this).closest('tr').find("input").each(function() {
-                if(isNaN(this.value)) {
-                    console.log("itemId:", this.value);
-                    itemIDs.push(this.value);
-                }
-                else if(!isNaN(this.value)) {
+                // if(isNaN(this.value)) {
+                //     console.log("itemId:", this.value);
+                //     itemNames.push(this.value);
+                // }
+                if(!isNaN(this.value)) {
                     console.log("quantity:", this.value);
                     quantities.push(this.value);
                 }
@@ -86,23 +89,38 @@ function checkout() {
         }
     })
     let storeId = $("#storeID").val();
-    submit(storeId, itemIDs, quantities);
+    submit(storeId, itemNames, quantities);
 }
 
-async function submit(aStoreID, itemIDs, quantities) {
-    let ccNum = $("#ccNum").val();
-    let name = $("#paymentName").val();
+async function submit(aStoreID, itemNames, quantities) {
+    $("#checkoutForm").submit(function (e) {
+        e.preventDefault();
+        let ccNum = $("#ccNum").val();
+        let name = $("#paymentName").val();
 
-    if (name == "") {
-        alert ("Please enter a name!");
-        return;
-    }
-    if (ccNum == "") {
-        alert ("Please enter a credit card number!");
-        return;
-    }
-    console.log("itemIDS", itemIDs);
-    console.log("quantities", quantities);
+        if (name == "") {
+            alert ("Please enter a name!");
+            return;
+        }
+        if (ccNum == "") {
+            alert ("Please enter a credit card number!");
+            return;
+        }
+        console.log("itemIDS", itemNames);
+        console.log("quantities", quantities);
+
+        $.ajax({
+            url: "/checkout?" + $("#checkoutForm").serialize(),
+            type: "POST",
+            dataType: "json"
+        }).then(function (data) {
+            console.log("back");
+            console.log("data", data);
+        });
+    });
+
+
+
 
     // const resp = await PurchaseItems({
     //     shopID: aStoreID,

@@ -12,6 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseController {
@@ -77,31 +79,22 @@ public class FirebaseController {
         return shop[0];
     }
 
-//    public static ArrayList<TempItem> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
-     public static TempItem[] getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
-//        ArrayList<TempItem> items = new ArrayList<TempItem>();
-        TempItem[] items = null;
+    public static ArrayList<TempItem> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
+        ArrayList<TempItem> items = new ArrayList<TempItem>();
         CountDownLatch wait = new CountDownLatch(1);
         FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     TempShop shop = dataSnapshot.getValue(TempShop.class);
-                    System.out.println("Shop: " + shop);
-//                    for (int i = 0; i< itemIDs.length; i++) {
+                    for (int i = 0; i< itemIDs.length; i++) {
 //                        System.out.println("itemID: " + itemIDs[i]);
-//                        TempItem tempItem = shop.getItemByKey(itemIDs[i]);
+                        TempItem tempItem = shop.getItemByKey(itemIDs[i]);
 //                        System.out.println("tempItem: " + tempItem);
-//                        if (tempItem != null) {
-//                            items.add(tempItem);
-//                        }
-//                    }
-
-//                    for (String s : shop.getItems().keySet()) {
-//                        System.out.println("Key: " + s);
-//                        if (s.equals(itemIDs))
-//                    }
-                    System.out.println("Got value: " + dataSnapshot.getValue(TempShop.class).getItems());
+                        if (tempItem != null) {
+                            items.add(tempItem);
+                        }
+                    }
                 }
                 wait.countDown();
             }
@@ -119,9 +112,53 @@ public class FirebaseController {
             e.printStackTrace();
         }
         System.out.println("array list " + items);
-//        return items;
+        return items;
     }
 
+    public static boolean purchaseItems(String aShopID, String[] itemNames, ArrayList<Integer> quantities) {
+        CountDownLatch wait = new CountDownLatch(1);
+        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    TempShop shop = dataSnapshot.getValue(TempShop.class);
+                    for (int i = 0; i< itemNames.length; i++) {
+//                        System.out.println("itemID: " + itemIDs[i]);
+                        String tempItemID = shop.getItemIDByName(itemNames[i]);
+                        TempItem tempItem = shop.getItemByKey(tempItemID);
+                        System.out.println("tempItem: " + tempItem);
+                        if (tempItem != null) {
+                            int newInventoryCount = tempItem.inventory - quantities.get(i);
+                            if (newInventoryCount < 0) {
+                                System.out.println("Error - Not enough inventory!");
+                            }
+                            else {
+                                tempItem.setInventory(newInventoryCount);
+                                Map<String, Object> map = new HashMap<>();
+                                map.put(tempItemID, tempItem);
+                                String path = String.format("item/%s/", tempItemID);
+                                FirebaseController.getInstance().getReference("store/" + aShopID).child(path).updateChildrenAsync(map);
+                            }
+                        }
+                    }
+                }
+                wait.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+                wait.countDown();
+            }
+
+        });
+        try {
+            wait.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
 
 }

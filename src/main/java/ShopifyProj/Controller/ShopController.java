@@ -31,6 +31,7 @@ public class ShopController {
         // Until database sorted out
         String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
         model.addAttribute("shopID", aShopId2);
+        TempShop shop = FirebaseController.getShopFromID(aShopId2);
         model.addAttribute("shop", FirebaseController.getShopFromID(aShopId2));
         return "CustomerShopViewPage";
     }

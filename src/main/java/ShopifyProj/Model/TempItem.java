@@ -2,6 +2,7 @@ package ShopifyProj.Model;
 
 public class TempItem {
     public String name;
+    public String altText;
     public int inventory;
     public double cost;
     public String url;
@@ -9,7 +10,8 @@ public class TempItem {
     public TempItem() {
     }
 
-    public TempItem(String name, int inventory, double cost, String url) {
+    public TempItem(String name, String altText, int inventory, double cost, String url) {
+        this.altText = altText;
         this.name = name;
         this.inventory = inventory;
         this.cost = cost;
@@ -22,6 +24,14 @@ public class TempItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAltText() {
+        return altText;
+    }
+
+    public void setAltText(String altText) {
+        this.altText = altText;
     }
 
     public int getInventory() {
