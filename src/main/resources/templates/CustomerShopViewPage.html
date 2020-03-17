@@ -54,7 +54,7 @@
     </table>
     <br>
     <div id="shoppingCartButton" th:unless="${#maps.isEmpty(shop.item)}">
-        <input type="hidden" value="${shopID}" name="store" />
+        <input type="hidden" th:value="${shopID}" name="store" />
         <input id="shoppingCart" type="submit" value="Add to Cart"/><!--style="display:none"-->
     </div>
 </form>

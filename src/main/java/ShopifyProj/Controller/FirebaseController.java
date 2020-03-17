@@ -1,5 +1,6 @@
 package ShopifyProj.Controller;
 
+import ShopifyProj.Model.TempItem;
 import ShopifyProj.Model.TempShop;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -10,6 +11,7 @@ import org.springframework.ui.Model;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseController {
@@ -74,4 +76,52 @@ public class FirebaseController {
         }
         return shop[0];
     }
+
+//    public static ArrayList<TempItem> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
+     public static TempItem[] getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
+//        ArrayList<TempItem> items = new ArrayList<TempItem>();
+        TempItem[] items = null;
+        CountDownLatch wait = new CountDownLatch(1);
+        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    TempShop shop = dataSnapshot.getValue(TempShop.class);
+                    System.out.println("Shop: " + shop);
+//                    for (int i = 0; i< itemIDs.length; i++) {
+//                        System.out.println("itemID: " + itemIDs[i]);
+//                        TempItem tempItem = shop.getItemByKey(itemIDs[i]);
+//                        System.out.println("tempItem: " + tempItem);
+//                        if (tempItem != null) {
+//                            items.add(tempItem);
+//                        }
+//                    }
+
+//                    for (String s : shop.getItems().keySet()) {
+//                        System.out.println("Key: " + s);
+//                        if (s.equals(itemIDs))
+//                    }
+                    System.out.println("Got value: " + dataSnapshot.getValue(TempShop.class).getItems());
+                }
+                wait.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+                wait.countDown();
+            }
+
+        });
+        try {
+            wait.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("array list " + items);
+//        return items;
+    }
+
+
+
 }

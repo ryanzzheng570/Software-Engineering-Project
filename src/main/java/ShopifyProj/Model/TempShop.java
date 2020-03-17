@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class TempShop {
     public String name;
-    public Map<String,TempItem>item;
+    public Map<String,TempItem> item;
     public Map<String, String> tag;
 
     public TempShop() {
@@ -18,9 +18,11 @@ public class TempShop {
         this.name = name;
     }
 
-    public Map<String, TempItem> getItem() {
+    public Map<String, TempItem> getItems() {
         return item;
     }
+
+    public TempItem getItemByKey(String id) { return item.get(id); }
 
     public void setItem(Map<String, TempItem> item) {
         this.item = item;
