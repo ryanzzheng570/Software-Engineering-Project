@@ -1,9 +1,9 @@
 var createShopFormId = "#createShopForm";
 
-async function saveStoreToDb(data) {
-    console.log(data);
-    const resp = await saveShop(data);
-    console.log(resp.data)
+async function saveStoreToDb(shopData) {
+    console.log(shopData);
+    const resp = await cloudSaveShop({});
+    console.log(resp.data);
 }
 
 function createShopFormHandler(e) {
@@ -29,7 +29,7 @@ function createShopFormHandler(e) {
         }).then(function(data) {
             console.log("HERE");
             saveStoreToDb(data);
-            window.location.href = '/goToEditShopPage?shopId=' + data.id;
+//            window.location.href = '/goToEditShopPage?shopId=' + data.id;
         });
     }
 }

@@ -2,6 +2,10 @@ var editNameFormId = "#editNameForm";
 var addTagFormId = "#addTagForm";
 var addItemFormId = "#addItemForm";
 
+async function asyncUpdateShopName(shopData) {
+    const resp = await cloudUpdateShopName(data);
+}
+
 function editShopNameHandler(e){
     if (e.preventDefault) {
         e.preventDefault();
@@ -23,6 +27,7 @@ function editShopNameHandler(e){
             type: "POST",
             dataType: "json"
         }).then(function(data) {
+            asyncUpdateShopName(data);
             $(editNameFormId).value = data.shopName;
         });
     }

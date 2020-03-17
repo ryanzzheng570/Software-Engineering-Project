@@ -1,7 +1,6 @@
 package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.ShopRepository;
 import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,9 +13,6 @@ import java.util.ArrayList;
 
 @Controller
 public class SearchController {
-    @Autowired
-    private ShopRepository shopRepo;
-
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
         return "ShopSearchPage";
@@ -28,7 +24,8 @@ public class SearchController {
 
         String lowercaseQuery = query.toLowerCase();
 
-        for (Shop shop : shopRepo.findAll()) {
+        // TODO: FIX
+        for (Shop shop : new ArrayList<Shop>()) {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();

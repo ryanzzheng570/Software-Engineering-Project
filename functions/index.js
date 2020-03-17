@@ -7,14 +7,14 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
-exports.addShop = functions.https.onCall((data, context) => {
-    var ref = database.ref('/store/');
+exports.addShop2 = functions.https.onCall((data, context) => {
+    var test = {
+        name: "NAME"
+    };
 
-    const returnVal = ref.push({
-        name: data.shopName
-    }).key;
+    const key = database.ref('/store/').push(test).key;
 
-    return returnVal;
+    return key;
 });
 
 exports.addItemToStore = functions.https.onCall((data, context) => {

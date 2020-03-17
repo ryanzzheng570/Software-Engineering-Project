@@ -4,7 +4,6 @@ import ShopifyProj.Model.Customer;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.TempItem;
-import ShopifyProj.Repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +18,6 @@ import java.util.Set;
 
 @Controller
 public class CheckoutController {
-    @Autowired
-    private CustomerRepository customerRepository;
-
     @PostMapping("/addToCart")
     public String addToCart(@RequestParam(value = "item") String[] items, @RequestParam(value = "store") String store, Model model) {
 //        System.out.println("Store: " + store);

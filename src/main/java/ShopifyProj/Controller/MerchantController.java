@@ -2,8 +2,6 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.MerchantRepository;
-import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,13 +13,7 @@ import java.util.List;
 @Controller
 public class MerchantController {
     @Autowired
-    private ShopRepository shopRepo;
-
-    @Autowired
     private ShopController shopCont;
-
-    @Autowired
-    private MerchantRepository merchantRepository;
 
     @GetMapping("/addNewMerchant")
     public String viewAddNewMerchantPage(Model model) {
@@ -32,15 +24,16 @@ public class MerchantController {
     @PostMapping("/addNewMerchant")
     public @ResponseBody
     Merchant addNewMerchant(@ModelAttribute Merchant newMerchant, Model model) {
-        merchantRepository.save(newMerchant);
+        //TODO: FIX
         return newMerchant;
     }
 
     private List<Shop> getShops() {
+        //TODO: FIX
         List<Shop> shops = new ArrayList<Shop>();
-        for (Shop shop : shopRepo.findAll()) {
-            shops.add(shop);
-        }
+//        for (Shop shop : shopRepo.findAll()) {
+//            shops.add(shop);
+//        }
 
         return shops;
     }
@@ -63,7 +56,8 @@ public class MerchantController {
 
     @PostMapping("/deleteShop")
     public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") int shopId, Model model) {
-        shopRepo.deleteById(shopId);
+        // TODO: FIX
+//        shopRepo.deleteById(shopId);
 
         return getShops().isEmpty();
     }

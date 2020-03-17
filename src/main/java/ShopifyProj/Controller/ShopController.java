@@ -3,7 +3,6 @@ package ShopifyProj.Controller;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.TempShop;
-import ShopifyProj.Repository.ShopRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,9 +19,6 @@ public class ShopController {
     @Autowired
     private MerchantController merchCont;
 
-    @Autowired
-    private ShopRepository shopRepo;
-
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         // Until database sorted out
@@ -33,18 +29,31 @@ public class ShopController {
         return "CustomerShopViewPage";
     }
 
+    @PostMapping("/updateShopId")
+    public @ResponseBody Shop changeShopId(@RequestParam(value = "newId") int shopId,
+                                             Model model) {
+        //TODO: FIX
+        Shop checkShop = new Shop();
+        if (checkShop == null) {
+            System.out.println(String.format("No shop found with ID %d", shopId));
+        }
+
+        checkShop.setId(shopId);
+
+        return checkShop;
+    }
+
     @PostMapping("/changeShopName")
     public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") int shopId,
                                  @RequestParam(value = "shopName") String newName,
                                  Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
+        // TODO: FIX
+        Shop checkShop = new Shop();
         if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
         checkShop.setShopName(newName);
-
-        shopRepo.save(checkShop);
 
         return checkShop;
     }
@@ -53,14 +62,13 @@ public class ShopController {
     public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") int shopId,
                                         @RequestParam(value = "tagId") int tagId,
                                         Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
+        // TODO: FIX
+        Shop checkShop = new Shop();
         if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
 
         checkShop.removeTagWithId(tagId);
-
-        shopRepo.save(checkShop);
 
         return checkShop;
     }
@@ -69,7 +77,9 @@ public class ShopController {
     public @ResponseBody Tag addTag(@RequestParam(value = "shopId") int shopId,
                                      @RequestParam(value = "tagName") String tagName,
                                      Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
+
+        //TODO: FIX
+        Shop checkShop = new Shop();
         if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
         }
@@ -77,23 +87,21 @@ public class ShopController {
         Tag toAdd = new Tag(tagName);
         checkShop.addTag(toAdd);
 
-        shopRepo.save(checkShop);
-
         return toAdd;
     }
 
     @PostMapping("/addShop")
-    public String addShop(@RequestParam(value = "shopName") String name, Model model) {
+    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name, Model model) {
+        //TODO: FIX
         Shop newShop = new Shop(name, Optional.empty());
 
-        shopRepo.save(newShop);
-
-        return displayYourShop(newShop.getId(), model);
+        return newShop;
     }
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") int shopId, Model model){
-        Shop theShop = shopRepo.findById(shopId);
+        //TODO: FIX
+        Shop theShop = new Shop();
         if (theShop == null){
             System.out.println(String.format("No shop found with ID %d", shopId));
         }

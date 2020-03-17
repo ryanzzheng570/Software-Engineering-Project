@@ -2,7 +2,6 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +20,6 @@ import java.util.Optional;
 @Controller
 public class ItemController {
     private static final int MAX_URL_LEN = 255;
-
-    @Autowired
-    private ShopRepository shopRepo;
 
     @Autowired
     private ShopController shopCont;
@@ -58,9 +54,10 @@ public class ItemController {
                                       @RequestParam (value = "cost") String cost,
                                       @RequestParam (value = "inventory") int inventory,
                                       Model model){
+        //TODO: FIX
         Item itemToAdd = null;
 
-        Shop shop = shopRepo.findById(shopId);
+        Shop shop = new Shop();
         if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
@@ -78,7 +75,6 @@ public class ItemController {
             itemToAdd = new Item(name, imageToAdd, newCost, inventory);
 
             shop.addItem(itemToAdd);
-            shopRepo.save(shop);
         }
 
         return itemToAdd;
@@ -88,12 +84,11 @@ public class ItemController {
     public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") int shopId,
                                          @RequestParam (value = "itemId") int itemId,
                                          Model model){
-
-        Shop checkShop = shopRepo.findById(shopId);
+        //TODO: FIX
+        Shop checkShop = new Shop();
         if (checkShop != null){
             if (checkShop.getItem(itemId) != null){
                 checkShop.removeItemWithId(itemId);
-                shopRepo.save(checkShop);
             }
         }
 
