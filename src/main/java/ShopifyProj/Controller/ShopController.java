@@ -2,6 +2,7 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
+import ShopifyProj.Model.TempShop;
 import ShopifyProj.Repository.ShopRepository;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,7 +35,7 @@ public class ShopController {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Shop shop = dataSnapshot.getValue(TempShop.class);
+                TempShop shop = dataSnapshot.getValue(TempShop.class);
                 model.addAttribute("shop", shop);
                 wait.countDown();
             }
