@@ -34,7 +34,7 @@ public class ShopController {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Shop shop = dataSnapshot.getValue(Shop.class);
+                Shop shop = dataSnapshot.getValue(TempShop.class);
                 model.addAttribute("shop", shop);
                 wait.countDown();
             }
