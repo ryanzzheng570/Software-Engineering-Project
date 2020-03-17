@@ -10,9 +10,6 @@
 <body>
 
 <div id="pageTitle"><h1 align="center" th:text="'Welcome to the online store for' + ${shop.name}"></h1></div>
-<!--    <div id="shopID" style="display:none">-->
-<!--        <p th:text="${shopID}" />-->
-<!--    </div>-->
 
 <div id="noItems" th:if="${#maps.isEmpty(shop.item)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>
 </div>
@@ -43,7 +40,7 @@
             <td style="text-align:center" th:text="${item.value.cost}"/>
 
             <div id="inventory" th:if="${item.value.inventory != 0}">
-                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox /></td>
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox/></td>
             </div>
             <div id="noInventory" th:if="${item.value.inventory <= 0}">
                 <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox disabled/>
@@ -54,8 +51,8 @@
     </table>
     <br>
     <div id="shoppingCartButton" th:unless="${#maps.isEmpty(shop.item)}">
-        <input type="hidden" th:value="${shopID}" name="store" />
-        <input id="shoppingCart" type="submit" value="Add to Cart"/><!--style="display:none"-->
+        <input type="hidden" th:value="${shopID}" name="store"/>
+        <input id="shoppingCart" type="submit" value="Add to Cart"/>
     </div>
 </form>
 
@@ -71,7 +68,6 @@
 </form>
 
 <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-<!--    <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>-->
 <script type="text/javascript" src="/js/SidebarController.js"></script>
 
 </body>

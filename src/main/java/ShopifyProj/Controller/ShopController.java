@@ -4,10 +4,7 @@ import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.TempShop;
 import ShopifyProj.Repository.ShopRepository;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +13,7 @@ import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+
 
 @Controller
 public class ShopController {
