@@ -5,6 +5,12 @@ function addSidebar(){
     var sidebarDiv = document.createElement("div");
     sidebarDiv.className = "sidenav";
 
+     var loginLink = document.createElement("a");
+     var loginText = document.createTextNode("User Login");
+     loginLink.href = "/login";
+     loginLink.appendChild(loginText);
+     sidebarDiv.appendChild(loginLink);
+
     var searchLink = document.createElement("a");
     var searchText = document.createTextNode("Search");
     searchLink.href = "/search";

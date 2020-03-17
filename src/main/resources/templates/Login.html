@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script type="text/javascript"
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+    <title>Login</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+    <h1>Login</h1>
+    <form action="#" th:action="@{/loginAsCustomer}">
+        <input type="submit" value="Customer Login"/>
+    </form>
+
+    <form action="#" th:action="@{/loginAsMerchant}">
+        <input type="submit" value="Merchant Login"/>
+    </form>
+
+    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+</body>
+</html>

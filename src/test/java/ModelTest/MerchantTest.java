@@ -13,7 +13,7 @@ class MerchantTest {
 
     @BeforeEach
     void setUp() {
-        testMerchant = new Merchant("TestMerchant", "1234596789", "testEmail@test.com");
+        testMerchant = new Merchant("TestMerchant", "1234596789", "testEmail@test.com", "testingPassword");
     }
 
     @AfterEach
