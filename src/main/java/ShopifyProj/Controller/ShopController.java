@@ -3,6 +3,10 @@ package ShopifyProj.Controller;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Repository.ShopRepository;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +15,7 @@ import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 @Controller
 public class ShopController {
@@ -22,9 +27,29 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        Shop toShow = shopRepo.findById((aShopId));
-        model.addAttribute("shop", toShow);
-        System.out.println(toShow);
+        // Until database sorted out
+        String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
+        DatabaseReference ref = FirebaseController.getInstance().getReference("store/" + aShopId2);
+        CountDownLatch wait = new CountDownLatch(1);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Shop shop = dataSnapshot.getValue(Shop.class);
+                model.addAttribute("shop", shop);
+                wait.countDown();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+                wait.countDown();
+            }
+
+        });
+        try {
+            wait.await();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         return "CustomerShopViewPage";
     }
 

@@ -3,33 +3,65 @@
 
 <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${shop.name}"></title>
 </head>
 
 <body>
 
-    <div id="pageTitle"></div>
-    <div id="shopID" style="display:none">
-        <p th:text="${shopID}" />
-    </div>
+<div id="pageTitle"><h1 align="center" th:text="'Welcome to the online store for' + ${shop.name}"></h1></div>
+<!--    <div id="shopID" style="display:none">-->
+<!--        <p th:text="${shopID}" />-->
+<!--    </div>-->
 
-    <div id="noItems"></div>
-    <form method="post" id="cartForm" th:action="@{/addToCart}">
-        <div id="itemSection"></div>
-        <br>
-        <input id="shoppingCart" style="display:none" type="submit" value="Add to Cart" />
-    </form>
+<div id="noItems" th:if="${#maps.isEmpty(shop.item)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>
+</div>
+<form method="post" id="cartForm" th:action="@{/addToCart}">
+    <div id="itemSection" th:unless="${#maps.isEmpty(shop.item)}"></div>
+    <h2>Items</h2>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Remaining</th>
+            <th>Cost</th>
+        </tr>
+        <tr th:each="item: ${shop.item}">
+            <td style="text-align:center" th:text="${item.value.name}"/>
 
-    <br><br><br>
-    <div id="tagSection"></div>
+            <td style="text-align:center" th:if="${item.value.url != ''}">
+                <a th:href="${item.value.url}">
+                    <img th:src="${item.value.url}" th:alt="${item.value.altText"
+                         style="width:200px;height:200px;border:0;">
+                </a>
+            </td>
+            <td style="text-align:center" th:if="${item.value.url == ''}">(NO IMAGE)</td>
+
+            <td style="text-align:center" th:text="${item.value.inventory}"/>
+
+            <td style="text-align:center" th:text="${item.value.cost}"/>
+        </tr>
+    </table>
     <br>
-    <form action="#" th:action="@{/}">
-        <input type="submit" value="Go To Home Page" />
-    </form>
+    <div id="shoppingCartButton" th:unless="${#maps.isEmpty(shop.item)}">
+        <input id="shoppingCart" type="submit" value="Add to Cart"/><!--style="display:none"-->
+    </div>
+</form>
 
-    <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-    <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
-    <script type="text/javascript" src="/js/SidebarController.js"></script>
+<br><br><br>
+<div id="tagSection" th:unless="${#maps.isEmpty(shop.tag)}">
+    <h5>Tag(s)</h5>
+    <div style="display:inline;" th:each="tag: ${shop.tag}"><h6 style="display:inline;"
+                                                                th:text="'&nbsp &nbsp &nbsp' + ${tag.value}"></h6></div>
+</div>
+<br>
+<form action="#" th:action="@{/}">
+    <input type="submit" value="Go To Home Page"/>
+</form>
+
+<script type="text/javascript" src="/js/CloudServiceController.js"></script>
+<!--    <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>-->
+<script type="text/javascript" src="/js/SidebarController.js"></script>
 
 </body>
 
