@@ -12,12 +12,14 @@
         <h1>Create Shop Page</h1>
 
         <h3>New Shop Information:</h3>
-        <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post">
+        <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="createShopForm">
             <p>New Shop Name: <input type="text" th:field="*{shopName}"/></p>
 
             <p><input type="submit" value="Create Shop"/></p>
         </form>
 
         <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/CreateShopController.js}"></script>
+        <script type="text/javascript" src="/js/CloudServiceController.js"></script>
     </body>
 </html>
