@@ -29,33 +29,43 @@ public class CheckoutController {
 
         System.out.println("Items: " + items);
         model.addAttribute("storeID", store);
+
+        String itemIds = "";
+        for(int a= 0; a < items.length; a++) {
+            itemIds += items[a];
+            if (a != items.length -1) {
+                itemIds += "$";
+            }
+        }
+        System.out.println("Items: " + itemIds);
+        model.addAttribute("itemIDs", itemIds);
         model.addAttribute("items", FirebaseController.getItemsFromStoreByIds(store, items));
         return "CheckoutPage";
     }
 
-    @PostMapping("/checkout")
-    public String checkout(@RequestParam(value = "item") String[] items,
-                           @RequestParam(value = "quantity") String[] quantity,
-                           @RequestParam(value = "store") String store,
-                           @RequestParam(value = "paymentName") String paymentName,
-                           @RequestParam(value = "ccNum") int ccNum,
-                           Model model) {
-
-        ArrayList<Integer> quantities = new ArrayList<Integer>();
-
-        for(int i= 0; i < items.length; i++) {
-            System.out.println("quantity "+ quantity[i]);
-            quantities.add(Integer.parseInt(quantity[i]));
-        }
-
-
-        System.out.println("Store: " + store);
-        System.out.println("paymentName " + paymentName);
-        System.out.println("ccNum " + ccNum);
-
-        boolean isSuccess = FirebaseController.purchaseItems(store, items, quantities);
-        System.out.println("Success: " + isSuccess);
-        return "CheckoutPage";
-    }
+//    @PostMapping("/checkout")
+//    public String checkout(@RequestParam(value = "item") String[] items,
+//                           @RequestParam(value = "quantity") String[] quantity,
+//                           @RequestParam(value = "store") String store,
+//                           @RequestParam(value = "paymentName") String paymentName,
+//                           @RequestParam(value = "ccNum") int ccNum,
+//                           Model model) {
+//
+//        ArrayList<Integer> quantities = new ArrayList<Integer>();
+//
+//        for(int i= 0; i < items.length; i++) {
+//            System.out.println("quantity "+ quantity[i]);
+//            quantities.add(Integer.parseInt(quantity[i]));
+//        }
+//
+//
+//        System.out.println("Store: " + store);
+//        System.out.println("paymentName " + paymentName);
+//        System.out.println("ccNum " + ccNum);
+//
+//        boolean isSuccess = FirebaseController.purchaseItems(store, items, quantities);
+//        System.out.println("Success: " + isSuccess);
+//        return "CheckoutPage";
+//    }
 
 }

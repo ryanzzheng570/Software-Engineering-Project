@@ -88,9 +88,7 @@ public class FirebaseController {
                 if (dataSnapshot.exists()) {
                     TempShop shop = dataSnapshot.getValue(TempShop.class);
                     for (int i = 0; i< itemIDs.length; i++) {
-//                        System.out.println("itemID: " + itemIDs[i]);
                         TempItem tempItem = shop.getItemByKey(itemIDs[i]);
-//                        System.out.println("tempItem: " + tempItem);
                         if (tempItem != null) {
                             items.add(tempItem);
                         }
@@ -114,51 +112,5 @@ public class FirebaseController {
         System.out.println("array list " + items);
         return items;
     }
-
-    public static boolean purchaseItems(String aShopID, String[] itemNames, ArrayList<Integer> quantities) {
-        CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    TempShop shop = dataSnapshot.getValue(TempShop.class);
-                    for (int i = 0; i< itemNames.length; i++) {
-//                        System.out.println("itemID: " + itemIDs[i]);
-                        String tempItemID = shop.getItemIDByName(itemNames[i]);
-                        TempItem tempItem = shop.getItemByKey(tempItemID);
-                        System.out.println("tempItem: " + tempItem);
-                        if (tempItem != null) {
-                            int newInventoryCount = tempItem.inventory - quantities.get(i);
-                            if (newInventoryCount < 0) {
-                                System.out.println("Error - Not enough inventory!");
-                            }
-                            else {
-                                tempItem.setInventory(newInventoryCount);
-                                Map<String, Object> map = new HashMap<>();
-                                map.put(tempItemID, tempItem);
-                                String path = String.format("item/%s/", tempItemID);
-                                FirebaseController.getInstance().getReference("store/" + aShopID).child(path).updateChildrenAsync(map);
-                            }
-                        }
-                    }
-                }
-                wait.countDown();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-                wait.countDown();
-            }
-
-        });
-        try {
-            wait.await();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
 
 }
