@@ -3,9 +3,9 @@ package ShopifyProj.Model;
 import java.util.Map;
 
 public class TempShop {
-    private String name;
-    private Map<String,TempItem>item;
-    private Map<String, String> tag;
+    public String name;
+    public Map<String,TempItem>item;
+    public Map<String, String> tag;
 
     public TempShop() {
     }

@@ -1,10 +1,10 @@
 package ShopifyProj.Model;
 
 public class TempItem {
-    private String name;
-    private int inventory;
-    private double cost;
-    private String url;
+    public String name;
+    public int inventory;
+    public double cost;
+    public String url;
 
     public TempItem() {
     }

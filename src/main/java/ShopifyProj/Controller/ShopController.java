@@ -30,28 +30,8 @@ public class ShopController {
     public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
         // Until database sorted out
         String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
-        DatabaseReference ref = FirebaseController.getInstance().getReference("store/" + aShopId2);
-        CountDownLatch wait = new CountDownLatch(1);
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                TempShop shop = dataSnapshot.getValue(TempShop.class);
-                model.addAttribute("shop", shop);
-                model.addAttribute("shopID", aShopId2);
-                wait.countDown();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-                wait.countDown();
-            }
-
-        });
-        try {
-            wait.await();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        model.addAttribute("shopID", aShopId2);
+        model.addAttribute("shop", FirebaseController.getShopFromID(aShopId2));
         return "CustomerShopViewPage";
     }
 
