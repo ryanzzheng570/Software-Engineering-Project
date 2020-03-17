@@ -24,11 +24,9 @@ public class CheckoutController {
 
     @PostMapping("/addToCart")
     public String addToCart(@RequestParam(value = "item") String[] items, @RequestParam(value = "store") String store, Model model) {
-        // You have an array of item IDs, and the store ID
-        System.out.println("Store: " + store);
+//        System.out.println("Store: " + store);
 
-        System.out.println("Items: " + items);
-        model.addAttribute("storeID", store);
+//        System.out.println("Items: " + items);
 
         String itemIds = "";
         for(int a= 0; a < items.length; a++) {
@@ -37,35 +35,10 @@ public class CheckoutController {
                 itemIds += "$";
             }
         }
-        System.out.println("Items: " + itemIds);
+//        System.out.println("Items: " + itemIds);
         model.addAttribute("itemIDs", itemIds);
+        model.addAttribute("storeID", store);
         model.addAttribute("items", FirebaseController.getItemsFromStoreByIds(store, items));
         return "CheckoutPage";
     }
-
-//    @PostMapping("/checkout")
-//    public String checkout(@RequestParam(value = "item") String[] items,
-//                           @RequestParam(value = "quantity") String[] quantity,
-//                           @RequestParam(value = "store") String store,
-//                           @RequestParam(value = "paymentName") String paymentName,
-//                           @RequestParam(value = "ccNum") int ccNum,
-//                           Model model) {
-//
-//        ArrayList<Integer> quantities = new ArrayList<Integer>();
-//
-//        for(int i= 0; i < items.length; i++) {
-//            System.out.println("quantity "+ quantity[i]);
-//            quantities.add(Integer.parseInt(quantity[i]));
-//        }
-//
-//
-//        System.out.println("Store: " + store);
-//        System.out.println("paymentName " + paymentName);
-//        System.out.println("ccNum " + ccNum);
-//
-//        boolean isSuccess = FirebaseController.purchaseItems(store, items, quantities);
-//        System.out.println("Success: " + isSuccess);
-//        return "CheckoutPage";
-//    }
-
 }

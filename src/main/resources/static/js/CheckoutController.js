@@ -8,7 +8,6 @@ function addItemIDs() {
     const ids = ids_str.split("$");
     let counter = 0;
     let isFirstRow = true;
-    console.log("ids:", ids);
     $("#cartTable tr").each(function(){
         if (isFirstRow) {
             isFirstRow = false;
@@ -34,11 +33,9 @@ function updateCost() {
             $(this).closest('tr').find("input").each(function() {
                 if(!isNaN(this.value)) {
                     quantity = this.value;
-                    console.log("quantity", quantity);
                 }
             });
             let cost = dataCells[3].innerHTML;
-            console.log("cost", cost);
 
             totalCost += quantity * cost;
         }
@@ -58,11 +55,9 @@ function checkout() {
         else {
             $(this).closest('tr').find("input").each(function() {
                 if(isNaN(this.value)) {
-                    console.log("itemId:", this.value);
                     itemIDs.push(this.value);
                 }
                 if(!isNaN(this.value)) {
-                    console.log("quantity:", this.value);
                     quantities.push(this.value);
                 }
             });
@@ -84,18 +79,14 @@ async function submit(aStoreID, itemIDs, quantities) {
         alert ("Please enter a credit card number!");
         return;
     }
-    console.log("Store", aStoreID);
-    console.log("itemIDS", itemIDs);
-    console.log("quantities", quantities);
 
     const resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
     });
-    console.log(resp.data)
 
-    if (resp.data.data == "Success") {
+    if (resp.data.msg == "Success") {
         alert ("Thank you " + name + " for your purchase.");
         window.history.back();
     } else {

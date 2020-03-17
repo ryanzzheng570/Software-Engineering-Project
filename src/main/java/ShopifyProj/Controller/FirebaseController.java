@@ -109,7 +109,6 @@ public class FirebaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("array list " + items);
         return items;
     }
 
