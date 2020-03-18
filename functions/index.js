@@ -7,7 +7,7 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
-exports.addShop2 = functions.https.onCall((data, context) => {
+exports.addShop = functions.https.onCall((data, context) => {
     var test = {
         name: "NAME"
     };
