@@ -23,7 +23,8 @@ public class MerchantController {
 
     @PostMapping("/addNewMerchant")
     public String addNewMerchant(@ModelAttribute Merchant merchant, Model model) {
-        merchantRepository.save(merchant);
+        // TODO: FIX
+        //merchantRepository.save(merchant);
         /*
             todo: Should navigate to profile page, redirect to home page for now
          */

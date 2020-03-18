@@ -16,7 +16,8 @@ public class CustomerController {
 
     @PostMapping("/createCustomerAccount")
     public String createCustomerAccount(@ModelAttribute Customer customer, Model model) {
-        customerRepository.save(customer);
+        //TODO: FIX
+        //customerRepository.save(customer);
         /*
          todo Should navigate to profile page, redirect to home page for now
          */
