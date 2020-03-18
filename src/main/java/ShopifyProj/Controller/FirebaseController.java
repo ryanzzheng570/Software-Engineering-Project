@@ -18,12 +18,17 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseController {
+    private static final String TEST_MODE = "TEST";
+    private static final String PRODUCTION_MODE = "PROD";
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
+    private static FirebaseController testInst = null;
+    private static FirebaseDatabase testDbInst = null;
+    private static String root = "";
 
     private static ArrayList<Shop> currShops = new ArrayList<Shop>();
 
-    private FirebaseController() {
+    private FirebaseController(String mode) {
         FileInputStream serviceAccount =
                 null;
         try {
@@ -44,15 +49,28 @@ public class FirebaseController {
 
         FirebaseApp.initializeApp(options);
 
-        dbInst = FirebaseDatabase.getInstance();
+        if(mode == PRODUCTION_MODE) {
+            dbInst = FirebaseDatabase.getInstance();
+        } else if(mode == TEST_MODE) {
+            root = "test/";
+            testDbInst = FirebaseDatabase.getInstance();
+        }
     }
 
     public static FirebaseDatabase getInstance() {
         if (inst == null) {
-            inst = new FirebaseController();
+            inst = new FirebaseController(PRODUCTION_MODE);
         }
 
         return (dbInst);
+    }
+
+    public static FirebaseDatabase getTestInstance() {
+        if (testInst == null) {
+            testInst = new FirebaseController(TEST_MODE);
+        }
+
+        return (testDbInst);
     }
 
     public static ArrayList<Shop> getCurrShops() {
@@ -76,7 +94,7 @@ public class FirebaseController {
     public static TempShop getShopFromID(String aShopID) {
         final TempShop[] shop = {null};
         CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseController.getInstance().getReference(root + "store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -103,7 +121,7 @@ public class FirebaseController {
     public static ArrayList<TempItem> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
         ArrayList<TempItem> items = new ArrayList<TempItem>();
         CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseController.getInstance().getReference(root + "store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {

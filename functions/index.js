@@ -4,118 +4,51 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 const database = admin.database();
+const cors = require('cors')({
+    origin: true
+});
+const TEST_MODE = '/test';
 
-// !--- PLACE ALL FUNCTIONS BELOW HERE ---!
+// !--- PLACE ALL SERVICES BELOW HERE ---!
 
-exports.addShop3 = functions.https.onCall((data, context) => {
-    var test = {
-        name: "NAME"
-    };
-
-    const key = database.ref('/store/').push({
-        name: data.shopName
+function addShop(shopName, mode = '') {
+    return database.ref(mode + '/store/').push({
+        name: shopName
     }).key;
+}
 
-    return key;
-});
+function deleteShop(shopID, mode = '') {
+    return database.ref(mode + '/store/' + shopID).remove();
+}
 
-exports.deleteShop = functions.https.onCall((data, context) => {
-    const key = database.ref('/store/' + data.shopId).remove();
-
-    return key;
-});
-
-exports.changeShopName = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-    var newName = data.shopName;
-
-    const key = database.ref('/store/' + shopId).update({
-        name: newName
+function changeShopName(shopID, shopName, mode = '') {
+    return database.ref(mode + '/store/' + shopID).update({
+        name: shopName
     }).key;
+}
 
-    return key;
-});
+function addTagToShop(shopID, tag, mode = '') {
+    return database.ref(mode + '/store/' + shopID + "/tag").push(tag).key;
+}
 
-exports.addTag = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-    var tagName = data.tagName;
+function removeTagFromShop(shopID, tagID, mode = '') {
+    return database.ref(mode + '/store/' + shopID + "/tag/" + tagID).remove();
+}
 
-    const key = database.ref('/store/' + shopId + "/tag").push(tagName).key;
+function addItemToShop(shopID, itemInfo, mode = '') {
+    return database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
+}
 
-    return key;
-});
+function removeItemFromShop(shopID, itemID, mode = '') {
+    return database.ref(mode + '/store/' + shopID + "/item/" + itemID).remove();
+}
 
-exports.removeTag = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-    var tagId = data.tagId;
+function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
+    const SHOP_ID = shopID;
+    const ITEM_IDS = itemID;
+    const QUANTITIES = quantities;
 
-    const key = database.ref('/store/' + shopId + "/tag/" + tagId).remove();
-
-    return key;
-});
-
-exports.addItem = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-
-    var itemData = {
-        url: data.url,
-        altText: data.altText,
-        name: data.itemName,
-        cost: data.cost,
-        inventory: data.inventory
-    };
-
-    const key = database.ref('/store/' + shopId + "/item").push(itemData).key;
-
-    return key;
-});
-
-exports.removeItem = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-    var itemId = data.itemId;
-
-    const key = database.ref('/store/' + shopId + "/item/" + itemId).remove();
-
-    return key;
-});
-
-exports.removeTag = functions.https.onCall((data, context) => {
-    var shopId = data.shopId;
-    var tagId = data.tagId;
-
-    const key = database.ref('/store/' + shopId + "/tag/" + tagId).remove();
-
-    return key;
-});
-
-exports.addItemToStore = functions.https.onCall((data, context) => {
-
-    const SHOP_ID = data.shopID;
-    const URL = data.url;
-    const ALT_TEXT = data.altText;
-    const ITEM_NAME = data.itemName;
-    const ITEM_COST = data.itemCost;
-    const ITEM_INV = data.inventory;
-
-    var item = {
-        name: ITEM_NAME,
-        cost: ITEM_COST,
-        inventory: ITEM_INV,
-        url: URL,
-        altText: ALT_TEXT,
-    };
-
-    const key = database.ref('/store/' + SHOP_ID+ '/item/').push(item).key;
-    return key;
-
-});
-
-exports.purchaseItems = functions.https.onCall((data, context) => {
-    const SHOP_ID = data.shopID;
-    const ITEM_IDS = data.itemIDs;
-    const QUANTITIES = data.quantities;
-
-    var returnVal = database.ref("/store/" + SHOP_ID).once("value").then((snapshot) => {
+    var returnVal = database.ref(mode + "/store/" + SHOP_ID).once("value").then((snapshot) => {
         if (snapshot.val()) {
             const res = snapshot.val();
             for (var id in ITEM_IDS) {
@@ -123,36 +56,69 @@ exports.purchaseItems = functions.https.onCall((data, context) => {
                 var itemID = ITEM_IDS[id];
                 var newInventoryCount = tempItem.inventory - QUANTITIES[id];
                 if (newInventoryCount < 0) {
-                    return { msg: "Error - Not enough inventory!" };
+                    return "Error - Not enough inventory!";
+
                 } else {
-                    database.ref("/store/" + SHOP_ID).child("item/" + itemID).update({
+                    database.ref(mode + "/store/" + SHOP_ID).child("item/" + itemID).update({
                         inventory: newInventoryCount
                     })
                 }
             }
-            return { msg: "Success" };
+            return "Success";
+
         }
-        return { msg: "Something went wrong!" };
+        return "Something went wrong!"
+
     });
     return returnVal;
+}
+
+// !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS RIGHT UNDER ---!
+exports.addShop = functions.https.onCall((data, context) => {
+    return addShop(data.shopName);
 });
 
-exports.exampleCloudFunction = functions.https.onCall((data, context) => {
+exports.deleteShop = functions.https.onCall((data, context) => {
+    return deleteShop(data.shopId);
+});
 
-    //    When login works
-    //    if (!context.auth) {
-    //      throw new functions.https.HttpsError('failed-precondition', 'The function must be called ' +
-    //          'while authenticated.');
-    //    }
+exports.changeShopName = functions.https.onCall((data, context) => {
+    return changeShopName(data.shopId, data.shopName)
+});
 
-    database.ref('/testing/exampleCloudFunction').set(data.inputData);
+exports.addTag = functions.https.onCall((data, context) => {
+    return addTagToShop(data.shopId, data.tagName);
+});
 
-    var returnVal = database.ref("/testing/").once("value").then((snapshot) => {
-        if (snapshot.val()) {
-            return { text: snapshot.val() }
-        }
-        return { text: "Something went wrong!" };
+exports.removeTag = functions.https.onCall((data, context) => {
+    return removeTagFromShop(data.shopId, data.tagId);
+});
+
+exports.addItem = functions.https.onCall((data, context) => {
+    var itemData = {
+        url: data.url,
+        altText: data.altText,
+        name: data.itemName,
+        cost: data.cost,
+        inventory: data.inventory
+    };
+    return addItemToShop(data.shopID, itemData);
+});
+
+exports.removeItem = functions.https.onCall((data, context) => {
+    return removeItemFromShop(data.shopId, data.itemId);
+});
+
+exports.purchaseItems = functions.https.onCall((data, context) => {
+    return purchaseItemFromShop(data.shopID, data.itemIDs, data.quantities);
+});
+
+// !--- PLACE ALL TESTING ENDPOINTS BELOW HERE ---!
+
+exports.test = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send({
+            test: request.body.test
+        });
     });
-    return returnVal;
-
 });

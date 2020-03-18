@@ -8,11 +8,10 @@ function addItemIDs() {
     const ids = ids_str.split("$");
     let counter = 0;
     let isFirstRow = true;
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
+        } else {
             $(this).append('<input name=item value="' + ids[counter] + '" type=hidden /></td>');
             counter++;
         }
@@ -23,15 +22,14 @@ function updateCost() {
     let isFirstRow = true;
     let totalCost = 0;
 
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
+        } else {
             let dataCells = $(this).find('td');
             let quantity;
-            $(this).closest('tr').find("input").each(function() {
-                if(!isNaN(this.value)) {
+            $(this).closest('tr').find("input").each(function () {
+                if (!isNaN(this.value)) {
                     quantity = this.value;
                 }
             });
@@ -48,16 +46,15 @@ function checkout() {
     let itemIDs = [];
     let quantities = [];
 
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
-            $(this).closest('tr').find("input").each(function() {
-                if(isNaN(this.value)) {
+        } else {
+            $(this).closest('tr').find("input").each(function () {
+                if (isNaN(this.value)) {
                     itemIDs.push(this.value);
                 }
-                if(!isNaN(this.value)) {
+                if (!isNaN(this.value)) {
                     quantities.push(this.value);
                 }
             });
@@ -72,11 +69,11 @@ async function submit(aStoreID, itemIDs, quantities) {
     let name = $("#paymentName").val();
 
     if (name == "") {
-        alert ("Please enter a name!");
+        alert("Please enter a name!");
         return;
     }
     if (ccNum == "") {
-        alert ("Please enter a credit card number!");
+        alert("Please enter a credit card number!");
         return;
     }
 
@@ -86,10 +83,10 @@ async function submit(aStoreID, itemIDs, quantities) {
         quantities: quantities
     });
 
-    if (resp.data.msg == "Success") {
-        alert ("Thank you " + name + " for your purchase.");
+    if (resp.data == "Success") {
+        alert("Thank you " + name + " for your purchase.");
         window.history.back();
     } else {
-        alert ("Error: there was a problem with the transaction");
+        alert("Error: there was a problem with the transaction");
     }
 }

@@ -40,7 +40,7 @@
             <td style="text-align:center" th:text="${item.value.cost}"/>
 
             <div id="inventory" th:if="${item.value.inventory != 0}">
-                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox/></td>
+                <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox /></td>
             </div>
             <div id="noInventory" th:if="${item.value.inventory <= 0}">
                 <td style="text-align:center"><input name=item th:value="${item.key}" type=checkbox disabled/>

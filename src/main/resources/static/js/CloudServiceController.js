@@ -29,7 +29,7 @@ async function PurchaseItems(quantityData) {
 }
 
 async function cloudSaveShop(shopData) {
-    var response = await callCloudFunction("addShop3", shopData);
+    var response = await callCloudFunction("addShop", shopData);
     return response;
 }
 
