@@ -84,6 +84,10 @@ public class Merchant extends User{
         super.setUserName(name);
     }
 
+    public String getPassword() {return super.getPassword();}
+
+    public void setPassword(String password) {super.setPassword(password);}
+
     public String getContactPhoneNumber() {
         return contactPhoneNumber;
     }

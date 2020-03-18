@@ -18,14 +18,16 @@ public class MerchantController {
     @GetMapping("/addNewMerchant")
     public String viewAddNewMerchantPage(Model model) {
         model.addAttribute("merchant", new Merchant());
-        return "addMerchantPage";
+        return "CreateMerchantAccountPage";
     }
 
     @PostMapping("/addNewMerchant")
-    public @ResponseBody
-    Merchant addNewMerchant(@ModelAttribute Merchant newMerchant, Model model) {
-        //TODO: FIX
-        return newMerchant;
+    public String addNewMerchant(@ModelAttribute Merchant merchant, Model model) {
+        merchantRepository.save(merchant);
+        /*
+            todo: Should navigate to profile page, redirect to home page for now
+         */
+        return "redirect:/";
     }
 
     private List<Shop> getShops() {
