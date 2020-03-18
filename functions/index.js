@@ -54,6 +54,9 @@ function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
             for (var id in ITEM_IDS) {
                 var tempItem = res.item[ITEM_IDS[id]];
                 var itemID = ITEM_IDS[id];
+                if (isNaN(QUANTITIES[id])) {
+                    return { msg: "Error - Invalid Quantity value" };
+                }
                 var newInventoryCount = tempItem.inventory - QUANTITIES[id];
                 if (newInventoryCount < 0) {
                     return "Error - Not enough inventory!";
