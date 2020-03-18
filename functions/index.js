@@ -7,6 +7,30 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
+exports.createMerchant = functions.https.onCall((data, context) => {
+    const key = database.ref('/users/merchants').push({
+        userName: data.userName,
+        password: data.password,
+        email: data.email,
+        phoneNum: data.contactPhoneNumber
+    }).key;
+
+    return key;
+});
+
+exports.createCustomer = functions.https.onCall((data, context) => {
+    const key = database.ref('/users/customers').push({
+        userName: data.userName,
+        password: data.password,
+        email: data.email,
+        address: data.address,
+        phoneNum: data.phoneNumber,
+        note: data.note
+    }).key;
+
+    return key;
+});
+
 exports.addShop = functions.https.onCall((data, context) => {
     const key = database.ref('/store/').push({
         name: data.shopName
