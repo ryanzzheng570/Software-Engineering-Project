@@ -47,6 +47,7 @@ function checkout() {
     let isFirstRow = true;
     let itemIDs = [];
     let quantities = [];
+    let noErrors = true;
 
     $("#cartTable tr").each(function(){
         if (isFirstRow) {
@@ -58,13 +59,22 @@ function checkout() {
                     itemIDs.push(this.value);
                 }
                 if(!isNaN(this.value)) {
+                    let maxValue = $(this)[0].max;
+                    let minValue = $(this)[0].min;
+                    if (this.value > maxValue || this.value < minValue) {
+                        alert ("Error - Please enter a valid quantity!");
+                        noErrors = false;
+                        return;
+                    }
                     quantities.push(this.value);
                 }
             });
         }
     })
-    let storeId = $("#storeID").val();
-    submit(storeId, itemIDs, quantities);
+    if (noErrors === true) {
+        let storeId = $("#storeID").val();
+        submit(storeId, itemIDs, quantities);
+    }
 }
 
 async function submit(aStoreID, itemIDs, quantities) {
