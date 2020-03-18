@@ -1,30 +1,5 @@
-// To use this, add:
-//    <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
-// to the HTML file that calls it, and within the JavaScript call:
-//    ExampleCloudFunctionCall("Pass!");
-async function ExampleCloudFunctionCall(someData) {
-    var response = await callCloudFunction("exampleCloudFunction", {
-        inputData: someData
-    });
-    console.log(response.data)
-}
-
-async function AddItemToStore(aItem) {
-    await callCloudFunction("addItemToStore", aItem);
-}
-
-async function GetItemsFromStoreByIds(IDs) {
-    var response = await callCloudFunction("getItemsFromStoreByIds", IDs);
-    return response;
-}
-
-async function GetItemsFromStore(aStoreID) {
-    var response = await callCloudFunction("getItemsFromStore", aStoreID);
-    return response;
-}
-
 async function PurchaseItems(quantityData) {
-    var response = await callCloudFunction("purchaseItems", quantityData);
+    var response = await callCloudFunction("purchaseItemsFromShop", quantityData);
     return response;
 }
 
