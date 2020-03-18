@@ -2,7 +2,6 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Model.TempShop;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,11 +23,16 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
-        // Until database sorted out
-        String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
-        model.addAttribute("shopID", aShopId2);
-        TempShop shop = FirebaseController.getShopFromID(aShopId2);
-        model.addAttribute("shop", FirebaseController.getShopFromID(aShopId2));
+        Shop shopToView = null;
+        try {
+            shopToView = FirebaseController.getShopWithId(aShopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        model.addAttribute("shopID", aShopId);
+        model.addAttribute("shop", shopToView);
+
         return "CustomerShopViewPage";
     }
 
@@ -36,7 +40,13 @@ public class ShopController {
     public @ResponseBody Shop changeShopId(@RequestParam(value = "oldId") String oldId,
                                            @RequestParam(value = "newId") String newId,
                                            Model model) {
-        Shop checkShop = FirebaseController.getShopWithId(oldId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(oldId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         checkShop.setId(newId);
 
         return checkShop;
@@ -46,7 +56,12 @@ public class ShopController {
     public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") String shopId,
                                  @RequestParam(value = "shopName") String newName,
                                  Model model) {
-        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         checkShop.setShopName(newName);
 
@@ -57,7 +72,12 @@ public class ShopController {
     public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") String shopId,
                                         @RequestParam(value = "tagId") String tagId,
                                         Model model) {
-        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         checkShop.removeTagWithId(tagId);
 
@@ -69,7 +89,12 @@ public class ShopController {
                                      @RequestParam(value = "tagName") String tagName,
                                     @RequestParam(value = "setId") String tagId,
                                      Model model) {
-        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Tag toAdd = new Tag(tagName);
         toAdd.setId(tagId);
@@ -92,7 +117,12 @@ public class ShopController {
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
-        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         model.addAttribute("shop", checkShop);
         model.addAttribute("item", new Item());

@@ -24,13 +24,12 @@ public class SearchController {
 
         String lowercaseQuery = query.toLowerCase();
 
-        // TODO: FIX
-        for (Shop shop : new ArrayList<Shop>()) {
+        for (Shop shop : FirebaseController.getCurrShops()) {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();
             for (Tag t : tags) {
-                if(t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery)) {
+                if(t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
                     matchingShops.add(shop);
                     isAdded = true;
                 }

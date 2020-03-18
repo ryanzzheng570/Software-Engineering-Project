@@ -48,6 +48,10 @@ public class Item {
         return this.inventory;
     }
 
+    public void reduceQuantity(int amount) {
+        this.inventory -= amount;
+    }
+
     public void decrementInventory() {
         if (this.inventory > 0) {
             this.inventory--;

@@ -60,34 +60,38 @@ public class FirebaseController {
                         shopToAdd.setId(shopId);
 
                         Map<String, Object> tagData = (Map<String, Object>) mapData.get("tag");
-                        for (String tagId : tagData.keySet()) {
-                            String tagName = (String) tagData.get(tagId);
+                        if (tagData != null) {
+                            for (String tagId : tagData.keySet()) {
+                                String tagName = (String) tagData.get(tagId);
 
-                            Tag tagToAdd = new Tag(tagName);
-                            tagToAdd.setId(tagId);
+                                Tag tagToAdd = new Tag(tagName);
+                                tagToAdd.setId(tagId);
 
-                            shopToAdd.addTag(tagToAdd);
+                                shopToAdd.addTag(tagToAdd);
+                            }
                         }
 
                         Map<String, Object> itemData = (Map<String, Object>) mapData.get("item");
-                        for (String itemId : itemData.keySet()) {
-                            Map<String, Object> currItemData = (Map<String, Object>) itemData.get(itemId);
+                        if (itemData != null) {
+                            for (String itemId : itemData.keySet()) {
+                                Map<String, Object> currItemData = (Map<String, Object>) itemData.get(itemId);
 
-                            String itemName = (String) currItemData.get("name");
-                            String cost = Double.toString((Double) currItemData.get("cost"));
+                                String itemName = (String) currItemData.get("name");
+                                String cost = Double.toString((Double) currItemData.get("cost"));
 
-                            Long invVal = (Long) currItemData.get("inventory");
-                            int inventory = invVal != null ? invVal.intValue() : null;
-                            String url = (String) currItemData.get("url");
-                            String altText = (String) currItemData.get("altText");
+                                Long invVal = (Long) currItemData.get("inventory");
+                                int inventory = invVal != null ? invVal.intValue() : null;
+                                String url = (String) currItemData.get("url");
+                                String altText = (String) currItemData.get("altText");
 
-                            Image imgToAdd = new Image(url, altText);
-                            ArrayList<Image> itemImages = new ArrayList<Image>();
-                            itemImages.add(imgToAdd);
+                                Image imgToAdd = new Image(url, altText);
+                                ArrayList<Image> itemImages = new ArrayList<Image>();
+                                itemImages.add(imgToAdd);
 
-                            Item itemToAdd = new Item(itemName, itemImages, cost, inventory);
-                            itemToAdd.setId(itemId);
-                            shopToAdd.addItem(itemToAdd);
+                                Item itemToAdd = new Item(itemName, itemImages, cost, inventory);
+                                itemToAdd.setId(itemId);
+                                shopToAdd.addItem(itemToAdd);
+                            }
                         }
 
                         dbShops.add(shopToAdd);
@@ -125,7 +129,7 @@ public class FirebaseController {
         return currShops;
     }
 
-    public static Shop getShopWithId(String shopId) {
+    public static Shop getShopWithId(String shopId) throws Exception {
         Shop checkShop = null;
         for (Shop shop : currShops) {
             if (shop.getId().equals(shopId)) {
@@ -135,67 +139,28 @@ public class FirebaseController {
         }
         if (checkShop == null) {
             System.out.println(String.format("No shop found with ID %d", shopId));
+            throw new Exception();
         }
         return checkShop;
     }
 
-    public static TempShop getShopFromID(String aShopID) {
-        final TempShop[] shop = {null};
-        CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    shop[0] = dataSnapshot.getValue(TempShop.class);
-                }
-                wait.countDown();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-                wait.countDown();
-            }
-
-        });
+    public static ArrayList<Item> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
+        Shop toParse = null;
         try {
-            wait.await();
+            toParse = FirebaseController.getShopWithId(aShopID);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return shop[0];
-    }
 
-    public static ArrayList<TempItem> getItemsFromStoreByIds(String aShopID, String[] itemIDs) {
-        ArrayList<TempItem> items = new ArrayList<TempItem>();
-        CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store/" + aShopID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    TempShop shop = dataSnapshot.getValue(TempShop.class);
-                    for (int i = 0; i< itemIDs.length; i++) {
-                        TempItem tempItem = shop.getItemByKey(itemIDs[i]);
-                        if (tempItem != null) {
-                            items.add(tempItem);
-                        }
-                    }
-                }
-                wait.countDown();
+        ArrayList<Item> items = new ArrayList<Item>();
+
+        List idList = Arrays.asList(itemIDs);
+        for (Item item : toParse.getItems()) {
+            if (idList.contains(item.getId())) {
+                items.add(item);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-                wait.countDown();
-            }
-
-        });
-        try {
-            wait.await();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
         return items;
     }
 
