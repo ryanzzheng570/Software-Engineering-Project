@@ -12,15 +12,18 @@ public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @PostMapping("/createCustomerAccount")
-    public @ResponseBody Customer createCustomerAccount(@ModelAttribute Customer newCustomer, Model model) {
-        customerRepository.save(newCustomer);
-        return newCustomer;
-    }
-
     @GetMapping("/createCustomerAccount")
     public String viewCreateCustomerAccountPage(Model model) {
         model.addAttribute("customer", new Customer());
-        return "createCustomerAccount";
+        return "CreateCustomerAccountPage";
+    }
+
+    @PostMapping("/createCustomerAccount")
+    public String createCustomerAccount(@ModelAttribute Customer customer, Model model) {
+        customerRepository.save(customer);
+        /*
+         todo Should navigate to profile page, redirect to home page for now
+         */
+        return "redirect:/";
     }
 }
