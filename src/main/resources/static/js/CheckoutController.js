@@ -59,9 +59,8 @@ function checkout() {
                     itemIDs.push(this.value);
                 }
                 if(!isNaN(this.value)) {
-                    let maxValue = $(this)[0].max;
-                    let minValue = $(this)[0].min;
-                    if (this.value > maxValue || this.value < minValue) {
+                    let maxValue = parseInt($(this)[0].max);
+                    if (parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
                         alert ("Error - Please enter a valid quantity!");
                         noErrors = false;
                         return;
