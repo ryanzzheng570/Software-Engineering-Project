@@ -60,7 +60,7 @@ function checkout() {
                 }
                 if(!isNaN(this.value)) {
                     let maxValue = parseInt($(this)[0].max);
-                    if (parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
+                    if (this.value == "" || isNaN(this.value) || parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
                         alert ("Error - Please enter a valid quantity!");
                         noErrors = false;
                         return;
