@@ -21,6 +21,8 @@ import java.util.Optional;
 public class ItemController {
     private static final int MAX_URL_LEN = 255;
 
+    ArrayList<Shop> currShops = FirebaseController.getCurrShops();
+
     @Autowired
     private ShopController shopCont;
 
@@ -47,17 +49,17 @@ public class ItemController {
 
 
     @PostMapping("/addItem")
-    public @ResponseBody Item addItem(@RequestParam (value = "shopId") int shopId,
+    public @ResponseBody Item addItem(@RequestParam (value = "shopId") String shopId,
+                                      @RequestParam (value = "setId") String itemId,
                                       @RequestParam (value = "url") String url,
                                       @RequestParam (value = "altText") String altText,
                                       @RequestParam (value = "itemName") String name,
                                       @RequestParam (value = "cost") String cost,
                                       @RequestParam (value = "inventory") int inventory,
                                       Model model){
-        //TODO: FIX
         Item itemToAdd = null;
 
-        Shop shop = new Shop();
+        Shop shop = FirebaseController.getShopWithId(shopId);
         if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
@@ -73,6 +75,7 @@ public class ItemController {
             String newCost = parseCostInput(cost);
 
             itemToAdd = new Item(name, imageToAdd, newCost, inventory);
+            itemToAdd.setId(itemId);
 
             shop.addItem(itemToAdd);
         }
@@ -81,16 +84,12 @@ public class ItemController {
     }
 
     @PostMapping("/removeItem")
-    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") int shopId,
-                                         @RequestParam (value = "itemId") int itemId,
+    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") String shopId,
+                                         @RequestParam (value = "itemId") String itemId,
                                          Model model){
-        //TODO: FIX
-        Shop checkShop = new Shop();
-        if (checkShop != null){
-            if (checkShop.getItem(itemId) != null){
-                checkShop.removeItemWithId(itemId);
-            }
-        }
+
+        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        checkShop.removeItemWithId(itemId);
 
         return checkShop;
     }

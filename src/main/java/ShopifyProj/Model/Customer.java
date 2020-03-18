@@ -57,34 +57,34 @@ public class Customer extends User{
     /*
         Get bough item using Id
      */
-    public Item getBoughtItemById(int itemId) {
+    public Item getBoughtItemById(String itemId) {
         return itemSetIterator(boughtItems, itemId);
     }
 
     /*
     Get Cart item using Id
  */
-    public Item getCartItemById(int itemId) {
+    public Item getCartItemById(String itemId) {
         return itemSetIterator(cart, itemId);
     }
 
-    private Item itemSetIterator(Set<Item> set, int itemId) {
+    private Item itemSetIterator(Set<Item> set, String itemId) {
         for (Item item : set) {
-            if (item.getId() == itemId) {
+            if (item.getId().equals(itemId)) {
                 return (item);
             }
         }
         return (null);
     }
 
-    public void removeBoughtItemById(int itemId) {
+    public void removeBoughtItemById(String itemId) {
         Item toRemove = getBoughtItemById(itemId);
         if(toRemove != null) {
             this.boughtItems.remove(toRemove);
         }
     }
 
-    public void removeCartItemById(int itemId) {
+    public void removeCartItemById(String itemId) {
         Item toRemove = getCartItemById(itemId);
         if(toRemove != null) {
             this.cart.remove(toRemove);

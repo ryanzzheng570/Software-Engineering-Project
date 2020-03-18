@@ -29,13 +29,7 @@ public class MerchantController {
     }
 
     private List<Shop> getShops() {
-        //TODO: FIX
-        List<Shop> shops = new ArrayList<Shop>();
-//        for (Shop shop : shopRepo.findAll()) {
-//            shops.add(shop);
-//        }
-
-        return shops;
+        return FirebaseController.getCurrShops();
     }
 
     @GetMapping("/goToAddShopPage")
@@ -55,9 +49,18 @@ public class MerchantController {
     }
 
     @PostMapping("/deleteShop")
-    public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") int shopId, Model model) {
-        // TODO: FIX
-//        shopRepo.deleteById(shopId);
+    public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") String shopId, Model model) {
+        ArrayList<Shop> currShops = FirebaseController.getCurrShops();
+
+        int indToRemove = -1;
+        for (int i = 0; i < currShops.size(); i++){
+            if (currShops.get(i).getId().equals(shopId)) {
+                indToRemove = i;
+                i = currShops.size() + 2;
+            }
+        }
+
+        currShops.remove(indToRemove);
 
         return getShops().isEmpty();
     }

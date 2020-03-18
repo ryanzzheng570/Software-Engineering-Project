@@ -1,9 +1,9 @@
 var createShopFormId = "#createShopForm";
 
 async function saveStoreToDb(shopData) {
-    console.log(shopData);
-    const resp = await cloudSaveShop({});
-    console.log(resp.data);
+    const resp = await cloudSaveShop(shopData);
+    var shopId = resp.data;
+    return shopId;
 }
 
 function createShopFormHandler(e) {
@@ -22,14 +22,15 @@ function createShopFormHandler(e) {
     if (infoJson["shopName"] === "") {
         alert("Please enter a store name!");
     } else {
-        $.ajax({
-            url: "/addShop?" + $(createShopFormId).serialize(),
-            type: "POST",
-            dataType: "json"
-        }).then(function(data) {
-            console.log("HERE");
-            saveStoreToDb(data);
-//            window.location.href = '/goToEditShopPage?shopId=' + data.id;
+        saveStoreToDb(infoJson).then(function(data) {
+            console.log(data);
+            return $.ajax({
+                url: "/addShop?" + $(createShopFormId).serialize() + "&setId=" + data,
+                type: "POST",
+                dataType: "json"
+            });
+        }).then(function(data){
+            window.location.href = '/goToEditShopPage?shopId=' + data.id;
         });
     }
 }

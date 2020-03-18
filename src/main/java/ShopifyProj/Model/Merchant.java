@@ -42,16 +42,16 @@ public class Merchant extends User{
     /*
         Find the new shops using shop id
      */
-    public Shop getShopById(int id) {
+    public Shop getShopById(String id) {
         for(Shop shop: shops) {
-            if(shop.getId() == id) {
+            if(shop.getId().equals(id)) {
                 return shop;
             }
         }
         return null;
     }
 
-    public void removeShopById(int id) {
+    public void removeShopById(String id) {
         Shop toRemove = getShopById(id);
         if(toRemove != null) {
             shops.remove(toRemove);

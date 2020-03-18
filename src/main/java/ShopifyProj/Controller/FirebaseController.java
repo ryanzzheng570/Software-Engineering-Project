@@ -1,5 +1,6 @@
 package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.TempItem;
 import ShopifyProj.Model.TempShop;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -19,6 +20,8 @@ import java.util.concurrent.CountDownLatch;
 public class FirebaseController {
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
+
+    private static ArrayList<Shop> currShops = new ArrayList<Shop>();
 
     private FirebaseController() {
         FileInputStream serviceAccount =
@@ -50,6 +53,24 @@ public class FirebaseController {
         }
 
         return (dbInst);
+    }
+
+    public static ArrayList<Shop> getCurrShops() {
+        return currShops;
+    }
+
+    public static Shop getShopWithId(String shopId) {
+        Shop checkShop = null;
+        for (Shop shop : currShops) {
+            if (shop.getId().equals(shopId)) {
+                checkShop = shop;
+                break;
+            }
+        }
+        if (checkShop == null) {
+            System.out.println(String.format("No shop found with ID %d", shopId));
+        }
+        return checkShop;
     }
 
     public static TempShop getShopFromID(String aShopID) {

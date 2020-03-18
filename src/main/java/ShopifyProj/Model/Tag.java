@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @Entity
 public class Tag {
-    private int id;
+    private String id;
 
     private String tagName;
 
@@ -22,17 +22,17 @@ public class Tag {
     }
 
     public Tag(String name) {
-        this.id = Math.toIntExact(counter.incrementAndGet());
+        this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
 
         this.tagName = name;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Id
-    public int getId() {
+    public String getId() {
         return (this.id);
     }
 

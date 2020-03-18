@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @Entity
 public class Item {
-    private int id;
+    private String id;
 
     private String itemName;
 
@@ -28,7 +28,7 @@ public class Item {
     }
 
     public Item(String name, List<Image> images, String cost, int inventory){
-        this.id = Math.toIntExact(counter.incrementAndGet());
+        this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
 
         this.itemName = name;
         this.images = images;
@@ -36,7 +36,7 @@ public class Item {
         this.cost = cost;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -57,7 +57,7 @@ public class Item {
     }
 
     @Id
-    public int getId() {
+    public String getId() {
         return (this.id);
     }
 

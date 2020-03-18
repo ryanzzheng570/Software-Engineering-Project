@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @Entity
 public class Shop {
-    private int id;
+    private String id;
 
     private String shopName;
 
@@ -31,7 +31,7 @@ public class Shop {
     }
 
     public Shop(String shopName, Optional<Set<Tag>> tags) {
-        this.id = Math.toIntExact(counter.incrementAndGet());
+        this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
 
         this.shopName = shopName;
 
@@ -45,11 +45,11 @@ public class Shop {
     }
 
     @Id
-    public int getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(int newId) {
+    public void setId(String newId) {
         this.id = newId;
     }
 
@@ -76,19 +76,19 @@ public class Shop {
 
     public void clearItems() { this.items = new HashSet<Item>(); }
 
-    public Item getItem(int id) {
+    public Item getItem(String id) {
         for (Item item : this.items) {
-            if (item.getId() == id) {
+            if (item.getId().equals(id)) {
                 return (item);
             }
         }
         return (null);
     }
 
-    public void removeItemWithId(int id) {
+    public void removeItemWithId(String id) {
         Item toRemove = null;
         for (Item item : this.items) {
-            if (item.getId() == id) {
+            if (item.getId().equals(id)) {
                 toRemove = item;
                 break;
             }
@@ -113,9 +113,9 @@ public class Shop {
         this.tags = new HashSet<Tag>();
     }
 
-    public Tag getTag(int id) {
+    public Tag getTag(String id) {
         for (Tag tag : this.tags) {
-            if (tag.getId() == id) {
+            if (tag.getId().equals(id)) {
                 return (tag);
             }
         }
@@ -123,10 +123,10 @@ public class Shop {
         return (null);
     }
 
-    public void removeTagWithId(int id) {
+    public void removeTagWithId(String id) {
         Tag toRemove = null;
         for (Tag tag : this.tags) {
-            if (tag.getId() == id) {
+            if (tag.getId().equals(id)) {
                 toRemove = tag;
                 break;
             }

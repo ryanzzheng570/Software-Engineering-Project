@@ -29,9 +29,37 @@ async function PurchaseItems(quantityData) {
 }
 
 async function cloudSaveShop(shopData) {
-    console.log("HERE_2");
-    console.log(shopData);
-    var response = await callCloudFunction("addShop2", {});
+    var response = await callCloudFunction("addShop3", shopData);
+    return response;
+}
+
+async function cloudUpdateShopName(shopData) {
+    var response = await callCloudFunction("changeShopName", shopData);
+    return response;
+}
+
+async function cloudAddTag(shopData) {
+    var response = await callCloudFunction("addTag", shopData);
+    return response;
+}
+
+async function cloudRemoveTag(shopData) {
+    var response = await callCloudFunction("removeTag", shopData);
+    return response;
+}
+
+async function cloudAddItem(shopData) {
+    var response = await callCloudFunction("addItem", shopData);
+    return response;
+}
+
+async function cloudRemoveItem(shopData) {
+    var response = await callCloudFunction("removeItem", shopData);
+    return response;
+}
+
+async function cloudDeleteShop(shopData) {
+    var response = await callCloudFunction("deleteShop", shopData);
     return response;
 }
 

@@ -7,12 +7,83 @@ const database = admin.database();
 
 // !--- PLACE ALL FUNCTIONS BELOW HERE ---!
 
-exports.addShop2 = functions.https.onCall((data, context) => {
+exports.addShop3 = functions.https.onCall((data, context) => {
     var test = {
         name: "NAME"
     };
 
-    const key = database.ref('/store/').push(test).key;
+    const key = database.ref('/store/').push({
+        name: data.shopName
+    }).key;
+
+    return key;
+});
+
+exports.deleteShop = functions.https.onCall((data, context) => {
+    const key = database.ref('/store/' + data.shopId).remove();
+
+    return key;
+});
+
+exports.changeShopName = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+    var newName = data.shopName;
+
+    const key = database.ref('/store/' + shopId).update({
+        name: newName
+    }).key;
+
+    return key;
+});
+
+exports.addTag = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+    var tagName = data.tagName;
+
+    const key = database.ref('/store/' + shopId + "/tag").push(tagName).key;
+
+    return key;
+});
+
+exports.removeTag = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+    var tagId = data.tagId;
+
+    const key = database.ref('/store/' + shopId + "/tag/" + tagId).remove();
+
+    return key;
+});
+
+exports.addItem = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+
+    var itemData = {
+        url: data.url,
+        altText: data.altText,
+        name: data.itemName,
+        cost: data.cost,
+        inventory: data.inventory
+    };
+
+    const key = database.ref('/store/' + shopId + "/item").push(itemData).key;
+
+    return key;
+});
+
+exports.removeItem = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+    var itemId = data.itemId;
+
+    const key = database.ref('/store/' + shopId + "/item/" + itemId).remove();
+
+    return key;
+});
+
+exports.removeTag = functions.https.onCall((data, context) => {
+    var shopId = data.shopId;
+    var tagId = data.tagId;
+
+    const key = database.ref('/store/' + shopId + "/tag/" + tagId).remove();
 
     return key;
 });

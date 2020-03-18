@@ -2,8 +2,28 @@ var editNameFormId = "#editNameForm";
 var addTagFormId = "#addTagForm";
 var addItemFormId = "#addItemForm";
 
-async function asyncUpdateShopName(shopData) {
-    const resp = await cloudUpdateShopName(data);
+async function asyncUpdateShopName(formData) {
+    const resp = await cloudUpdateShopName(formData);
+}
+
+async function asyncAddTag(formData) {
+    const resp = await cloudAddTag(formData);
+    var tagId = resp.data;
+    return tagId;
+}
+
+async function asyncRemoveTag(formData) {
+    const resp = await cloudRemoveTag(formData);
+}
+
+async function asyncAddItem(formData) {
+    const resp = await cloudAddItem(formData);
+    var itemId = resp.data;
+    return itemId;
+}
+
+async function asyncRemoveItem(formData) {
+    const resp = await cloudRemoveItem(formData);
 }
 
 function editShopNameHandler(e){
@@ -22,25 +42,33 @@ function editShopNameHandler(e){
     if (infoJson["shopName"] === "") {
         alert("Please enter a store name!");
     } else {
-        $.ajax({
-            url: "/changeShopName?" + $(editNameFormId).serialize(),
-            type: "POST",
-            dataType: "json"
-        }).then(function(data) {
-            asyncUpdateShopName(data);
+        asyncUpdateShopName(infoJson).then(function(data) {
+            console.log(data);
+            return $.ajax({
+               url: "/changeShopName?" + $(editNameFormId).serialize(),
+               type: "POST",
+               dataType: "json"
+             })
+        }).then(function(data){
             $(editNameFormId).value = data.shopName;
         });
     }
 }
 
 function removeTag(btn, shopId, tagId) {
-    var callStr = "/removeTag?shopId=" + shopId + "&tagId=" + tagId;
+    var infoJson = {
+        shopId: shopId,
+        tagId: tagId
+    };
 
-    $.ajax({
-        url: callStr,
-        type: "POST",
-        dataType: "json"
-    }).then(function(data) {
+    asyncRemoveTag(infoJson).then(function(data) {
+        console.log(data);
+        return $.ajax({
+            url: "/removeTag?shopId=" + shopId + "&tagId=" + tagId,
+            type: "POST",
+            dataType: "json"
+        })
+    }).then(function(data){
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -67,11 +95,14 @@ function addTagHandler(e){
     if (infoJson["tagName"] === "") {
         alert("Tag names must be non-empty!");
     } else {
-        $.ajax({
-            url: "/addTag?" + $(addTagFormId).serialize(),
-            type: "POST",
-            dataType: "json"
-        }).then(function(data) {
+        asyncAddTag(infoJson).then(function(data) {
+            console.log(data);
+            return $.ajax({
+                url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data,
+                type: "POST",
+                dataType: "json"
+            })
+        }).then(function(data){
             $("#noTagDiv").css("display", "none");
             $("#nonEmptyTagDiv").css("display", "block");
 
@@ -98,13 +129,19 @@ function addTagHandler(e){
 }
 
 function removeItem(btn, shopId, itemId) {
-    var callStr = "/removeItem?shopId=" + shopId + "&itemId=" + itemId;
+    infoJson = {
+        shopId: shopId,
+        itemId: itemId
+    };
 
-    $.ajax({
-        url: callStr,
-        type: "POST",
-        dataType: "json"
-    }).then(function(data) {
+    asyncRemoveItem(infoJson).then(function(data) {
+        console.log(data);
+        return $.ajax({
+            url: "/removeItem?shopId=" + shopId + "&itemId=" + itemId,
+            type: "POST",
+            dataType: "json"
+        })
+    }).then(function(data){
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -136,11 +173,14 @@ function addItemHandler(e){
     } else if (infoJson["cost"] === "") {
         alert("Please enter a cost value!");
     } else {
-        $.ajax({
-            url: "/addItem?" + $(addItemFormId).serialize(),
-            type: "POST",
-            dataType: "json"
-        }).then(function(data) {
+        asyncAddItem(infoJson).then(function(data) {
+            console.log(data);
+            return $.ajax({
+                url: "/addItem?" + $(addItemFormId).serialize() + "&setId=" + data,
+                type: "POST",
+                dataType: "json"
+            })
+        }).then(function(data){
             $("#noItemDiv").css("display", "none");
             $("#nonEmptyItemDiv").css("display", "block");
 

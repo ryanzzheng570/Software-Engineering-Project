@@ -1,11 +1,20 @@
-function deleteShop(btn, shopId) {
-    var callStr = "/deleteShop?shopId=" + shopId;
+async function asyncDeleteShop(formData) {
+    const resp = await cloudDeleteShop(formData);
+}
 
-    $.ajax({
-        url: callStr,
-        type: "POST",
-        dataType: "json"
-    }).then(function(data) {
+function deleteShop(btn, shopId) {
+    var infoJson = {
+        shopId: shopId
+    };
+
+    asyncDeleteShop(infoJson).then(function(data) {
+        console.log(data);
+        return $.ajax({
+            url: "/deleteShop?shopId=" + shopId,
+            type: "POST",
+            dataType: "json"
+        })
+    }).then(function(data){
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -18,9 +27,27 @@ function deleteShop(btn, shopId) {
     });
 }
 
+function editShop(shopId) {
+    window.location.href = '/goToEditShopPage?shopId=' + shopId;
+}
+
+function viewAsCustomer(shopId) {
+    window.location.href = '/goToShopCustomerView?shopId=' + shopId;
+}
+
 $(document).ready(function() {
     $(".deleteShopButton").on('click', function() {
-        shopId = this.id.replace("SHOP_", "");
+        shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
         deleteShop(this, shopId);
+    });
+
+    $(".viewAsCustButton").on('click', function() {
+        shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
+        viewAsCustomer(shopId);
+    });
+
+    $(".editShopButton").on('click', function() {
+        shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
+        editShop(shopId);
     });
 });
