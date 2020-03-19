@@ -32,4 +32,18 @@ public class ItemTest {
 
         assertEquals(testItem.getInventory(), newInv - 1);
     }
+
+    @Test
+    public void testReduceInventory(){
+        int newInv = 10;
+        int changeAmount = 5;
+
+        testItem.setInventory(newInv);
+
+        assertEquals(testItem.getInventory(), newInv);
+
+        testItem.reduceQuantity(changeAmount);
+
+        assertEquals(testItem.getInventory(), newInv - changeAmount);
+    }
 }

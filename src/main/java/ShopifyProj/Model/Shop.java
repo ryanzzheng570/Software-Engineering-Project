@@ -137,7 +137,7 @@ public class Shop {
     @Override
     public String toString() {
         String toRet = "";
-        toRet += String.format("Shop Name: %s, Id: %d: \n", this.shopName, this.id);
+        toRet += String.format("Shop Name: %s, Id: %s: \n", this.shopName, this.id);
 
         if (!this.tags.isEmpty()) {
             toRet += "Tags: [";
