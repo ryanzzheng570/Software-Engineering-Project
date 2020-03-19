@@ -92,13 +92,15 @@ async function submit(aStoreID, itemIDs, quantities) {
         quantities: quantities
     };
 
-    const resp = await PurchaseItems({
+    var resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
-    })
+    });
 
-    if (resp.data.msg == "Success") {
+    console.log(resp.data);
+
+    if (resp.data == "Success") {
         $.ajax({
             url: "/checkout?" + $.param(checkoutData),
             type: "POST",

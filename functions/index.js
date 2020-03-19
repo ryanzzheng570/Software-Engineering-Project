@@ -22,7 +22,7 @@ function addShop(shopName, mode = '') {
     }
     return database.ref(mode + '/store/').push({
         name: shopName
-    });
+    }).key;
 }
 
 function deleteShop(shopID, mode = '') {
@@ -56,7 +56,7 @@ function removeTagFromShop(shopID, tagID, mode = '') {
 }
 
 function addItemToShop(shopID, itemInfo, mode = '') {
-    if (!ValidateString(shopdID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
+    if (!ValidateString(shopID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
         return "Sorry, invalid input was entered!";
     }
     return database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
@@ -102,7 +102,7 @@ function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
 function createMerchant(username, password, email, phoneNumber, mode = '') {
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
-    const encryptedPhoneNumber = encrypted(phoneNymber);
+    const encryptedPhoneNumber = encrypt(phoneNumber);
     return database.ref(mode + '/users/merchants').push({
         userName: username,
         password: encryptedPassword,
@@ -180,7 +180,7 @@ exports.addItem = functions.https.onCall((data, context) => {
         cost: data.cost,
         inventory: data.inventory
     };
-    return addItemToShop(data.shopID, itemData);
+    return addItemToShop(data.shopId, itemData);
 });
 exports.addItemTest = functions.https.onRequest((request, response) => {
     cors(request, response, () => {

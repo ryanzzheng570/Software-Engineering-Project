@@ -11,7 +11,6 @@
 <body>
 
 <h1>Create Customer Account: </h1>
-<h2><strong>NOTE FROM DEVELOPER: None of this information is currently encrypted, so please do NOT enter any real information.</strong></h2>
 <form action="#" th:action="@{/createCustomerAccount}" th:object="${customer}" method="post" id="customerInfoForm">
     <input type="hidden" th:value="${customer.id}" name="id">
     <p>UserName: <input type="text" th:value="${customer.getUserName()}" th:field="*{userName}" id="userName"></p>
