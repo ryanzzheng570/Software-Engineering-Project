@@ -22,7 +22,7 @@
                      <th>Individual Cost</th>
                  </tr>
                  <tr th:each="item: ${items}">
-                     <td style="text-align:center" th:text="${item.name}"/>
+                     <td style="text-align:center" th:text="${item.itemName}"/>
                      <td style="text-align:center" name="itemQuantity">
                          <input name="quantity" type="number" min="1" th:max="${item.inventory}" value="1" onchange="updateCost()"/>
                      </td>

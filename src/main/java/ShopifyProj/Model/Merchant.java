@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @Entity
 public class Merchant extends User{
-    private int id;
+    private String id;
     private List<Shop> shops;
     private String contactPhoneNumber;
     private String email;
@@ -24,7 +24,7 @@ public class Merchant extends User{
 
     public Merchant(String name, String contactPhoneNumber, String email, String password) {
         super(name, password);
-        this.id = Math.toIntExact(counter.incrementAndGet());
+        this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
         this.shops = new ArrayList<Shop>();
         this.contactPhoneNumber = contactPhoneNumber;
         this.email = email;
@@ -59,11 +59,11 @@ public class Merchant extends User{
     }
 
     @Id
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -83,6 +83,10 @@ public class Merchant extends User{
     public void setName(String name) {
         super.setUserName(name);
     }
+
+    public String getPassword() {return super.getPassword();}
+
+    public void setPassword(String password) {super.setPassword(password);}
 
     public String getContactPhoneNumber() {
         return contactPhoneNumber;

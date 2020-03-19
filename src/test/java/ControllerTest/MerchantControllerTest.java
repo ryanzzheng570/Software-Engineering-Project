@@ -26,6 +26,12 @@ public class MerchantControllerTest {
     }
 
     @Test
+    public void goToCreateMerchantPage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/addNewMerchant",
+                String.class)).contains("Create Merchant Account");
+    }
+
+    @Test
     public void goToAddShopPage() throws Exception {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToAddShopPage",
                 String.class)).contains("Create Shop Page");

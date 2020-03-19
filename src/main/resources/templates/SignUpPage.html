@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <script type="text/javascript"
+            th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
+
+    <title>Sign Up</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+
+<body>
+
+    <h1>Signing Up</h1>
+    <form action="#" th:action="@{/addNewMerchant}">
+        <input type="submit" value="Press to sign up as a Merchant"/>
+    </form>
+
+    <form action="#" th:action="@{/createCustomerAccount}">
+        <input type="submit" value="Press to sign up as a Customer"/>
+    </form>
+
+    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+</body>
+</html>

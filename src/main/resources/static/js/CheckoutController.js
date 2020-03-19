@@ -86,16 +86,30 @@ async function submit(aStoreID, itemIDs, quantities) {
         return;
     }
 
+    var checkoutData = {
+        storeId: aStoreID,
+        itemIds: itemIDs,
+        quantities: quantities
+    };
+
     const resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
-    });
+    })
 
-    if (resp.data == "Success") {
+    if (resp.data.msg == "Success") {
+        $.ajax({
+            url: "/checkout?" + $.param(checkoutData),
+            type: "POST",
+            dataType: "json"
+        });
+
         alert("Thank you " + name + " for your purchase.");
+
         window.history.back();
     } else {
         alert("Error: there was a problem with the transaction");
     }
+
 }

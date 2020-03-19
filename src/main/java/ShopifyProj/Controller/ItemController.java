@@ -59,7 +59,13 @@ public class ItemController {
                                       Model model){
         Item itemToAdd = null;
 
-        Shop shop = FirebaseController.getShopWithId(shopId);
+        Shop shop = null;
+        try {
+            shop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
@@ -88,7 +94,13 @@ public class ItemController {
                                          @RequestParam (value = "itemId") String itemId,
                                          Model model){
 
-        Shop checkShop = FirebaseController.getShopWithId(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         checkShop.removeItemWithId(itemId);
 
         return checkShop;

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Customer extends User{
 
     private static final AtomicLong counter = new AtomicLong();
-    private int id;
+    private String id;
     private String email;
     private String address;
     private String phoneNumber;
@@ -32,7 +32,7 @@ public class Customer extends User{
     public Customer(String name, String email, String address, String phoneNumber, String note,
                     Set<Item> boughtItems, Set<Item> cart, String password) {
         super(name, password);
-        this.id = Math.toIntExact(counter.incrementAndGet());
+        this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
@@ -92,11 +92,11 @@ public class Customer extends User{
     }
 
     @Id
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

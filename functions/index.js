@@ -1,4 +1,5 @@
-// https://firebase.google.com/docs/functions/write-firebase-functions
+// Cloud Function Link: https://firebase.google.com/docs/functions/write-firebase-functions
+// Encrypt and Decrypt Link: https://codeforgeek.com/encrypt-and-decrypt-data-in-node-js/ 
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
@@ -8,6 +9,10 @@ const cors = require('cors')({
     origin: true
 });
 const TEST_MODE = '/test';
+const crypto = require('crypto');
+const algorithm = 'aes-256-cbc';
+const key = crypto.randomBytes(32);
+const iv = crypto.randomBytes(16);
 
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
@@ -17,7 +22,7 @@ function addShop(shopName, mode = '') {
     }
     return database.ref(mode + '/store/').push({
         name: shopName
-    }).key;
+    });
 }
 
 function deleteShop(shopID, mode = '') {
@@ -94,7 +99,34 @@ function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
     return returnVal;
 }
 
-// !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS RIGHT UNDER ---!
+function createMerchant(username, password, email, phoneNumber, mode = '') {
+    const encryptedPassword = encrypt(password);
+    const encryptedEmail = encrypt(email);
+    const encryptedPhoneNumber = encrypted(phoneNymber);
+    return database.ref(mode + '/users/merchants').push({
+        userName: username,
+        password: encryptedPassword,
+        email: encryptedEmail,
+        phoneNum: encryptedPhoneNumber
+    }).key;
+}
+
+function createCustomer(username, password, email, address, phoneNumber, note, mode = '') {
+    const encryptedPassword = encrypt(password);
+    const encryptedEmail = encrypt(email);
+    const encryptedAddress = encrypt(address);
+    const encryptedPhoneNumber = encrypt(phoneNumber);
+    return database.ref(mode + '/users/customers').push({
+        userName: username,
+        password: encryptedPassword,
+        email: encryptedEmail,
+        address: encryptedAddress,
+        phoneNum: encryptedPhoneNumber,
+        note: note
+    }).key;
+}
+
+// !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
 exports.addShop = functions.https.onCall((data, context) => {
     return addShop(data.shopName);
 });
@@ -181,11 +213,41 @@ exports.purchaseItemsTest = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.createMerchant = functions.https.onCall((data, context) => {
+    return createMerchant(data.userName, data.password, data.email, data.contactPhoneNumber);
+});
+exports.createMerchantTest = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(createMerchant(request.body.userName, request.body.password, request.body.email, request.body.contactPhoneNumber, TEST_MODE));
+    });
+});
 
+exports.createCustomer = functions.https.onCall((data, context) => {
+    return createCustomer(data.userName, data.password, data.email, data.address, data.phoneNumber, data.note);
+});
+exports.createCustomerTest = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(createCustomer(request.body.userName, request.body.password, request.body.email, request.body.address, request.body.phoneNumber, request.body.note, TEST_MODE));
+    });
+});
 
+// !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
 
+function encrypt(text) {
+    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+    let encrypted = cipher.update(text);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+    return encrypted.toString('hex');
+}
 
-// !--- PLACE ALL HELPER FUNCTIONS RIGHT UNDER ---!
+function decrypt(text) {
+    let iv = Buffer.from(text.iv, 'hex');
+    let encryptedText = Buffer.from(text.encryptedData, 'hex');
+    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+    let decrypted = decipher.update(encryptedText);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+    return decrypted.toString();
+}
 
 function ValidateString(string) {
     if (string && string !== "") {

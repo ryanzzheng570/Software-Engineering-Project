@@ -17,14 +17,16 @@ import java.util.List;
 public class CloudServiceController {
 
     // List all our Cloud Function URLs here
-    public static final String addItem = "https://us-central1-engineeringlabproject.cloudfunctions.net/addItem";
-    public static final String addItemToStore = "https://us-central1-engineeringlabproject.cloudfunctions.net/addItemToStore";
-    public static final String addShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/addShop";
-    public static final String addTag = "https://us-central1-engineeringlabproject.cloudfunctions.net/addTag";
-    public static final String changeShopName = "https://us-central1-engineeringlabproject.cloudfunctions.net/changeShopName";
-    public static final String purchaseItems = "https://us-central1-engineeringlabproject.cloudfunctions.net/purchaseItems";
-    public static final String removeItem = "https://us-central1-engineeringlabproject.cloudfunctions.net/removeItem";
-    public static final String removeTag = "https://us-central1-engineeringlabproject.cloudfunctions.net/removeTag";
+    public static final String addShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/addShopTest";
+    public static final String deleteShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/deleteShopTest";
+    public static final String changeShopName = "https://us-central1-engineeringlabproject.cloudfunctions.net/changeShopNameTest";
+    public static final String addTagToShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/addTagToShopTest";
+    public static final String removeTagFromShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/removeTagFromShopTest";
+    public static final String addItemToShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/addItemToShopTest";
+    public static final String removeItemFromShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/removeItemFromShopTest";
+    public static final String purchaseItemFromShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/purchaseItemFromShopTest";
+    public static final String createMerchant = "https://us-central1-engineeringlabproject.cloudfunctions.net/createMerchantTest";
+    public static final String createCustomer = "https://us-central1-engineeringlabproject.cloudfunctions.net/createCustomerTest";
 
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 

@@ -38,6 +38,16 @@ async function cloudDeleteShop(shopData) {
     return response;
 }
 
+async function cloudSaveMerchant(merchantData) {
+    var response = await callCloudFunction("createMerchant", merchantData);
+    return response;
+}
+
+async function cloudSaveCustomer(customerData) {
+    var response = await callCloudFunction("createCustomer", customerData);
+    return response;
+}
+
 // !--- PLACE ALL CLOUD SERVICE CALLS ABOVE HERE --- SHOULD NOT HAVE TO CHANGE ANYTHING BELOW ---!
 
 document.writeln('<script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>');
