@@ -10,7 +10,7 @@
 <body>
 
     <div id="pageTitle">
-        <h1 align="center" th:text="'Welcome to the online store for' + ${shop.shopName}"></h1>
+        <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
     </div>
 
     <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>

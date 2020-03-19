@@ -19,8 +19,6 @@ public class ShopController {
     @Autowired
     private MerchantController merchCont;
 
-    ArrayList<Shop> currShops = FirebaseController.getCurrShops();
-
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
         Shop shopToView = null;
@@ -110,7 +108,7 @@ public class ShopController {
         Shop newShop = new Shop(name, Optional.empty());
         newShop.setId(newId);
 
-        currShops.add(newShop);
+        FirebaseController.addShop(newShop);
 
         return newShop;
     }

@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class FirebaseController {
     private static final String TEST_MODE = "TEST";
@@ -23,6 +24,8 @@ public class FirebaseController {
     private static String root = "";
 
     private static ArrayList<Shop> currShops = initializeDbInfo();
+
+    private static final AtomicLong counter = new AtomicLong();
 
     private FirebaseController(String mode) {
         FileInputStream serviceAccount =
@@ -56,7 +59,7 @@ public class FirebaseController {
     private static ArrayList<Shop> initializeDbInfo() {
         ArrayList<Shop> dbShops = new ArrayList<Shop>();
         CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference("store").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseController.getInstance().getReference(root + "store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -180,6 +183,58 @@ public class FirebaseController {
         }
 
         return items;
+    }
+
+    public static Shop findByShopName(String name) throws Exception {
+        for (Shop shop : currShops) {
+            if (shop.getShopName().equals(name)) {
+                return shop;
+            }
+        }
+
+        throw new Exception();
+    }
+
+    public static Tag findByTagName(String shopId, String tagName) throws Exception {
+        try {
+            Shop shop = getShopWithId(shopId);
+
+            for (Tag tag : shop.getTags()) {
+                if (tag.getTagName().equals(tagName)) {
+                    return tag;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        throw new Exception();
+
+    }
+
+    public static Item findByItemName(String shopId, String itemName) throws Exception {
+        try {
+            Shop shop = getShopWithId(shopId);
+
+            for (Item item : shop.getItems()) {
+                if (item.getItemName().equals(itemName)) {
+                    return item;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        throw new Exception();
+
+    }
+
+    public static void addShop(Shop toAdd) {
+        currShops.add(toAdd);
+    }
+
+    public static String getCounterAndIterate() {
+        return Integer.toString(Math.toIntExact(counter.incrementAndGet()));
     }
 
 }
