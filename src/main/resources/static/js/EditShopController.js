@@ -42,6 +42,7 @@ function editShopNameHandler(e){
     if (infoJson["shopName"] === "") {
         alert("Please enter a store name!");
     } else {
+        showLoading();
         asyncUpdateShopName(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -50,6 +51,7 @@ function editShopNameHandler(e){
                dataType: "json"
              })
         }).then(function(data){
+            hideLoading();
             $(editNameFormId).value = data.shopName;
         });
     }
@@ -61,6 +63,7 @@ function removeTag(btn, shopId, tagId) {
         tagId: tagId
     };
 
+    showLoading();
     asyncRemoveTag(infoJson).then(function(data) {
         console.log(data);
         return $.ajax({
@@ -69,6 +72,7 @@ function removeTag(btn, shopId, tagId) {
             dataType: "json"
         })
     }).then(function(data){
+        hideLoading();
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -95,6 +99,7 @@ function addTagHandler(e){
     if (infoJson["tagName"] === "") {
         alert("Tag names must be non-empty!");
     } else {
+        showLoading();
         asyncAddTag(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -103,6 +108,7 @@ function addTagHandler(e){
                 dataType: "json"
             })
         }).then(function(data){
+            hideLoading();
             $("#noTagDiv").css("display", "none");
             $("#nonEmptyTagDiv").css("display", "block");
 
@@ -134,6 +140,7 @@ function removeItem(btn, shopId, itemId) {
         itemId: itemId
     };
 
+    showLoading();
     asyncRemoveItem(infoJson).then(function(data) {
         console.log(data);
         return $.ajax({
@@ -142,6 +149,7 @@ function removeItem(btn, shopId, itemId) {
             dataType: "json"
         })
     }).then(function(data){
+        hideLoading();
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -173,6 +181,7 @@ function addItemHandler(e){
     } else if (infoJson["cost"] === "") {
         alert("Please enter a cost value!");
     } else {
+        showLoading();
         asyncAddItem(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -181,6 +190,7 @@ function addItemHandler(e){
                 dataType: "json"
             })
         }).then(function(data){
+            hideLoading();
             $("#noItemDiv").css("display", "none");
             $("#nonEmptyItemDiv").css("display", "block");
 

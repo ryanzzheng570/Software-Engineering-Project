@@ -92,6 +92,10 @@ async function submit(aStoreID, itemIDs, quantities) {
         quantities: quantities
     };
 
+    console.log(checkoutData);
+
+    showLoading();
+
     var resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
@@ -107,10 +111,13 @@ async function submit(aStoreID, itemIDs, quantities) {
             dataType: "json"
         });
 
+        hideLoading();
+
         alert("Thank you " + name + " for your purchase.");
 
         window.history.back();
     } else {
+        hideLoading();
         alert("Error: there was a problem with the transaction");
     }
 

@@ -22,6 +22,7 @@ function createShopFormHandler(e) {
     if (infoJson["shopName"] === "") {
         alert("Please enter a store name!");
     } else {
+        showLoading();
         saveStoreToDb(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -30,6 +31,7 @@ function createShopFormHandler(e) {
                 dataType: "json"
             });
         }).then(function(data){
+            hideLoading();
             window.location.href = '/goToEditShopPage?shopId=' + data.id;
         });
     }

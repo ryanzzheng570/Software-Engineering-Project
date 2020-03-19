@@ -32,6 +32,7 @@ function createCustomerAccountHandler(e) {
     } else if (infoJson["note"] === "") {
         alert("Please enter a note!");
     } else {
+        showLoading();
         createCustomerInDb(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -41,6 +42,7 @@ function createCustomerAccountHandler(e) {
             });
         }).then(function(data){
             window.location.href = '/';
+            hideLoading();
         });
     }
 }

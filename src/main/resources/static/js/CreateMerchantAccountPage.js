@@ -28,6 +28,7 @@ function createMerchantAccountHandler(e) {
     } else if (infoJson["contactPhoneNumber"] === "") {
         alert("Please enter a phone number!");
     } else {
+        showLoading();
         createMerchantInDb(infoJson).then(function(data) {
             console.log(data);
             return $.ajax({
@@ -37,6 +38,7 @@ function createMerchantAccountHandler(e) {
             });
         }).then(function(data){
             window.location.href = '/';
+            hideLoading();
         });
     }
 }
