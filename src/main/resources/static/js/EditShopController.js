@@ -112,8 +112,19 @@ function removeItem(btn, shopId, itemId) {
     });
 }
 
-function editItemHandler(shopId, itemId, itemData){
-    var callStr = "/editItem?;
+function editItemHandler(btn){
+    var shopId = $("#shopId").val();
+    var rowId = btn.parentNode.parentNode.id;
+    var row = $('#' + rowId);
+    var itemData = {};
+    $("td input", row).each(function() {
+         var name = $(this).attr('name')
+         var val = $(this).val();
+         itemData[name] = val;
+    });
+         itemId = rowId.replace("ITEM_", "");
+
+    var callStr = "/editItem?";
     itemData["shopId"] = shopId;
     itemData["itemId"] = itemId;
 
@@ -129,6 +140,7 @@ function editItemHandler(shopId, itemId, itemData){
                 $("#noItemDiv").css("display", "block");
                 $("#nonEmptyItemDiv").css("display", "none");
             }
+            window.location.href = '/goToEditShopPage?shopId=' + data.id;
         });
 }
 
@@ -163,14 +175,24 @@ function addItemHandler(e){
 
             var newRow = document.createElement("tr");
 
+            newRow.id = "ITEM_" + data.id;
+
             var nameElem = document.createElement("td");
-            var nameText = document.createTextNode(data.itemName)
+            var nameText = document.createElement("input");
+            nameText.type = "text";
+            nameText.value = data.itemName;
+            nameText.name = "itemName";
             nameElem.appendChild(nameText);
             newRow.appendChild(nameElem);
 
             var imgElem = document.createElement("td");
             var images = data.images;
+            var url = "";
+            var altText = "";
             if (images.length > 0) {
+                url = images[0].url;
+                altText = images[0].altText;
+
                 var linkRef = document.createElement("a");
                 linkRef.href = images[0].url;
 
@@ -187,13 +209,39 @@ function addItemHandler(e){
             }
             newRow.appendChild(imgElem);
 
+            var urlElem = document.createElement("td");
+            var urlText = document.createElement("input");
+            urlText.type = "text";
+            urlText.value = url;
+            urlText.name = "url";
+            urlElem.appendChild(urlText);
+            newRow.appendChild(urlElem);
+
+            var altTextElem = document.createElement("td");
+            var altTextText = document.createElement("input");
+            altTextText.type = "text";
+            altTextText.value = altText;
+            altTextText.name = "altText";
+            altTextElem.appendChild(altTextText);
+            newRow.appendChild(altTextElem);
+
             var invElem = document.createElement("td");
-            var invText = document.createTextNode(data.inventory)
+            var invText = document.createElement("input");
+            invText.type = "number";
+            invText.step = "1";
+            invText.min = "0";
+            invText.value = data.inventory;
+            invText.name = "inventory";
             invElem.appendChild(invText);
             newRow.appendChild(invElem);
 
             var costElem = document.createElement("td");
-            var costText = document.createTextNode(data.cost)
+            var costText = document.createElement("input");
+            costText.type = "number";
+            costText.step = "0.01";
+            costText.min = "0";
+            costText.value = parseInt(data.cost.substring(1));
+            costText.name = "cost";
             costElem.appendChild(costText);
             newRow.appendChild(costElem);
 
@@ -206,6 +254,16 @@ function addItemHandler(e){
             });
             remButtonBox.appendChild(remButton);
             newRow.appendChild(remButtonBox);
+
+            var editButtonBox = document.createElement("td");
+            var editButton = document.createElement("input");
+            editButton.type = "button";
+            editButton.value = "Save Changes";
+            editButton.addEventListener('click', function() {
+               editItemHandler(this);
+            });
+            editButtonBox.appendChild(editButton);
+            newRow.appendChild(editButtonBox);
 
             document.getElementById("itemTable").appendChild(newRow);
         });
@@ -236,15 +294,6 @@ $(document).ready(function() {
     });
 
     $(".saveChangesButton").on('click', function() {
-        var rowId = this.parentNode.parentNode.id;
-        var row = $('#' + rowId);
-        var data = {};
-        $("td input", row).each(function() {
-            var name = $(this).attr('name')
-            var val = $(this).val();
-            data[name] = val;
-        });
-            itemId = rowId.replace("ITEM__", "");
-            editItemHandler($("#shopId").val(), itemId, data);
+            editItemHandler(this);
         });
 });
