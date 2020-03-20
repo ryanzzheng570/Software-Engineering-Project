@@ -14,6 +14,9 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  - Merchants can add items to their shops and remove them
  - Shops have different views for customers and merchants
  - App is running on Travis CI and Heroku
+ - Setup and integrated Firebase/database
+ - Setup account signup for merchant and customers
+ - Customers can add items to cart and checkout
  
  ### UML Diagram
  ![UML](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Eng%20Lab%20Project%20UML.png)
@@ -22,7 +25,4 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ![Database Schema](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Database%20Schema.png)
  
  ### Plan For Next Sprint
- - Setup Firebase/database
- - Reorganize pages to be merchant or customer
- - Setup checkout and cart
- - Update search
+ 

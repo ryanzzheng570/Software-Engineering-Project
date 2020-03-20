@@ -36,13 +36,14 @@
             <label for="paymentName">Name</label><br>
             <input type="text" id="paymentName" name="paymentName"><br>
             <label for="ccNum">Credit Card Number</label><br>
-            <input type="text" id="ccNum" name="ccNum"><br>
+            <input type="number" id="ccNum" name="ccNum"><br>
             <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
 
     <form action="#" th:action="@{/}">
         <input type="submit" value="Cancel and go To Home Page" />
     </form>
 
+     <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
     <script type="text/javascript" src="/js/CloudServiceController.js"></script>
     <script type="text/javascript" src="/js/CheckoutController.js"></script>
 

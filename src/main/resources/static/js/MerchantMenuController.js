@@ -7,6 +7,7 @@ function deleteShop(btn, shopId) {
         shopId: shopId
     };
 
+    showLoading();
     asyncDeleteShop(infoJson).then(function(data) {
         console.log(data);
         return $.ajax({
@@ -24,6 +25,7 @@ function deleteShop(btn, shopId) {
             $("#noShopDiv").css("display", "block");
             $("#nonEmptyShopDiv").css("display", "none");
         }
+        hideLoading();
     });
 }
 

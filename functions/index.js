@@ -173,12 +173,14 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 });
 
 exports.addItem = functions.https.onCall((data, context) => {
+    var inventory = parseInt(data.inventory);
+
     const itemData = {
         url: data.url,
         altText: data.altText,
         name: data.itemName,
         cost: data.cost,
-        inventory: data.inventory
+        inventory: inventory
     };
     return addItemToShop(data.shopId, itemData);
 });

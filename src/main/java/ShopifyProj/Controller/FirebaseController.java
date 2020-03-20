@@ -96,9 +96,11 @@ public class FirebaseController {
                                 String url = (String) currItemData.get("url");
                                 String altText = (String) currItemData.get("altText");
 
-                                Image imgToAdd = new Image(url, altText);
                                 ArrayList<Image> itemImages = new ArrayList<Image>();
-                                itemImages.add(imgToAdd);
+                                if (!url.equals("")) {
+                                    Image imgToAdd = new Image(url, altText);
+                                    itemImages.add(imgToAdd);
+                                }
 
                                 Item itemToAdd = new Item(itemName, itemImages, cost, inventory);
                                 itemToAdd.setId(itemId);
