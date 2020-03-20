@@ -79,16 +79,14 @@
             </table>
         </div>
 
-
-
         <form action="#" th:action="@{/addItem}" th:object="${item}" method="post" id="addItemForm">
             <input type="hidden" th:value="${shop.id}" name="shopId"/>
 
             <p>Item Name: <input type="text" th:field="*{itemName}"/></p>
             <p>Image URL: <input type="text" size="75" name="url"/></p>
             <p>Alternative Text Description <input type="text" name="altText"/></p>
-            <p>Quantity: <input type="text" th:field="*{inventory}"/></p>
-            <p>Cost: <input type="text" th:field="*{cost}"/></p>
+            <p>Quantity: <input type="number" placeholder="0" step="1" min="0" th:field="*{inventory}"/></p>
+            <p>Cost: <input type="number" placeholder="0.0" step="0.01" min="0"  th:field="*{cost}"/></p>
 
             <input type="submit" value="Add Item"/>
         </form>
@@ -97,7 +95,9 @@
             <input type="submit" value="Done Editing"/>
         </form>
 
+        <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
         <script type="text/javascript" th:src="@{/js/EditShopController.js}"></script>
         <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
     </body>
 </html>

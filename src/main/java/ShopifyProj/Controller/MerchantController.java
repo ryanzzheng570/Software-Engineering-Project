@@ -2,8 +2,7 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.MerchantRepository;
-import ShopifyProj.Repository.ShopRepository;
+import ShopifyProj.Model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,13 +14,7 @@ import java.util.List;
 @Controller
 public class MerchantController {
     @Autowired
-    private ShopRepository shopRepo;
-
-    @Autowired
     private ShopController shopCont;
-
-    @Autowired
-    private MerchantRepository merchantRepository;
 
     @GetMapping("/addNewMerchant")
     public String viewAddNewMerchantPage(Model model) {
@@ -30,21 +23,25 @@ public class MerchantController {
     }
 
     @PostMapping("/addNewMerchant")
-    public String addNewMerchant(@ModelAttribute Merchant merchant, Model model) {
-        merchantRepository.save(merchant);
+    public @ResponseBody Merchant addNewMerchant(@RequestParam(value = "userName") String userName,
+                                                 @RequestParam(value = "password") String password,
+                                                 @RequestParam(value = "email") String email,
+                                                 @RequestParam(value = "contactPhoneNumber") String phoneNum,
+                                                 @RequestParam(value = "setId") String newId,
+                                                 Model model) {
+
+        Merchant toAdd = new Merchant(userName, phoneNum, email, password);
+        toAdd.setId(newId);
+        // TODO: FIX
+        //merchantRepository.save(merchant);
         /*
             todo: Should navigate to profile page, redirect to home page for now
          */
-        return "redirect:/";
+        return toAdd;
     }
 
     private List<Shop> getShops() {
-        List<Shop> shops = new ArrayList<Shop>();
-        for (Shop shop : shopRepo.findAll()) {
-            shops.add(shop);
-        }
-
-        return shops;
+        return FirebaseController.getCurrShops();
     }
 
     @GetMapping("/goToAddShopPage")
@@ -64,8 +61,18 @@ public class MerchantController {
     }
 
     @PostMapping("/deleteShop")
-    public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") int shopId, Model model) {
-        shopRepo.deleteById(shopId);
+    public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") String shopId, Model model) {
+        ArrayList<Shop> currShops = FirebaseController.getCurrShops();
+
+        int indToRemove = -1;
+        for (int i = 0; i < currShops.size(); i++){
+            if (currShops.get(i).getId().equals(shopId)) {
+                indToRemove = i;
+                i = currShops.size() + 2;
+            }
+        }
+
+        currShops.remove(indToRemove);
 
         return getShops().isEmpty();
     }

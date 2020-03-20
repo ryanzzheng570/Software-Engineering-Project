@@ -2,8 +2,6 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Model.TempShop;
-import ShopifyProj.Repository.ShopRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,85 +18,110 @@ public class ShopController {
     @Autowired
     private MerchantController merchCont;
 
-    @Autowired
-    private ShopRepository shopRepo;
-
     @GetMapping("/goToShopCustomerView")
-    public String viewShopPageById(@RequestParam(value = "shopId") int aShopId, Model model) {
-        // Until database sorted out
-        String aShopId2 = "-M2QECi8-MSD1yp8jzA9";
-        model.addAttribute("shopID", aShopId2);
-        TempShop shop = FirebaseController.getShopFromID(aShopId2);
-        model.addAttribute("shop", FirebaseController.getShopFromID(aShopId2));
+    public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
+        Shop shopToView = null;
+        try {
+            shopToView = FirebaseController.getShopWithId(aShopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        model.addAttribute("shopID", aShopId);
+        model.addAttribute("shop", shopToView);
+
         return "CustomerShopViewPage";
     }
 
+    @PostMapping("/updateShopId")
+    public @ResponseBody Shop changeShopId(@RequestParam(value = "oldId") String oldId,
+                                           @RequestParam(value = "newId") String newId,
+                                           Model model) {
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(oldId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        checkShop.setId(newId);
+
+        return checkShop;
+    }
+
     @PostMapping("/changeShopName")
-    public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") int shopId,
+    public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") String shopId,
                                  @RequestParam(value = "shopName") String newName,
                                  Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop == null) {
-            System.out.println(String.format("No shop found with ID %d", shopId));
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         checkShop.setShopName(newName);
-
-        shopRepo.save(checkShop);
 
         return checkShop;
     }
 
     @PostMapping("/removeTag")
-    public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") int shopId,
-                                        @RequestParam(value = "tagId") int tagId,
+    public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") String shopId,
+                                        @RequestParam(value = "tagId") String tagId,
                                         Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop == null) {
-            System.out.println(String.format("No shop found with ID %d", shopId));
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         checkShop.removeTagWithId(tagId);
-
-        shopRepo.save(checkShop);
 
         return checkShop;
     }
 
     @PostMapping("/addTag")
-    public @ResponseBody Tag addTag(@RequestParam(value = "shopId") int shopId,
+    public @ResponseBody Tag addTag(@RequestParam(value = "shopId") String shopId,
                                      @RequestParam(value = "tagName") String tagName,
+                                    @RequestParam(value = "setId") String tagId,
                                      Model model) {
-        Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop == null) {
-            System.out.println(String.format("No shop found with ID %d", shopId));
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         Tag toAdd = new Tag(tagName);
+        toAdd.setId(tagId);
         checkShop.addTag(toAdd);
-
-        shopRepo.save(checkShop);
 
         return toAdd;
     }
 
     @PostMapping("/addShop")
-    public String addShop(@RequestParam(value = "shopName") String name, Model model) {
+    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
+                                      @RequestParam(value = "setId") String newId,
+                                      Model model) {
         Shop newShop = new Shop(name, Optional.empty());
+        newShop.setId(newId);
 
-        shopRepo.save(newShop);
+        FirebaseController.addShop(newShop);
 
-        return displayYourShop(newShop.getId(), model);
+        return newShop;
     }
 
     @GetMapping("/goToEditShopPage")
-    public String displayYourShop(@RequestParam(value = "shopId") int shopId, Model model){
-        Shop theShop = shopRepo.findById(shopId);
-        if (theShop == null){
-            System.out.println(String.format("No shop found with ID %d", shopId));
+    public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        model.addAttribute("shop", theShop);
+        model.addAttribute("shop", checkShop);
         model.addAttribute("item", new Item());
         model.addAttribute("tag", new Tag());
 

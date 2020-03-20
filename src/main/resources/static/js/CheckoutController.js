@@ -8,11 +8,10 @@ function addItemIDs() {
     const ids = ids_str.split("$");
     let counter = 0;
     let isFirstRow = true;
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
+        } else {
             $(this).append('<input name=item value="' + ids[counter] + '" type=hidden /></td>');
             counter++;
         }
@@ -23,15 +22,14 @@ function updateCost() {
     let isFirstRow = true;
     let totalCost = 0;
 
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
+        } else {
             let dataCells = $(this).find('td');
             let quantity;
-            $(this).closest('tr').find("input").each(function() {
-                if(!isNaN(this.value)) {
+            $(this).closest('tr').find("input").each(function () {
+                if (!isNaN(this.value)) {
                     quantity = this.value;
                 }
             });
@@ -49,19 +47,18 @@ function checkout() {
     let quantities = [];
     let noErrors = true;
 
-    $("#cartTable tr").each(function(){
+    $("#cartTable tr").each(function () {
         if (isFirstRow) {
             isFirstRow = false;
-        }
-        else {
-            $(this).closest('tr').find("input").each(function() {
-                if(isNaN(this.value)) {
+        } else {
+            $(this).closest('tr').find("input").each(function () {
+                if (isNaN(this.value)) {
                     itemIDs.push(this.value);
                 }
-                if(!isNaN(this.value)) {
+                if (!isNaN(this.value)) {
                     let maxValue = parseInt($(this)[0].max);
                     if (this.value == "" || isNaN(this.value) || parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
-                        alert ("Error - Please enter a valid quantity!");
+                        alert("Error - Please enter a valid quantity!");
                         noErrors = false;
                         return;
                     }
@@ -81,24 +78,47 @@ async function submit(aStoreID, itemIDs, quantities) {
     let name = $("#paymentName").val();
 
     if (name == "") {
-        alert ("Please enter a name!");
+        alert("Please enter a name!");
         return;
     }
     if (ccNum == "") {
-        alert ("Please enter a credit card number!");
+        alert("Please enter a credit card number!");
         return;
     }
 
-    const resp = await PurchaseItems({
+    var checkoutData = {
+        storeId: aStoreID,
+        itemIds: itemIDs,
+        quantities: quantities
+    };
+
+    console.log(checkoutData);
+
+    showLoading();
+
+    var resp = await PurchaseItems({
         shopID: aStoreID,
         itemIDs: itemIDs,
         quantities: quantities
     });
 
-    if (resp.data.msg == "Success") {
-        alert ("Thank you " + name + " for your purchase.");
+    console.log(resp.data);
+
+    if (resp.data == "Success") {
+        $.ajax({
+            url: "/checkout?" + $.param(checkoutData),
+            type: "POST",
+            dataType: "json"
+        });
+
+        hideLoading();
+
+        alert("Thank you " + name + " for your purchase.");
+
         window.history.back();
     } else {
-        alert ("Error: there was a problem with the transaction");
+        hideLoading();
+        alert("Error: there was a problem with the transaction");
     }
+
 }

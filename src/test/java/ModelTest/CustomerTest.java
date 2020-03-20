@@ -69,7 +69,7 @@ class CustomerTest {
         assertEquals(newItem2, testCustomer.getBoughtItemById(newItem2.getId()));
         assertEquals(2, testCustomer.getBoughtItems().size());
 
-        int idToRem = newItem.getId();
+        String idToRem = newItem.getId();
 
         testCustomer.removeBoughtItemById(idToRem);
 
@@ -90,7 +90,7 @@ class CustomerTest {
         assertEquals(newItem2, testCustomer.getCartItemById(newItem2.getId()));
         assertEquals(2, testCustomer.getCart().size());
 
-        int idToRem = newItem.getId();
+        String idToRem = newItem.getId();
 
         testCustomer.removeCartItemById(idToRem);
 

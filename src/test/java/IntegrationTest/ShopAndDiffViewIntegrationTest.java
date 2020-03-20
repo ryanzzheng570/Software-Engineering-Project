@@ -1,13 +1,13 @@
 package ShopifyProj;
 
-import ShopifyProj.Repository.ItemRepository;
-import ShopifyProj.Repository.ShopRepository;
-import ShopifyProj.Repository.TagRepository;
+import ShopifyProj.Controller.FirebaseController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -23,20 +23,11 @@ public class ShopAndDiffViewIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private TagRepository tagRepo;
-
-    @Autowired
-    private ShopRepository shopRepo;
-
-    @Autowired
-    private ItemRepository itemRepo;
-
     @Test
     public void addBasicShop() throws Exception {
         String name = "TEST_SHOP";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
 
         this.mockMvc.perform(post(requestStr));
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -49,16 +40,16 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP";
         String newName = "NEW_NAME";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String changeNameQuery = String.format("/changeShopName?shopId=%d&shopName=%s", shopId, newName);
+        String changeNameQuery = String.format("/changeShopName?shopId=%s&shopName=%s", shopId, newName);
         this.mockMvc.perform(post(changeNameQuery));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -72,10 +63,10 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP_DEL";
         String name2 = "TEST_SHOP_2_DEL";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        requestStr = String.format("/addShop?shopName=%s", name2);
+        requestStr = String.format("/addShop?shopName=%s&setId=%s", name2, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -83,9 +74,9 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(content().string(containsString(name)))
                 .andExpect(content().string(containsString(name2)));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String delShopQuery = String.format("/deleteShop?shopId=%d", shopId);
+        String delShopQuery = String.format("/deleteShop?shopId=%s", shopId);
         this.mockMvc.perform(post(delShopQuery));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -99,12 +90,12 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP_ONE_TAG";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         this.mockMvc.perform(post(requestStr));
@@ -120,15 +111,15 @@ public class ShopAndDiffViewIntegrationTest {
         String tag1 = "TAG_1";
         String tag2 = "TAG_2";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
-        addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag2);
+        addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag2, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         this.mockMvc.perform(post(requestStr));
@@ -145,15 +136,15 @@ public class ShopAndDiffViewIntegrationTest {
         String tag1 = "TAG_1_REM_TAG";
         String tag2 = "TAG_2";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
-        addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag2);
+        addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag2, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -162,9 +153,9 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(content().string(containsString(tag1)))
                 .andExpect(content().string(containsString(tag2)));
 
-        int tagId = tagRepo.findByTagName(tag1).getId();
+        String tagId = FirebaseController.findByTagName(shopId, tag1).getId();
 
-        String remTagQuery = String.format("/removeTag?shopId=%d&tagId=%d", shopId, tagId);
+        String remTagQuery = String.format("/removeTag?shopId=%s&tagId=%s", shopId, tagId);
         this.mockMvc.perform(post(remTagQuery));
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
@@ -184,25 +175,26 @@ public class ShopAndDiffViewIntegrationTest {
         String itemCost = "45";
         int itemInventory = 56;
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addItemQuery = String.format("/addItem?shopId=%d&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d",
+        String addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d&setId=%s",
                 shopId,
                 itemUrl,
                 itemAltText,
                 itemName,
                 itemCost,
-                itemInventory);
+                itemInventory,
+                FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addItemQuery));
 
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((containsString(itemName))))
-//                .andExpect(content().string((containsString(itemCost))))
-//                .andExpect(content().string((containsString(Integer.toString(itemInventory)))));
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((containsString(itemName))))
+                .andExpect(content().string((containsString(itemCost))))
+                .andExpect(content().string((containsString(Integer.toString(itemInventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -227,37 +219,39 @@ public class ShopAndDiffViewIntegrationTest {
         String item2Cost = "698";
         int item2Inventory = 9867;
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addItemQuery = String.format("/addItem?shopId=%d&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d",
+        String addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d&setId=%s",
                 shopId,
                 item1Url,
                 item1AltText,
                 item1Name,
                 item1Cost,
-                item1Inventory);
+                item1Inventory,
+                FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addItemQuery));
 
-        addItemQuery = String.format("/addItem?shopId=%d&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d",
+        addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%d&setId=%s",
                 shopId,
                 item2Url,
                 item2AltText,
                 item2Name,
                 item2Cost,
-                item2Inventory);
+                item2Inventory,
+                FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addItemQuery));
 
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((containsString(item1Name))))
-//                .andExpect(content().string((containsString(item1Cost))))
-//                .andExpect(content().string((containsString(Integer.toString(item1Inventory)))))
-//                .andExpect(content().string((containsString(item2Name))))
-//                .andExpect(content().string((containsString(item2Cost))))
-//                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((containsString(item1Name))))
+                .andExpect(content().string((containsString(item1Cost))))
+                .andExpect(content().string((containsString(Integer.toString(item1Inventory)))))
+                .andExpect(content().string((containsString(item2Name))))
+                .andExpect(content().string((containsString(item2Cost))))
+                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -268,21 +262,21 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(content().string((containsString(item2Cost))))
                 .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
 
-        int itemId = itemRepo.findByItemName(item1Name).getId();
+        String itemId = FirebaseController.findByItemName(shopId, item1Name).getId();
 
-        String remItemQuery = String.format("/removeItem?shopId=%d&itemId=%d",
+        String remItemQuery = String.format("/removeItem?shopId=%s&itemId=%s",
                 shopId,
                 itemId);
         this.mockMvc.perform(post(remItemQuery));
 
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((not(containsString(item1Name)))))
-//                .andExpect(content().string((not(containsString(item1Cost)))))
-//                .andExpect(content().string((not(containsString(Integer.toString(item1Inventory))))))
-//                .andExpect(content().string((containsString(item2Name))))
-//                .andExpect(content().string((containsString(item2Cost))))
-//                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((not(containsString(item1Name)))))
+                .andExpect(content().string((not(containsString(item1Cost)))))
+                .andExpect(content().string((not(containsString(Integer.toString(item1Inventory))))))
+                .andExpect(content().string((containsString(item2Name))))
+                .andExpect(content().string((containsString(item2Cost))))
+                .andExpect(content().string((containsString(Integer.toString(item2Inventory)))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -298,15 +292,17 @@ public class ShopAndDiffViewIntegrationTest {
     public void goToNewShop() throws Exception {
         String shopName = "goToNewShop";
 
-        String addShopQuery = String.format("/addShop?shopName=%s&tag=%s", shopName, "tagOne");
+        String addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
 
         this.mockMvc.perform(post(addShopQuery));
 
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
+        String shopId = FirebaseController.findByShopName(shopName).getId();
 
-        this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((containsString("Welcome to the online store for " + shopName))));
+
+        this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string((containsString("Shop"))));
     }
@@ -321,34 +317,35 @@ public class ShopAndDiffViewIntegrationTest {
         String cost = "10";
         String inventory = "30";
 
-        String addShopQuery = String.format("/addShop?shopName=%s", shopName);
+        String addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addShopQuery));
 
-        int shopId = shopRepo.findByShopName(shopName).getId();
+        String shopId = FirebaseController.findByShopName(shopName).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tagOne);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tagOne, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
-        addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tagTwo);
+        addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tagTwo, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
-        String addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%s",
-                shopRepo.findByShopName(shopName).getId(),
+        String addItemQuery = String.format("/addItem?shopId=%s&url=%s&altText=%s&itemName=%s&cost=%s&inventory=%s&setId=%s",
+                shopId,
                 "",
                 "",
                 itemName,
                 cost,
-                inventory);
+                inventory,
+                FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addItemQuery));
 
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((containsString(shopName))))
-//                .andExpect(content().string((containsString(tagOne))))
-//                .andExpect(content().string((containsString(tagTwo))))
-//                .andExpect(content().string((containsString(itemName))))
-//                .andExpect(content().string((containsString(cost))))
-//                .andExpect(content().string((containsString(inventory))));
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((containsString(shopName))))
+                .andExpect(content().string((containsString(tagOne))))
+                .andExpect(content().string((containsString(tagTwo))))
+                .andExpect(content().string((containsString(itemName))))
+                .andExpect(content().string((containsString(cost))))
+                .andExpect(content().string((containsString(inventory))));
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
@@ -360,15 +357,19 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(content().string((containsString(inventory))));
     }
 
-//    @Test
-//    public void goToShopWithoutItems() throws Exception {
-//        String shopName = "goToShopWithoutItems";
-//        String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
-//
-//        this.mockMvc.perform(post("/addShop?shopName=" + shopName + "&tag=tagOne"));
-//
-//        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopRepo.findByShopName(shopName).getId())).andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(content().string((containsString(noItemsMessage))));
-//    }
+    @Test
+    public void goToShopWithoutItems() throws Exception {
+        String shopName = "goToShopWithoutItems";
+        String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
+
+        String query = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
+
+        this.mockMvc.perform(post(query));
+
+        String shopId = FirebaseController.findByShopName(shopName).getId();
+
+        this.mockMvc.perform(get("/goToShopCustomerView?shopId=" + shopId)).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string((containsString(noItemsMessage))));
+    }
 }
