@@ -130,7 +130,7 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
 exports.addShop = functions.https.onCall((data, context) => {
     return addShop(data.shopName);
 });
-exports.addShopTest = functions.https.onRequest((request, response) => {
+exports.testAddShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(addShop(request.body.shopName, TEST_MODE));
     });
@@ -139,7 +139,7 @@ exports.addShopTest = functions.https.onRequest((request, response) => {
 exports.deleteShop = functions.https.onCall((data, context) => {
     return deleteShop(data.shopId);
 });
-exports.deleteShopTest = functions.https.onRequest((request, response) => {
+exports.testDeleteShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(deleteShop(request.body.shopID, TEST_MODE));
     });
@@ -148,7 +148,7 @@ exports.deleteShopTest = functions.https.onRequest((request, response) => {
 exports.changeShopName = functions.https.onCall((data, context) => {
     return changeShopName(data.shopId, data.shopName)
 });
-exports.changeShopNameTest = functions.https.onRequest((request, response) => {
+exports.testChangeShopName = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(changeShopName(request.body.shopID, request.body.shopName, TEST_MODE));
     });
@@ -157,16 +157,16 @@ exports.changeShopNameTest = functions.https.onRequest((request, response) => {
 exports.addTag = functions.https.onCall((data, context) => {
     return addTagToShop(data.shopId, data.tagName);
 });
-exports.addTagTest = functions.https.onRequest((request, response) => {
+exports.testAddTag = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(addTag(request.body.shopID, request.body.tagName, TEST_MODE));
+        response.status(200).send(addTagToShop(request.body.shopID, request.body.tagName, TEST_MODE));
     });
 });
 
 exports.removeTag = functions.https.onCall((data, context) => {
     return removeTagFromShop(data.shopId, data.tagId);
 });
-exports.removeTagTest = functions.https.onRequest((request, response) => {
+exports.testRemoveTag = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(removeTagFromShop(request.body.shopID, request.body.tagID, TEST_MODE));
     });
@@ -182,14 +182,15 @@ exports.addItem = functions.https.onCall((data, context) => {
     };
     return addItemToShop(data.shopId, itemData);
 });
-exports.addItemTest = functions.https.onRequest((request, response) => {
+exports.testAddItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
+        const numInventory = Number(request.body.inventory);
         const itemData = {
             url: request.body.url,
             altText: request.body.altText,
             name: request.body.itemName,
             cost: request.body.cost,
-            inventory: request.body.inventory
+            inventory: numInventory
         };
         response.status(200).send(addItemToShop(request.body.shopID, itemData, TEST_MODE));
     });
@@ -198,7 +199,7 @@ exports.addItemTest = functions.https.onRequest((request, response) => {
 exports.removeItem = functions.https.onCall((data, context) => {
     return removeItemFromShop(data.shopId, data.itemId);
 });
-exports.removeItemTest = functions.https.onRequest((request, response) => {
+exports.testRemoveItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(removeItemFromShop(request.body.shopID, request.body.itemID, TEST_MODE));
     });
@@ -207,16 +208,22 @@ exports.removeItemTest = functions.https.onRequest((request, response) => {
 exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
     return purchaseItemFromShop(data.shopID, data.itemIDs, data.quantities);
 });
-exports.purchaseItemsTest = functions.https.onRequest((request, response) => {
+exports.testPurchaseItems = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(purchaseItemFromShop(request.body.shopID, request.body.itemIDs, request.body.quantities, TEST_MODE));
+        const items = request.body.itemIDs.split(', ');
+        const quantities = request.body.quantities.split(', ');
+        var qties = [];
+        for(var a in quantities) {
+            qties.push(Number(quantities[a]));
+        }
+        response.status(200).send(purchaseItemFromShop(request.body.shopID, items, qties, TEST_MODE));
     });
 });
 
 exports.createMerchant = functions.https.onCall((data, context) => {
     return createMerchant(data.userName, data.password, data.email, data.contactPhoneNumber);
 });
-exports.createMerchantTest = functions.https.onRequest((request, response) => {
+exports.testCreateMerchant = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(createMerchant(request.body.userName, request.body.password, request.body.email, request.body.contactPhoneNumber, TEST_MODE));
     });
@@ -225,7 +232,7 @@ exports.createMerchantTest = functions.https.onRequest((request, response) => {
 exports.createCustomer = functions.https.onCall((data, context) => {
     return createCustomer(data.userName, data.password, data.email, data.address, data.phoneNumber, data.note);
 });
-exports.createCustomerTest = functions.https.onRequest((request, response) => {
+exports.testCreateCustomer = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(createCustomer(request.body.userName, request.body.password, request.body.email, request.body.address, request.body.phoneNumber, request.body.note, TEST_MODE));
     });

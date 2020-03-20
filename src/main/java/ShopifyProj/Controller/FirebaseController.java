@@ -5,7 +5,6 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-import org.springframework.ui.Model;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,7 +22,7 @@ public class FirebaseController {
     private static FirebaseDatabase testDbInst = null;
     private static String root = "";
 
-    private static ArrayList<Shop> currShops = initializeDbInfo();
+    private static ArrayList<Shop> currShops;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -133,6 +132,7 @@ public class FirebaseController {
     public static FirebaseDatabase getInstance() {
         if (inst == null) {
             inst = new FirebaseController(PRODUCTION_MODE);
+            currShops = initializeDbInfo();
         }
 
         return (dbInst);
@@ -187,7 +187,7 @@ public class FirebaseController {
 
     public static Shop findByShopName(String name) throws Exception {
         for (Shop shop : currShops) {
-            if (shop.getShopName().equals(name)) {
+            if (shop.getName().equals(name)) {
                 return shop;
             }
         }

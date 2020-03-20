@@ -2,12 +2,10 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 
@@ -35,7 +33,7 @@ public class SearchController {
                 }
             }
 
-            if (shop.getShopName().equalsIgnoreCase(lowercaseQuery) || shop.getShopName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
+            if (shop.getName().equalsIgnoreCase(lowercaseQuery) || shop.getName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
                 matchingShops.add(shop);
             }
         }

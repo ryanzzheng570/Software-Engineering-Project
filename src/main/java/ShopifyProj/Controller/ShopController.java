@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -61,7 +60,7 @@ public class ShopController {
             e.printStackTrace();
         }
 
-        checkShop.setShopName(newName);
+        checkShop.setName(newName);
 
         return checkShop;
     }

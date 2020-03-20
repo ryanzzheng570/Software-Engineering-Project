@@ -1,7 +1,5 @@
 package ShopifyProj.Model;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class Shop {
     private String id;
 
-    private String shopName;
+    private String name;
 
     private Set<Tag> tags;
 
@@ -30,10 +28,14 @@ public class Shop {
                 Optional.of(new HashSet<Tag>()));
     }
 
-    public Shop(String shopName, Optional<Set<Tag>> tags) {
+    public Shop(String name) {
+        this.name = name;
+    }
+
+    public Shop(String name, Optional<Set<Tag>> tags) {
         this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
 
-        this.shopName = shopName;
+        this.name = name;
 
         if (tags.isPresent()) {
             this.tags = tags.get();
@@ -53,12 +55,12 @@ public class Shop {
         this.id = newId;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getName() {
+        return name;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void addItem(Item newItem) {
@@ -137,7 +139,7 @@ public class Shop {
     @Override
     public String toString() {
         String toRet = "";
-        toRet += String.format("Shop Name: %s, Id: %s: \n", this.shopName, this.id);
+        toRet += String.format("Shop Name: %s, Id: %s: \n", this.name, this.id);
 
         if (!this.tags.isEmpty()) {
             toRet += "Tags: [";
