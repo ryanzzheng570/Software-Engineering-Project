@@ -206,7 +206,7 @@ public class CustomerServicesTest {
 
     @BeforeClass
     public static void setup() {
-        testDbInstance = FirebaseController.getTestInstance();
+        testDbInstance = FirebaseController.getInstance();
         functionCaller = new CloudTestController();
     }
 

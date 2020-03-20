@@ -14,19 +14,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class FirebaseController {
-    private static final String TEST_MODE = "TEST";
-    private static final String PRODUCTION_MODE = "PROD";
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
-    private static FirebaseController testInst = null;
-    private static FirebaseDatabase testDbInst = null;
     private static String root = "";
 
     private static ArrayList<Shop> currShops = null;
 
     private static final AtomicLong counter = new AtomicLong();
 
-    private FirebaseController(String mode) {
+    private FirebaseController() {
         FileInputStream serviceAccount =
                 null;
         try {
@@ -46,19 +42,13 @@ public class FirebaseController {
         }
 
         FirebaseApp.initializeApp(options);
-
-        if (mode == PRODUCTION_MODE) {
-            dbInst = FirebaseDatabase.getInstance();
-        } else if (mode == TEST_MODE) {
-            root = "test/";
-            testDbInst = FirebaseDatabase.getInstance();
-        }
+        dbInst = FirebaseDatabase.getInstance();
     }
 
     private static ArrayList<Shop> initializeDbInfo() {
         ArrayList<Shop> dbShops = new ArrayList<Shop>();
         CountDownLatch wait = new CountDownLatch(1);
-        FirebaseController.getInstance().getReference(root + "store").addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseController.getInstance().getReference("store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -133,22 +123,14 @@ public class FirebaseController {
 
     public static FirebaseDatabase getInstance() {
         if (inst == null) {
-            inst = new FirebaseController(PRODUCTION_MODE);
+            inst = new FirebaseController();
         }
 
         return (dbInst);
     }
 
-    public static FirebaseDatabase getTestInstance() {
-        if (testInst == null) {
-            testInst = new FirebaseController(TEST_MODE);
-        }
-
-        return (testDbInst);
-    }
-
     public static ArrayList<Shop> getCurrShops() {
-        if(currShops == null) {
+        if (currShops == null) {
             currShops = initializeDbInfo();
         }
         return currShops;
