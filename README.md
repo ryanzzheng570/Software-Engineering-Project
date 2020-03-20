@@ -29,6 +29,7 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ![UML](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Eng%20Lab%20Project%20UML.png)
  
  ### Database Schema
+ NOTE: As part of the project we have to use Firebase, which is NoSQL, so the database schema follows NoSQL
  ![Database Schema](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Database%20Schema.png)
  
  ### Plan For Next Sprint
