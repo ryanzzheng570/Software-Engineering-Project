@@ -53,7 +53,7 @@ class MerchantTest {
         assertEquals(newShop2, testMerchant.getShopById(newShop2.getId()));
         assertEquals(2, testMerchant.getShops().size());
 
-        int idToRem = newShop.getId();
+        String idToRem = newShop.getId();
 
         testMerchant.removeShopById(idToRem);
 

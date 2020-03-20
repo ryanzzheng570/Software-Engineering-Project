@@ -2,6 +2,8 @@ $(document).ready(function () {
     $("#searchShopForm").submit(function (e) {
         e.preventDefault();
 
+        showLoading();
+
         $.ajax({
             url: "/search?" + $("#searchShopForm").serialize(),
             type: "POST",
@@ -42,6 +44,8 @@ $(document).ready(function () {
                     $("#results-table").append(tr);
                 }
             }
+
+            hideLoading();
         })
     })
 })

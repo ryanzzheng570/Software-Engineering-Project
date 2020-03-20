@@ -45,6 +45,24 @@ function addSidebar(){
     $("body").prepend(sidebarDiv);
 }
 
+function test() {
+$.ajax({
+        url: 'https://us-central1-engineeringlabproject.cloudfunctions.net/test',
+        dataType: "json",
+        method: 'POST',
+        data: {
+            inputData: "someData"
+        },
+        success: function(data){
+          console.log('succes: '+data.test);
+        },
+        error:function(xhr,err){
+            console.log("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+            console.log("responseText: "+xhr.responseText);
+        }
+      });
+}
+
 $(document).ready(function() {
     addSidebar();
 })

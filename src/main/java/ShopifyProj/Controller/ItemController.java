@@ -2,7 +2,6 @@ package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Repository.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,8 +21,7 @@ import java.util.Optional;
 public class ItemController {
     private static final int MAX_URL_LEN = 255;
 
-    @Autowired
-    private ShopRepository shopRepo;
+    ArrayList<Shop> currShops = FirebaseController.getCurrShops();
 
     @Autowired
     private ShopController shopCont;
@@ -51,7 +49,8 @@ public class ItemController {
 
 
     @PostMapping("/addItem")
-    public @ResponseBody Item addItem(@RequestParam (value = "shopId") int shopId,
+    public @ResponseBody Item addItem(@RequestParam (value = "shopId") String shopId,
+                                      @RequestParam (value = "setId") String itemId,
                                       @RequestParam (value = "url") String url,
                                       @RequestParam (value = "altText") String altText,
                                       @RequestParam (value = "itemName") String name,
@@ -60,7 +59,13 @@ public class ItemController {
                                       Model model){
         Item itemToAdd = null;
 
-        Shop shop = shopRepo.findById(shopId);
+        Shop shop = null;
+        try {
+            shop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         if (shop != null){
             List<Image> imageToAdd = new ArrayList<Image>();
 
@@ -76,26 +81,27 @@ public class ItemController {
             String newCost = parseCostInput(cost);
 
             itemToAdd = new Item(name, imageToAdd, newCost, inventory);
+            itemToAdd.setId(itemId);
 
             shop.addItem(itemToAdd);
-            shopRepo.save(shop);
         }
 
         return itemToAdd;
     }
 
     @PostMapping("/removeItem")
-    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") int shopId,
-                                         @RequestParam (value = "itemId") int itemId,
+    public @ResponseBody Shop removeItem(@RequestParam (value = "shopId") String shopId,
+                                         @RequestParam (value = "itemId") String itemId,
                                          Model model){
 
-        Shop checkShop = shopRepo.findById(shopId);
-        if (checkShop != null){
-            if (checkShop.getItem(itemId) != null){
-                checkShop.removeItemWithId(itemId);
-                shopRepo.save(checkShop);
-            }
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        checkShop.removeItemWithId(itemId);
 
         return checkShop;
     }

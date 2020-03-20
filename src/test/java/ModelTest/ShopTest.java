@@ -47,7 +47,7 @@ public class ShopTest {
         assertEquals(testShop.getItem(newItem2.getId()), newItem2);
         assertEquals(testShop.getItems().size(), 2);
 
-        int idToRem = newItem.getId();
+        String idToRem = newItem.getId();
 
         testShop.removeItemWithId(idToRem);
 
@@ -95,7 +95,7 @@ public class ShopTest {
         assertEquals(testShop.getTag(newTag2.getId()), newTag2);
         assertEquals(testShop.getTags().size(), 2);
 
-        int idToRem = newTag.getId();
+        String idToRem = newTag.getId();
 
         testShop.removeTagWithId(newTag.getId());
 

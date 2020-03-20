@@ -1,14 +1,14 @@
 package ShopifyProj;
 
-import ShopifyProj.Repository.ShopRepository;
-import ShopifyProj.Repository.ItemRepository;
-
+import ShopifyProj.Controller.FirebaseController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+
+import java.util.concurrent.atomic.AtomicLong;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,12 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ShopAndSearchIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ShopRepository shopRepo;
-
-    @Autowired
-    private ItemRepository itemRepo;
 
     @Test
     public void searchShopNoMatch() throws Exception {
@@ -44,7 +38,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP_BY_NAME";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&tag=%s", name, tag1);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
 
         this.mockMvc.perform(post(requestStr));
 
@@ -65,12 +59,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP123456";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by partial name
@@ -89,12 +83,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP_BY_TAG";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by name
@@ -113,12 +107,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP_PARTIAL_TAG";
         String tag1 = "TAG_123456";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Search for the shop by name
@@ -137,12 +131,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "BookShop_UPPERCASE";
         String tag1 = "test";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
@@ -161,12 +155,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "BookShop_UPPERCASE_TAG";
         String tag1 = "TEST";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
@@ -185,12 +179,12 @@ public class ShopAndSearchIntegrationTest {
         String name = "book";
         String tag1 = "test";
 
-        String requestStr = String.format("/addShop?shopName=%s", name);
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
-        int shopId = shopRepo.findByShopName(name).getId();
+        String shopId = FirebaseController.findByShopName(name).getId();
 
-        String addTagQuery = String.format("/addTag?shopId=%d&tagName=%s", shopId, tag1);
+        String addTagQuery = String.format("/addTag?shopId=%s&tagName=%s&setId=%s", shopId, tag1, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addTagQuery));
 
         //Shop 1 contains name with book and tag with book
