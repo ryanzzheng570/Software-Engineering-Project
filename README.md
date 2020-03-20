@@ -12,10 +12,10 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  Test Locally:
  1. Clone the repo
  2. Open "src/main/java/ShopifyProj/Launcher.java" and run the Launcher
- 3. Go to http://localhost:8181/
+ 3. Go to http://localhost:8181/ <br />
  Alternatively, use Heroku:
  1. Go to https://dashboard.heroku.com/apps/minishopifygroup5
- 2. Click "Open App"
+ 2. Click "Open App" <br />
  To Test:
  1. Use the navigation menu or buttons to test the app (NOTE: some pages ask for phone numbers, email, or credit card numbers. Nothing is done with this information, so you can just enter fake info)
   
