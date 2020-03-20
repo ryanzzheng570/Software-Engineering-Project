@@ -56,13 +56,16 @@
                 <tr>
                     <th>Name</th>
                     <th>Image</th>
+                    <th>Image URL</th>
+                    <th>Image AltText</th>
                     <th>Quantity</th>
                     <th>Cost</th>
                     <th></th>
+                    <th></th>
                 </tr>
 
-                <tr th:each="item: ${shop.items}">
-                    <td style="text-align:center" th:text="${item.itemName}"/>
+                <tr th:each="item: ${shop.items}" th:id="'ITEM_' + ${item.id}"}>
+                    <td> <input type='text' th:value="${item.itemName}" name="itemName"/> </td>
 
                     <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
                         <a th:href="${item.images[0]?.url}">
@@ -72,9 +75,16 @@
                     </td>
                     <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-                    <td style="text-align:center" th:text="${item.inventory}"/>
-                    <td style="text-align:center" th:text="${item.cost}"/>
-                    <td><input type="button" value="Remove Item" class="removeItemButton" th:id="'ITEM_' + ${item.id}"/></td>
+                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text'  th:value="${item.images[0]?.url}" name="url"/> </td>
+                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text'  value="No URL"/> </td>
+
+                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text'  th:value="${item.images[0]?.altText}" name="altText"/> </td>
+                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text'  value="No AltText"/> </td>
+
+                    <td> <input type='number' step="1" min="0" th:value="${item.inventory}" name="inventory"/> </td>
+                    <td> <input type='number' step="0.01" min="0" th:value="${item.cost}" name="cost"/> </td>
+                    <td><input type="button" value="Remove Item" class="removeItemButton" /></td>
+                    <td><input type="button" value="Edit Item" class="saveChangesButton" /></td>
                 </tr>
             </table>
         </div>
