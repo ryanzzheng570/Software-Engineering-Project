@@ -63,6 +63,9 @@ function addItemToShop(shopID, itemInfo, mode = '') {
 }
 
 function removeItemFromShop(shopID, itemID, mode = '') {
+    if (!ValidateString(shopID) || !ValidateString(itemID)) {
+        return "Sorry, invalid input was entered!";
+    }
     return database.ref(mode + '/store/' + shopID + "/item/" + itemID).remove();
 }
 
