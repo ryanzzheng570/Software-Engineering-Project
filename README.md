@@ -32,4 +32,8 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ![Database Schema](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Database%20Schema.png)
  
  ### Plan For Next Sprint
- 
+ - Add login support for customers and merchants
+ - Improve testing for cart and checkout
+ - Update the user interface
+ - Update database to account for merchant's for owning shops
+ - More updates for merchant shop view
