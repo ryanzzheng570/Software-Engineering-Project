@@ -107,8 +107,8 @@ public class ItemController {
     }
 
     @PostMapping("/editItem")
-    public @ResponseBody Shop editItem(@RequestParam (value = "shopId") int shopId,
-                                       @RequestParam (value = "itemId") int itemId,
+    public @ResponseBody Shop editItem(@RequestParam (value = "shopId") String shopId,
+                                       @RequestParam (value = "itemId") String itemId,
                                        @RequestParam (value = "url") String url,
                                        @RequestParam (value = "altText") String altText,
                                        @RequestParam (value = "itemName") String itemName,
@@ -116,7 +116,12 @@ public class ItemController {
                                        @RequestParam (value = "inventory") int inventory,
                                          Model model){
 
-        Shop checkShop = shopRepo.findById(shopId);
+        Shop checkShop = null;
+        try {
+            checkShop = FirebaseController.getShopWithId(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (checkShop != null){
             if (checkShop.getItem(itemId) != null){
                 checkShop.getItem(itemId).setInventory(inventory);
@@ -124,7 +129,6 @@ public class ItemController {
                 checkShop.getItem(itemId).setAltText(0, altText);
                 checkShop.getItem(itemId).setItemName(itemName);
                 checkShop.getItem(itemId).setCost(cost);
-                shopRepo.save(checkShop);
             }
         }
 
