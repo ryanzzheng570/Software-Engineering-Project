@@ -1,9 +1,8 @@
 package CloudFunctionTest;
 
-import ShopifyProj.Controller.CloudServiceController;
+import ShopifyProj.Controller.CloudTestController;
 import ShopifyProj.Controller.FirebaseController;
 
-import ShopifyProj.Model.Shop;
 import com.google.firebase.database.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -19,7 +18,7 @@ import java.util.Map;
 
 public class CustomerServicesTest {
     private static FirebaseDatabase testDbInstance = null;
-    private static CloudServiceController functionCaller = null;
+    private static CloudTestController functionCaller = null;
 
     @Test
     public void itPreventsPurchaseOfOutOfInventoryItems() {
@@ -56,7 +55,7 @@ public class CustomerServicesTest {
         param.put("quantities", SECOND_ITEM_PURC);
 
         try {
-            functionCaller.sendPost(CloudServiceController.purchaseItemFromShop, param);
+            functionCaller.sendPost(CloudTestController.purchaseItemFromShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -124,7 +123,7 @@ public class CustomerServicesTest {
         param.put("quantities", FIRST_ITEM_PURC + ", " + SECOND_ITEM_PURC);
 
         try {
-            functionCaller.sendPost(CloudServiceController.purchaseItemFromShop, param);
+            functionCaller.sendPost(CloudTestController.purchaseItemFromShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -169,7 +168,7 @@ public class CustomerServicesTest {
         param.put("note", NOTE);
 
         try {
-            key = functionCaller.sendPost(CloudServiceController.createCustomer, param);
+            key = functionCaller.sendPost(CloudTestController.createCustomer, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -208,7 +207,7 @@ public class CustomerServicesTest {
     @BeforeClass
     public static void setup() {
         testDbInstance = FirebaseController.getTestInstance();
-        functionCaller = new CloudServiceController();
+        functionCaller = new CloudTestController();
     }
 
     @AfterClass

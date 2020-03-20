@@ -1,6 +1,6 @@
 package CloudFunctionTest;
 
-import ShopifyProj.Controller.CloudServiceController;
+import ShopifyProj.Controller.CloudTestController;
 import ShopifyProj.Controller.FirebaseController;
 
 import ShopifyProj.Model.Shop;
@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class MerchantServicesTest {
     private static FirebaseDatabase testDbInstance = null;
-    private static CloudServiceController functionCaller = null;
+    private static CloudTestController functionCaller = null;
     private static String result = "";
 
     @Test
@@ -50,7 +50,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            functionCaller.sendPost(CloudServiceController.removeItemFromShop, param);
+            functionCaller.sendPost(CloudTestController.removeItemFromShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -99,7 +99,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            key = functionCaller.sendPost(CloudServiceController.addItemToShop, param);
+            key = functionCaller.sendPost(CloudTestController.addItemToShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -165,7 +165,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            functionCaller.sendPost(CloudServiceController.removeTagFromShop, param);
+            functionCaller.sendPost(CloudTestController.removeTagFromShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -206,7 +206,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            key = functionCaller.sendPost(CloudServiceController.addTagToShop, param);
+            key = functionCaller.sendPost(CloudTestController.addTagToShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -238,7 +238,7 @@ public class MerchantServicesTest {
         String key = "";
 
         try {
-            key = functionCaller.sendPost(CloudServiceController.addShop, param);
+            key = functionCaller.sendPost(CloudTestController.addShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -247,7 +247,7 @@ public class MerchantServicesTest {
         testDbInstance.getReference("test/store/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                setResult(((String) ((Map<String, Object>) dataSnapshot.getValue()).get("name")));
+                setResult(((String) ((Map<String, Object>) dataSnapshot.getValue()).get("shopName")));
             }
 
             @Override
@@ -279,7 +279,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            functionCaller.sendPost(CloudServiceController.deleteShop, param);
+            functionCaller.sendPost(CloudTestController.deleteShop, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -319,7 +319,7 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         try {
-            functionCaller.sendPost(CloudServiceController.changeShopName, param);
+            functionCaller.sendPost(CloudTestController.changeShopName, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -328,7 +328,7 @@ public class MerchantServicesTest {
         testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                setResult(((String) ((Map<String, Object>) dataSnapshot.getValue()).get("name")));
+                setResult(((String) ((Map<String, Object>) dataSnapshot.getValue()).get("shopName")));
             }
 
             @Override
@@ -353,7 +353,7 @@ public class MerchantServicesTest {
         param.put("contactPhoneNumber", "1234567890");
 
         try {
-            key = functionCaller.sendPost(CloudServiceController.createMerchant, param);
+            key = functionCaller.sendPost(CloudTestController.createMerchant, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
@@ -387,7 +387,7 @@ public class MerchantServicesTest {
     @BeforeClass
     public static void setup() {
         testDbInstance = FirebaseController.getTestInstance();
-        functionCaller = new CloudServiceController();
+        functionCaller = new CloudTestController();
     }
 
     @AfterClass

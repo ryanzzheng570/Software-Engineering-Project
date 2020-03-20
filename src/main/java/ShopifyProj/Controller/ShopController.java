@@ -60,7 +60,7 @@ public class ShopController {
             e.printStackTrace();
         }
 
-        checkShop.setName(newName);
+        checkShop.setShopName(newName);
 
         return checkShop;
     }

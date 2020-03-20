@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class CloudServiceController {
+public class CloudTestController {
 
     // List all our Cloud Function URLs here
     public static final String addShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/testAddShop";

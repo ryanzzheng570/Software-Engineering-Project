@@ -33,7 +33,7 @@ public class SearchController {
                 }
             }
 
-            if (shop.getName().equalsIgnoreCase(lowercaseQuery) || shop.getName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
+            if (shop.getShopName().equalsIgnoreCase(lowercaseQuery) || shop.getShopName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
                 matchingShops.add(shop);
             }
         }

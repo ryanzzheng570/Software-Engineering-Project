@@ -22,7 +22,7 @@ public class FirebaseController {
     private static FirebaseDatabase testDbInst = null;
     private static String root = "";
 
-    private static ArrayList<Shop> currShops;
+    private static ArrayList<Shop> currShops = null;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -47,9 +47,9 @@ public class FirebaseController {
 
         FirebaseApp.initializeApp(options);
 
-        if(mode == PRODUCTION_MODE) {
+        if (mode == PRODUCTION_MODE) {
             dbInst = FirebaseDatabase.getInstance();
-        } else if(mode == TEST_MODE) {
+        } else if (mode == TEST_MODE) {
             root = "test/";
             testDbInst = FirebaseDatabase.getInstance();
         }
@@ -67,7 +67,7 @@ public class FirebaseController {
 
                         Map<String, Object> mapData = (Map<String, Object>) storeData.getValue();
 
-                        String shopName = (String) mapData.get("name");
+                        String shopName = (String) mapData.get("shopName");
                         Shop shopToAdd = new Shop(shopName, Optional.empty());
                         shopToAdd.setId(shopId);
 
@@ -128,13 +128,12 @@ public class FirebaseController {
             e.printStackTrace();
         }
 
-        return(dbShops);
+        return (dbShops);
     }
 
     public static FirebaseDatabase getInstance() {
         if (inst == null) {
             inst = new FirebaseController(PRODUCTION_MODE);
-            currShops = initializeDbInfo();
         }
 
         return (dbInst);
@@ -149,6 +148,9 @@ public class FirebaseController {
     }
 
     public static ArrayList<Shop> getCurrShops() {
+        if(currShops == null) {
+            currShops = initializeDbInfo();
+        }
         return currShops;
     }
 
@@ -189,7 +191,7 @@ public class FirebaseController {
 
     public static Shop findByShopName(String name) throws Exception {
         for (Shop shop : currShops) {
-            if (shop.getName().equals(name)) {
+            if (shop.getShopName().equals(name)) {
                 return shop;
             }
         }

@@ -21,7 +21,7 @@ function addShop(shopName, mode = '') {
         return "Sorry, invalid input was entered!";
     }
     return database.ref(mode + '/store/').push({
-        name: shopName
+        shopName: shopName
     }).key;
 }
 
@@ -37,7 +37,7 @@ function changeShopName(shopID, shopName, mode = '') {
         return "Sorry, invalid input was entered!";
     }
     return database.ref(mode + '/store/' + shopID).update({
-        name: shopName
+        shopName: shopName
     }).key;
 }
 
