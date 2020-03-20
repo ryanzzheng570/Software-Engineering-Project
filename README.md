@@ -11,7 +11,7 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ### Current State
  - Shops can be created
  - Shops can be searched by using the name or tags
- - Merchants can add items to their shops and remove them
+ - Merchants can modify shops by chaning the shops name, adding/removing tags, and adding/removing items
  - Shops have different views for customers and merchants
  - App is running on Travis CI and Heroku
  - Setup and integrated Firebase/database
