@@ -100,4 +100,28 @@ public class ItemController {
         return checkShop;
     }
 
+    @PostMapping("/editItem")
+    public @ResponseBody Shop editItem(@RequestParam (value = "shopId") int shopId,
+                                       @RequestParam (value = "itemId") int itemId,
+                                       @RequestParam (value = "url") String url,
+                                       @RequestParam (value = "altText") String altText,
+                                       @RequestParam (value = "itemName") String itemName,
+                                       @RequestParam (value = "cost") String cost,
+                                       @RequestParam (value = "inventory") int inventory,
+                                         Model model){
+
+        Shop checkShop = shopRepo.findById(shopId);
+        if (checkShop != null){
+            if (checkShop.getItem(itemId) != null){
+                checkShop.getItem(itemId).setInventory(inventory);
+                checkShop.getItem(itemId).setUrl(0, url);
+                checkShop.getItem(itemId).setAltText(0, altText);
+                checkShop.getItem(itemId).setItemName(itemName);
+                checkShop.getItem(itemId).setCost(cost);
+                shopRepo.save(checkShop);
+            }
+        }
+
+        return checkShop;
+    }
 }

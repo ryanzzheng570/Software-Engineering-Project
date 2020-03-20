@@ -92,6 +92,8 @@ function addTagHandler(e){
     }
 }
 
+
+
 function removeItem(btn, shopId, itemId) {
     var callStr = "/removeItem?shopId=" + shopId + "&itemId=" + itemId;
 
@@ -108,6 +110,26 @@ function removeItem(btn, shopId, itemId) {
             $("#nonEmptyItemDiv").css("display", "none");
         }
     });
+}
+
+function editItemHandler(shopId, itemId, itemData){
+    var callStr = "/editItem?;
+    itemData["shopId"] = shopId;
+    itemData["itemId"] = itemId;
+
+    console.log(itemData);
+
+    $.ajax({
+            url: callStr + $.param(itemData),
+            type: "POST",
+            dataType: "json"
+        }).then(function(data) {
+
+            if (data.items.length === 0) {
+                $("#noItemDiv").css("display", "block");
+                $("#nonEmptyItemDiv").css("display", "none");
+            }
+        });
 }
 
 function addItemHandler(e){
@@ -212,4 +234,17 @@ $(document).ready(function() {
         tagId = this.id.replace("ITEM_", "");
         removeItem(this, $("#shopId").val(), tagId);
     });
+
+    $(".saveChangesButton").on('click', function() {
+        var rowId = this.parentNode.parentNode.id;
+        var row = $('#' + rowId);
+        var data = {};
+        $("td input", row).each(function() {
+            var name = $(this).attr('name')
+            var val = $(this).val();
+            data[name] = val;
+        });
+            itemId = rowId.replace("ITEM__", "");
+            editItemHandler($("#shopId").val(), itemId, data);
+        });
 });
