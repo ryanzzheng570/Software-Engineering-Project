@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FirebaseController {
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
-    private static String root = "";
 
     private static ArrayList<Shop> currShops = null;
 
