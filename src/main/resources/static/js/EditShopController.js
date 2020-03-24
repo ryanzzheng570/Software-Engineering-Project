@@ -22,6 +22,10 @@ async function asyncAddItem(formData) {
     return itemId;
 }
 
+async function asyncEditItem(formData) {
+    const resp = await cloudEditItem(formData);
+}
+
 async function asyncRemoveItem(formData) {
     const resp = await cloudRemoveItem(formData);
 }
@@ -180,18 +184,21 @@ function editItemHandler(btn){
 
     console.log(itemData);
 
-    $.ajax({
+    showLoading();
+    asyncEditItem(itemData).then(function(data) {
+        return $.ajax({
             url: callStr + $.param(itemData),
             type: "POST",
             dataType: "json"
-        }).then(function(data) {
-
-            if (data.items.length === 0) {
-                $("#noItemDiv").css("display", "block");
-                $("#nonEmptyItemDiv").css("display", "none");
-            }
-            window.location.href = '/goToEditShopPage?shopId=' + data.id;
-        });
+        })
+    }).then(function(data) {
+        hideLoading();
+        if (data.items.length === 0) {
+            $("#noItemDiv").css("display", "block");
+            $("#nonEmptyItemDiv").css("display", "none");
+        }
+        window.location.href = '/goToEditShopPage?shopId=' + data.id;
+    });
 }
 
 function addItemHandler(e){

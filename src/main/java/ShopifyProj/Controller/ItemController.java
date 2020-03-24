@@ -26,35 +26,13 @@ public class ItemController {
     @Autowired
     private ShopController shopCont;
 
-    private String parseCostInput(String cost) {
-        cost = cost.replaceAll("[$]", "");
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        boolean numeric = true;
-        double check = 0;
-
-        try {
-            check = Double.parseDouble(cost);
-        } catch (NumberFormatException e) {
-            numeric = false;
-        }
-
-        if (numeric){
-            cost = formatter.format(check);
-        }else{
-            cost = "Invalid Cost Input";
-        }
-        return(cost);
-    }
-
-
     @PostMapping("/addItem")
     public @ResponseBody Item addItem(@RequestParam (value = "shopId") String shopId,
                                       @RequestParam (value = "setId") String itemId,
                                       @RequestParam (value = "url") String url,
                                       @RequestParam (value = "altText") String altText,
                                       @RequestParam (value = "itemName") String name,
-                                      @RequestParam (value = "cost") String cost,
+                                      @RequestParam (value = "cost") Double cost,
                                       @RequestParam (value = "inventory") int inventory,
                                       Model model){
         Item itemToAdd = null;
@@ -78,9 +56,7 @@ public class ItemController {
                 }
             }
 
-            String newCost = parseCostInput(cost);
-
-            itemToAdd = new Item(name, imageToAdd, newCost, inventory);
+            itemToAdd = new Item(name, imageToAdd, cost, inventory);
             itemToAdd.setId(itemId);
 
             shop.addItem(itemToAdd);
@@ -112,7 +88,7 @@ public class ItemController {
                                        @RequestParam (value = "url") String url,
                                        @RequestParam (value = "altText") String altText,
                                        @RequestParam (value = "itemName") String itemName,
-                                       @RequestParam (value = "cost") String cost,
+                                       @RequestParam (value = "cost") Double cost,
                                        @RequestParam (value = "inventory") int inventory,
                                          Model model){
 

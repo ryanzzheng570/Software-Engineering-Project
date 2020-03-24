@@ -69,6 +69,13 @@ function removeItemFromShop(shopID, itemID, mode = '') {
     return database.ref(mode + '/store/' + shopID + "/item/" + itemID).remove();
 }
 
+function editItemInShop(shopID, itemID, itemInfo, mode = '') {
+    if (!ValidateString(shopID) || !ValidateString(itemID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
+        return "Sorry, invalid input was entered!";
+    }
+    return database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+}
+
 function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
     const SHOP_ID = shopID;
     const ITEM_IDS = itemID;
@@ -177,7 +184,7 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 
 exports.addItem = functions.https.onCall((data, context) => {
     var inventory = parseInt(data.inventory);
-
+    var cost = parseFloat(data.cost);
     const itemData = {
         url: data.url,
         altText: data.altText,
@@ -207,6 +214,36 @@ exports.removeItem = functions.https.onCall((data, context) => {
 exports.testRemoveItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         response.status(200).send(removeItemFromShop(request.body.shopID, request.body.itemID, TEST_MODE));
+    });
+});
+
+exports.editItem2 = functions.https.onCall((data, context) => {
+    var itemId = data.itemId;
+    var shopId = data.shopId;
+
+    var inventory = parseInt(data.inventory);
+    var cost = parseFloat(data.cost);
+    const itemData = {
+        url: data.url,
+        altText: data.altText,
+        name: data.itemName,
+        cost: cost,
+        inventory: inventory
+    };
+
+    return editItemInShop(shopId, itemId, itemData);
+});
+exports.editItemTest = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        const numInventory = Number(request.body.inventory);
+        const itemData = {
+            url: request.body.url,
+            altText: request.body.altText,
+            name: request.body.itemName,
+            cost: request.body.cost,
+            inventory: numInventory
+        };
+        response.status(200).send(addItemToShop(request.body.shopID, itemData, TEST_MODE));
     });
 });
 
