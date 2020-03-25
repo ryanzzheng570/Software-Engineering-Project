@@ -19,8 +19,6 @@ function createShopFormHandler(e) {
         infoJson[curr["name"]] = curr["value"];
     }
 
-    console.log(infoJson);
-
     if (infoJson["shopName"] === "") {
         alert("Please enter a store name!");
     } else {

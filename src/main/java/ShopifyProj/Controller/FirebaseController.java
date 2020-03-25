@@ -82,7 +82,6 @@ public class FirebaseController {
 
                                 String itemName = (String) currItemData.get("name");
 
-                                System.out.println(currItemData.get("cost"));
                                 Double cost = null;
                                 try {
                                     Long costVal = (Long) currItemData.get("cost");
@@ -151,7 +150,6 @@ public class FirebaseController {
     public static Shop getShopWithId(String shopId) throws Exception {
         Shop checkShop = null;
         for (Shop shop : dbShops) {
-            System.out.println(shop.getId());
             if (shop.getId().equals(shopId)) {
                 checkShop = shop;
                 break;

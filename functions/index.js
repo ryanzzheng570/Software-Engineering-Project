@@ -294,7 +294,7 @@ exports.editItemTest = functions.https.onRequest((request, response) => {
             cost: request.body.cost,
             inventory: numInventory
         };
-        response.status(200).send(addItemToShop(request.body.shopID, itemData, TEST_MODE));
+        response.status(200).send(editItemInShop(request.body.shopID, request.body.itemId, itemData, TEST_MODE));
     });
 });
 

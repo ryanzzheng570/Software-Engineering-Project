@@ -25,7 +25,6 @@ function merchantLoginHandler(e) {
     } else {
         showLoading();
         merchantLogin(infoJson).then(function(data) {
-            console.log($.param(data.data));
             data = data.data;
             var id = data.id;
             var shops = [];
@@ -41,8 +40,6 @@ function merchantLoginHandler(e) {
             };
 
             var callStr = "/loginAsMerchant?" + $.param(data);
-            console.log(data);
-            console.log(callStr);
             return $.ajax({
                 url: callStr,
                 type: "POST",
