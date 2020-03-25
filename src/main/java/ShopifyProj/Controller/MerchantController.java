@@ -40,29 +40,35 @@ public class MerchantController {
         return toAdd;
     }
 
-    private List<Shop> getShops() {
-        return FirebaseController.getCurrShops();
-    }
-
     @GetMapping("/goToAddShopPage")
     public String viewAddShopPage(Model model) {
-        model.addAttribute("shops", getShops());
-        model.addAttribute("shop", new Shop());
+        if (FirebaseController.getCurrUser() == null) {
+            return "Login";
+        } else {
+            model.addAttribute("shops", FirebaseController.getCurrUsersShops());
+            model.addAttribute("shop", new Shop());
+            model.addAttribute("currUser", FirebaseController.getCurrUser().getId());
 
-        return "CreateShopPage";
+            return "CreateShopPage";
+        }
     }
 
     @GetMapping("/goToMerchantMenuPage")
     public String viewMerchantMenuPage(Model model) {
-        model.addAttribute("shops", getShops());
-        model.addAttribute("shop", new Shop());
+        if (FirebaseController.getCurrUser() == null) {
+            return "Login";
+        } else {
+            model.addAttribute("shops", FirebaseController.getCurrUsersShops());
+            model.addAttribute("shop", new Shop());
+            model.addAttribute("currUser", FirebaseController.getCurrUser().getId());
 
-        return "MerchantMenuPage";
+            return "MerchantMenuPage";
+        }
     }
 
     @PostMapping("/deleteShop")
     public @ResponseBody Boolean deleteShop(@RequestParam(value = "shopId") String shopId, Model model) {
-        ArrayList<Shop> currShops = FirebaseController.getCurrShops();
+        ArrayList<Shop> currShops = FirebaseController.getDbShops();
 
         int indToRemove = -1;
         for (int i = 0; i < currShops.size(); i++){
@@ -74,6 +80,6 @@ public class MerchantController {
 
         currShops.remove(indToRemove);
 
-        return getShops().isEmpty();
+        return FirebaseController.getCurrUsersShops().isEmpty();
     }
 }

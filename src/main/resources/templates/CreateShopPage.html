@@ -11,8 +11,12 @@
     <body>
         <h1>Create Shop Page</h1>
 
+        <h3>You're Logged in as: </h3>
+        <p th:text="'Id: ' + ${currUser}"/>
+
         <h3>New Shop Information:</h3>
         <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="createShopForm">
+            <input type="hidden" name="userId" th:value="${currUser}"/>
             <p>New Shop Name: <input type="text" th:field="*{shopName}"/></p>
 
             <p><input type="submit" value="Create Shop"/></p>

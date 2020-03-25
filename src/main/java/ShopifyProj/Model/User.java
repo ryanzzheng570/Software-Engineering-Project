@@ -1,10 +1,17 @@
 package ShopifyProj.Model;
 
+import javax.persistence.Id;
+
 public abstract class User {
     private String userName;
     private String password;
 
+    private boolean isActiveUser = false;
+
     public User() {
+    }
+
+    public User(String id) {
     }
 
     public User(String userName, String password){
@@ -27,4 +34,6 @@ public abstract class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public abstract String getId();
 }

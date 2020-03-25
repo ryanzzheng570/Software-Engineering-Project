@@ -16,13 +16,18 @@ const iv = crypto.randomBytes(16);
 
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
-function addShop(shopName, mode = '') {
+function addShop(shopName, merchantId, mode = '') {
     if (!ValidateString(shopName)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/').push({
-        shopName: shopName
-    }).key;
+
+    var storeKey = database.ref(mode + '/store/').push({
+                           shopName: shopName
+                       }).key;
+
+    database.ref("/users/merchants/" + merchantId + "/shops").push(storeKey);
+
+    return storeKey;
 }
 
 function deleteShop(shopID, mode = '') {
@@ -121,6 +126,33 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
     }).key;
 }
 
+function merchantLogin(username, password, mode = '') {
+    password = encrypt(password);
+    var retVal = database.ref("/users/merchants").once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+        for (var merchantId in ssv) {
+            var currData = ssv[merchantId];
+
+            var checkUsername = currData["userName"];
+            var checkPass = currData["password"];
+
+            if ((checkUsername === username) && (checkPass === password)) {
+                var shops = [];
+                if ("shops" in currData) {
+                    shops = currData["shops"];
+                }
+                return {
+                    id: merchantId,
+                    shops: shops
+                };
+            }
+        }
+
+        return null;
+    });
+    return retVal;
+}
+
 function createCustomer(username, password, email, address, phoneNumber, note, mode = '') {
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
@@ -138,7 +170,7 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
 
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
 exports.addShop = functions.https.onCall((data, context) => {
-    return addShop(data.shopName);
+    return addShop(data.shopName, data.userId);
 });
 exports.testAddShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
@@ -271,6 +303,10 @@ exports.testCreateMerchant = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.merchantLogin = functions.https.onCall((data, context) => {
+    return merchantLogin(data.userName, data.password);
+});
+
 exports.createCustomer = functions.https.onCall((data, context) => {
     return createCustomer(data.userName, data.password, data.email, data.address, data.phoneNumber, data.note);
 });
@@ -282,20 +318,24 @@ exports.testCreateCustomer = functions.https.onRequest((request, response) => {
 
 // !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
 
+const ENCRYPTION_PASSWORD = "password";
+const ENCRYPTION_METHOD = 'aes-128-cbc';
+const UNENCRYPTED_FORM = "utf8";
+const ENCRYPTED_FORM = "hex";
+
 function encrypt(text) {
-    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return encrypted.toString('hex');
+    var key = crypto.createCipher(ENCRYPTION_METHOD, ENCRYPTION_PASSWORD);
+    var encryptedVal = key.update(text, UNENCRYPTED_FORM, ENCRYPTED_FORM)
+    encryptedVal += key.final(ENCRYPTED_FORM);
+    return encryptedVal;
 }
 
 function decrypt(text) {
-    let iv = Buffer.from(text.iv, 'hex');
-    let encryptedText = Buffer.from(text.encryptedData, 'hex');
-    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
+    console.log("DECRYPTING", text);
+    var key = crypto.createDecipher(ENCRYPTION_METHOD, ENCRYPTION_PASSWORD);
+    var unencryptedVal = key.update(text, ENCRYPTED_FORM, UNENCRYPTED_FORM)
+    unencryptedVal += key.final(UNENCRYPTED_FORM);
+    return unencryptedVal;
 }
 
 function ValidateString(string) {

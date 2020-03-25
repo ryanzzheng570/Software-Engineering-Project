@@ -49,6 +49,11 @@ async function cloudSaveMerchant(merchantData) {
     return response;
 }
 
+async function merchantLogin(merchantData) {
+    var response = await callCloudFunction("merchantLogin", merchantData);
+    return response;
+}
+
 async function cloudSaveCustomer(customerData) {
     var response = await callCloudFunction("createCustomer", customerData);
     return response;

@@ -22,7 +22,7 @@ public class SearchController {
 
         String lowercaseQuery = query.toLowerCase();
 
-        for (Shop shop : FirebaseController.getCurrShops()) {
+        for (Shop shop : FirebaseController.getDbShops()) {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();

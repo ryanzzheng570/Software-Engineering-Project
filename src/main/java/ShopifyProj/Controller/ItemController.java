@@ -21,8 +21,6 @@ import java.util.Optional;
 public class ItemController {
     private static final int MAX_URL_LEN = 255;
 
-    ArrayList<Shop> currShops = FirebaseController.getCurrShops();
-
     @Autowired
     private ShopController shopCont;
 

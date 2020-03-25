@@ -5,12 +5,11 @@ function addSidebar(){
     var sidebarDiv = document.createElement("div");
     sidebarDiv.className = "sidenav";
 
-//     Disable the login link since it's not fully implemented
-//     var loginLink = document.createElement("a");
-//     var loginText = document.createTextNode("User Login");
-//     loginLink.href = "/login";
-//     loginLink.appendChild(loginText);
-//     sidebarDiv.appendChild(loginLink);
+     var loginLink = document.createElement("a");
+     var loginText = document.createTextNode("User Login");
+     loginLink.href = "/login";
+     loginLink.appendChild(loginText);
+     sidebarDiv.appendChild(loginLink);
 
     var signUpLink = document.createElement("a");
     var signUpText = document.createTextNode("Sign Up");
