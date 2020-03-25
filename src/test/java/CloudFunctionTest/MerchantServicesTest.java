@@ -14,8 +14,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MerchantServicesTest {
     private static FirebaseDatabase testDbInstance = null;
@@ -231,11 +230,27 @@ public class MerchantServicesTest {
 
     @Test
     public void itCreatesAShop() {
+        String key = "";
+        final String USERNAME = "aUsername";
+        HashMap<String, String> param = new HashMap<>();
+        param.put("userName", USERNAME);
+        param.put("password", "aPassword");
+        param.put("email", "a@a.com");
+        param.put("contactPhoneNumber", "1234567890");
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.createMerchant, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
 
         final String SHOP_NAME = "itCreatesAShop";
-        HashMap<String, String> param = new HashMap<>();
+        String MERCHANT_ID = key;
+        param = new HashMap<>();
         param.put("shopName", SHOP_NAME);
-        String key = "";
+        param.put("userId", MERCHANT_ID);
+        key = "";
 
         try {
             key = functionCaller.sendPost(CloudTestController.addShop, param);
@@ -259,6 +274,28 @@ public class MerchantServicesTest {
 
         firebaseDelay();
         assertThat("Could not find the store in the DB.", getResult(), is(SHOP_NAME));
+
+        testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> temp = (Map<String, Object>) dataSnapshot.getValue();
+
+                Set<String> keys = temp.keySet();
+                List<String> keyList = new ArrayList<String>();
+                keyList.addAll(keys);
+
+                setResult((String) temp.get(keyList.get(0)));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+
+        firebaseDelay();
+        assertThat("Shop ID not added to merchant's shop list.", getResult(), is(key));
     }
 
     @Test
@@ -267,16 +304,62 @@ public class MerchantServicesTest {
         final String DELETE_SHOP_ID = "deleteShopID";
         final String THIRD_SHOP_ID = "thirdShopID";
 
-        DatabaseReference ref = testDbInstance.getReference("test/store/");
-        Map<String, Object> map = new HashMap<>();
-        map.put(FIRST_SHOP_ID, new Shop("First Shop"));
-        map.put(DELETE_SHOP_ID, new Shop("Second Shop"));
-        map.put(THIRD_SHOP_ID, new Shop("Third Shop"));
-        ref.updateChildrenAsync(map);
-
+        // Create Merchant
+        String key = "";
+        final String USERNAME = "aUsername";
         HashMap<String, String> param = new HashMap<>();
-        param.put("shopID", DELETE_SHOP_ID);
+        param.put("userName", USERNAME);
+        param.put("password", "aPassword");
+        param.put("email", "a@a.com");
+        param.put("contactPhoneNumber", "1234567890");
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.createMerchant, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
         firebaseDelay();
+        String MERCHANT_ID = key;
+
+        // Create shop 1
+        param = new HashMap<>();
+        param.put("shopName", FIRST_SHOP_ID);
+        param.put("userId", MERCHANT_ID);
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.addShop, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        // Create shop 2
+        param = new HashMap<>();
+        param.put("shopName", DELETE_SHOP_ID);
+        param.put("userId", MERCHANT_ID);
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.addShop, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        // Create shop 3
+        param = new HashMap<>();
+        param.put("shopName", THIRD_SHOP_ID);
+        param.put("userId", MERCHANT_ID);
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.addShop, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        param = new HashMap<>();
+        param.put("shopID", key);
+        param.put("userId", MERCHANT_ID);
 
         try {
             functionCaller.sendPost(CloudTestController.deleteShop, param);
@@ -289,7 +372,8 @@ public class MerchantServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
-                    assertThat("Store was not deleted", storeData.getKey(), is(not(DELETE_SHOP_ID)));
+                    String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
+                    assertNotEquals("Store was not deleted", currName, DELETE_SHOP_ID);
                 }
             }
 
@@ -300,6 +384,34 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+
+        testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> temp = (Map<String, Object>) dataSnapshot.getValue();
+
+                Set<String> keys = temp.keySet();
+                List<String> keyList = new ArrayList<String>();
+                keyList.addAll(keys);
+
+                assertEquals("No key removed.", keyList.size(), 2);
+
+                System.out.println("######################################################");
+                for (String temp2 : keyList) {
+                    System.out.println(temp2);
+                }
+
+                setResult((String) temp.get(keyList.get(0)));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+        firebaseDelay();
+        assertNotEquals("Shop ID not deleted from merchant's shop list.", getResult(), key);
     }
 
     @Test
@@ -373,6 +485,53 @@ public class MerchantServicesTest {
         });
         firebaseDelay();
         assertThat("Merchant was not added.", getResult(), is(USERNAME));
+    }
+
+    @Test
+    public void itLoginsCorrectly() {
+        String key = "";
+        final String USERNAME = "aUsername";
+        final String PASSWORD = "aPassword";
+        HashMap<String, String> param = new HashMap<>();
+        param.put("userName", USERNAME);
+        param.put("password", PASSWORD);
+        param.put("email", "a@a.com");
+        param.put("contactPhoneNumber", "1234567890");
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.createMerchant, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        final String SHOP_NAME = "itCreatesAShop";
+        String MERCHANT_ID = key;
+        param = new HashMap<>();
+        param.put("shopName", SHOP_NAME);
+        param.put("userId", MERCHANT_ID);
+        key = "";
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.addShop, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        param = new HashMap<>();
+        param.put("userName", USERNAME);
+        param.put("password", PASSWORD);
+        key = "";
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.merchantLogin, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        assertNotEquals("Could not find the store in the DB.", key, functionCaller.getCallErrorMsg());
     }
 
     public static void firebaseDelay() {

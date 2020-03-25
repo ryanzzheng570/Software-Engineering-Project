@@ -80,6 +80,8 @@ public class MerchantController {
 
         currShops.remove(indToRemove);
 
+        ((Merchant) FirebaseController.getCurrUser()).removeShopById(shopId);
+
         return FirebaseController.getCurrUsersShops().isEmpty();
     }
 }

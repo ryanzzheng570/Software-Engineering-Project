@@ -4,7 +4,8 @@ async function asyncDeleteShop(formData) {
 
 function deleteShop(btn, shopId) {
     var infoJson = {
-        shopId: shopId
+        shopId: shopId,
+        userId: $("#currUserId").val()
     };
 
     showLoading();

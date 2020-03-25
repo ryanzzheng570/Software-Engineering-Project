@@ -1,6 +1,7 @@
 package ShopifyProj.Controller;
 
 import ShopifyProj.Model.Item;
+import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.Shop;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +109,8 @@ public class ShopController {
         newShop.setId(newId);
 
         FirebaseController.addShop(newShop);
+
+        ((Merchant) FirebaseController.getCurrUser()).appendNewShop(newShop);
 
         return newShop;
     }

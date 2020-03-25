@@ -25,16 +25,35 @@ function addShop(shopName, merchantId, mode = '') {
                            shopName: shopName
                        }).key;
 
-    database.ref("/users/merchants/" + merchantId + "/shops").push(storeKey);
+    database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
 
     return storeKey;
 }
 
-function deleteShop(shopID, mode = '') {
+function deleteShop(shopID, merchantId, mode = '') {
     if (!ValidateString(shopID)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID).remove();
+
+    var path = mode + '/users/merchants/' + merchantId + "/shops/";
+    var retVal = database.ref(path).once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+
+        var found = false;
+        for (var shopKey in ssv) {
+            if (ssv[shopKey] === shopID) {
+                database.ref(path + shopKey).remove();
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    });
+
+    retVal = database.ref(mode + '/store/' + shopID).remove();
+
+    return retVal;
 }
 
 function changeShopName(shopID, shopName, mode = '') {
@@ -128,7 +147,7 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
 
 function merchantLogin(username, password, mode = '') {
     password = encrypt(password);
-    var retVal = database.ref("/users/merchants").once("value").then((snapshot) => {
+    var retVal = database.ref(mode + "/users/merchants").once("value").then((snapshot) => {
         var ssv = snapshot.val();
         for (var merchantId in ssv) {
             var currData = ssv[merchantId];
@@ -174,16 +193,16 @@ exports.addShop = functions.https.onCall((data, context) => {
 });
 exports.testAddShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(addShop(request.body.shopName, TEST_MODE));
+        response.status(200).send(addShop(request.body.shopName, request.body.userId, TEST_MODE));
     });
 });
 
 exports.deleteShop = functions.https.onCall((data, context) => {
-    return deleteShop(data.shopId);
+    return deleteShop(data.shopId, data.userId);
 });
 exports.testDeleteShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(deleteShop(request.body.shopID, TEST_MODE));
+        response.status(200).send(deleteShop(request.body.shopID, request.body.userId, TEST_MODE));
     });
 });
 
@@ -305,6 +324,11 @@ exports.testCreateMerchant = functions.https.onRequest((request, response) => {
 
 exports.merchantLogin = functions.https.onCall((data, context) => {
     return merchantLogin(data.userName, data.password);
+});
+exports.testMerchantLogin = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(merchantLogin(request.body.userName, request.body.password, TEST_MODE));
+    });
 });
 
 exports.createCustomer = functions.https.onCall((data, context) => {

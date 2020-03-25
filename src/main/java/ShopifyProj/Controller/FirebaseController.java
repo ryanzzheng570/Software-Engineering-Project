@@ -88,7 +88,12 @@ public class FirebaseController {
                                     Long costVal = (Long) currItemData.get("cost");
                                     cost = costVal != null ? costVal.doubleValue() : null;
                                 } catch (Exception e) {
-                                    cost = (Double) currItemData.get("cost");
+                                    try {
+                                        cost = (Double) currItemData.get("cost");
+                                    } catch (Exception f) {
+                                        String costVal = (String) currItemData.get("cost");
+                                        cost = Double.parseDouble(costVal);
+                                    }
                                 }
 
                                 Long invVal = (Long) currItemData.get("inventory");
@@ -240,10 +245,8 @@ public class FirebaseController {
     }
 
     public static List<Shop> getCurrUsersShops() {
-        System.out.println("HERE");
         List<Shop> toRet = null;
         if (FirebaseController.getCurrUser() instanceof Merchant) {
-            System.out.println("HERE_2");
             toRet = ((Merchant) FirebaseController.getCurrUser()).getShops();
         }
         return toRet;
