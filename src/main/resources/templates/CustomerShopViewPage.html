@@ -16,7 +16,6 @@
 <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store
     yet!</h2>
 </div>
-<!--<form method="post" id="cartForm" th:action="@{/addToCart}">-->
 <div id="itemSection" th:unless="${#lists.isEmpty(shop.items)}"></div>
 <h2>Items</h2>
 <table>
