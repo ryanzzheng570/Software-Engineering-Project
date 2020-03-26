@@ -78,7 +78,8 @@ public class FirebaseController {
                                 Map<String, Object> currItemData = (Map<String, Object>) itemData.get(itemId);
 
                                 String itemName = (String) currItemData.get("name");
-                                String cost = ((String) currItemData.get("cost"));
+//                                String cost = ((String) currItemData.get("cost"));
+                                String cost = "1.99";
 
                                 Long invVal = (Long) currItemData.get("inventory");
                                 int inventory = invVal != null ? invVal.intValue() : null;

@@ -129,7 +129,23 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     }).key;
 }
 
+function addItemToShoppingCart(shopID, itemID, mode="") {
+    const CUSTOMER_ID = "-M3JTMoy32z1v1Makgq1";
+    return database.ref(mode + '/users/customers/' + CUSTOMER_ID + '/shoppingCart/').push({
+        itemID: itemID,
+        shopID: shopID
+    }).key;
+}
+
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
+exports.addToCart = functions.https.onCall((data, context) => {
+    return addItemToShoppingCart(data.shopID,data.itemID);
+});
+exports.testAddToCart = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(addItemToShoppingCart("testShopID", "testItemID", TEST_MODE));
+    });
+});
 exports.addShop = functions.https.onCall((data, context) => {
     return addShop(data.shopName);
 });

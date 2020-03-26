@@ -1,5 +1,4 @@
 async function PurchaseItems(quantityData) {
-    console.log("HERE");
     var response = await callCloudFunction("purchaseItemsFromShop", quantityData);
     return response;
 }
@@ -47,6 +46,11 @@ async function cloudSaveMerchant(merchantData) {
 async function cloudSaveCustomer(customerData) {
     var response = await callCloudFunction("createCustomer", customerData);
     return response;
+}
+
+async function cloudAddToCart(data) {
+   var response = await callCloudFunction("addToCart", data);
+   return response;
 }
 
 // !--- PLACE ALL CLOUD SERVICE CALLS ABOVE HERE --- SHOULD NOT HAVE TO CHANGE ANYTHING BELOW ---!

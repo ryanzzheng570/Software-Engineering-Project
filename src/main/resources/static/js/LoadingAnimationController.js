@@ -19,7 +19,6 @@ function hideLoading() {
 }
 
 function showLoading() {
-    console.log("HERE");
     $('#loading').show();
 }
 
