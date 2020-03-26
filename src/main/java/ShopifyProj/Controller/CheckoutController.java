@@ -41,7 +41,6 @@ public class CheckoutController {
 //        model.addAttribute("items", retItems);
 
 //        return "CheckoutPage";
-        System.out.println("HERE");
         return "HomePage";
     }
 
