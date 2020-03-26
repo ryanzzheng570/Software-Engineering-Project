@@ -13,6 +13,8 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
+const SUCCESS_CONSTANT = "SUCCESS";
+const ERROR_CONSTANT = "ERROR - Please contact the developer";
 
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
@@ -129,17 +131,37 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     }).key;
 }
 
-function addItemToShoppingCart(shopID, itemID, mode="") {
+function addItemToShoppingCart(shopID, itemID, mode = "") {
     const CUSTOMER_ID = "-M3JTMoy32z1v1Makgq1";
-    return database.ref(mode + '/users/customers/' + CUSTOMER_ID + '/shoppingCart/').push({
-        itemID: itemID,
-        shopID: shopID
-    }).key;
+    var returnVal = database.ref(mode + '/users/customers/' + CUSTOMER_ID + '/shoppingCart/').once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const SC = snapshot.val();
+            for (var item in SC) {
+                if (SC[item].itemID === itemID) {
+                    return "That item is already in your shopping cart!"
+                }
+            }
+            database.ref(mode + '/users/customers/' + CUSTOMER_ID + '/shoppingCart/').push({
+                itemID: itemID,
+                shopID: shopID
+            }).key;
+            return SUCCESS_CONSTANT;
+
+        } else {
+            database.ref(mode + '/users/customers/' + CUSTOMER_ID + '/shoppingCart/').push({
+                itemID: itemID,
+                shopID: shopID
+            }).key;
+            return SUCCESS_CONSTANT;
+        }
+
+    });
+    return returnVal;
 }
 
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
 exports.addToCart = functions.https.onCall((data, context) => {
-    return addItemToShoppingCart(data.shopID,data.itemID);
+    return addItemToShoppingCart(data.shopID, data.itemID);
 });
 exports.testAddToCart = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
@@ -234,7 +256,7 @@ exports.testPurchaseItems = functions.https.onRequest((request, response) => {
         const items = request.body.itemIDs.split(', ');
         const quantities = request.body.quantities.split(', ');
         var qties = [];
-        for(var a in quantities) {
+        for (var a in quantities) {
             qties.push(Number(quantities[a]));
         }
         response.status(200).send(purchaseItemFromShop(request.body.shopID, items, qties, TEST_MODE));

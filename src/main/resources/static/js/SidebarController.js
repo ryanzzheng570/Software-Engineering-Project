@@ -1,16 +1,30 @@
-function addSidebar(){
+function addShoppingCartLink() {
+    sessionStorage.setItem('token', '-M3JTMoy32z1v1Makgq1');
+
+    var scLink = document.createElement("a");
+    var scText = document.createTextNode("Your Shopping Cart");
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("token") != "") {
+        scLink.href = "/goToCart?userID=" + sessionStorage.getItem("token");
+    } else {
+        scLink.href = "/login";
+    }
+    scLink.appendChild(scText);
+    return scLink;
+}
+
+function addSidebar() {
     $("head").prepend("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/SidebarStyles.css\">");
     $("body").wrapInner("<div class='main' />");
 
     var sidebarDiv = document.createElement("div");
     sidebarDiv.className = "sidenav";
 
-//     Disable the login link since it's not fully implemented
-//     var loginLink = document.createElement("a");
-//     var loginText = document.createTextNode("User Login");
-//     loginLink.href = "/login";
-//     loginLink.appendChild(loginText);
-//     sidebarDiv.appendChild(loginLink);
+    //     Disable the login link since it's not fully implemented
+    //     var loginLink = document.createElement("a");
+    //     var loginText = document.createTextNode("User Login");
+    //     loginLink.href = "/login";
+    //     loginLink.appendChild(loginText);
+    //     sidebarDiv.appendChild(loginLink);
 
     var signUpLink = document.createElement("a");
     var signUpText = document.createTextNode("Sign Up");
@@ -42,27 +56,11 @@ function addSidebar(){
     createShopLink.appendChild(createShopText);
     sidebarDiv.appendChild(createShopLink);
 
+    sidebarDiv.appendChild(addShoppingCartLink());
+
     $("body").prepend(sidebarDiv);
 }
 
-function test() {
-$.ajax({
-        url: 'https://us-central1-engineeringlabproject.cloudfunctions.net/test',
-        dataType: "json",
-        method: 'POST',
-        data: {
-            inputData: "someData"
-        },
-        success: function(data){
-          console.log('succes: '+data.test);
-        },
-        error:function(xhr,err){
-            console.log("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
-            console.log("responseText: "+xhr.responseText);
-        }
-      });
-}
-
-$(document).ready(function() {
+$(document).ready(function () {
     addSidebar();
 })
