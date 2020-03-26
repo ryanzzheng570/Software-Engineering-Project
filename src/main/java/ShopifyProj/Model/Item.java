@@ -18,16 +18,16 @@ public class Item {
     private int inventory;
 
     private List<Image> images;
-    private String cost;
+    private Double cost;
 
     private static final AtomicLong counter = new AtomicLong();
 
     @Autowired
     public Item() {
-        this("", new ArrayList<Image>(), "", 0);
+        this("", new ArrayList<Image>(), 0.0, 0);
     }
 
-    public Item(String name, List<Image> images, String cost, int inventory){
+    public Item(String name, List<Image> images, Double cost, int inventory){
         this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
 
         this.itemName = name;
@@ -90,11 +90,11 @@ public class Item {
     public String getAltText(int imageNum) {return images.get(imageNum).getAltText(); }
 
 
-    public void setCost(String newCost){
+    public void setCost(Double newCost){
         this.cost = newCost;
     }
 
-    public String getCost(){ return this.cost; }
+    public Double getCost(){ return this.cost; }
 
 
     @Override

@@ -10,6 +10,10 @@
 
     <body>
         <h1>Merchant Menu Page</h1>
+        <input type="hidden" th:value="${currUser.id}" id="currUserId"/>
+
+        <h3>You're Logged in as: </h3>
+        <p th:text="'Id: ' + ${currUser.userName}"/>
 
         <h3>Your Current Shops:</h3>
         <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">

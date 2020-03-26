@@ -21,32 +21,8 @@ import java.util.Optional;
 public class ItemController {
     private static final int MAX_URL_LEN = 255;
 
-    ArrayList<Shop> currShops = FirebaseController.getCurrShops();
-
     @Autowired
     private ShopController shopCont;
-
-    private String parseCostInput(String cost) {
-        cost = cost.replaceAll("[$]", "");
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        boolean numeric = true;
-        double check = 0;
-
-        try {
-            check = Double.parseDouble(cost);
-        } catch (NumberFormatException e) {
-            numeric = false;
-        }
-
-        if (numeric){
-            cost = formatter.format(check);
-        }else{
-            cost = "Invalid Cost Input";
-        }
-        return(cost);
-    }
-
 
     @PostMapping("/addItem")
     public @ResponseBody Item addItem(@RequestParam (value = "shopId") String shopId,
@@ -54,7 +30,7 @@ public class ItemController {
                                       @RequestParam (value = "url") String url,
                                       @RequestParam (value = "altText") String altText,
                                       @RequestParam (value = "itemName") String name,
-                                      @RequestParam (value = "cost") String cost,
+                                      @RequestParam (value = "cost") Double cost,
                                       @RequestParam (value = "inventory") int inventory,
                                       Model model){
         Item itemToAdd = null;
@@ -78,9 +54,7 @@ public class ItemController {
                 }
             }
 
-            String newCost = parseCostInput(cost);
-
-            itemToAdd = new Item(name, imageToAdd, newCost, inventory);
+            itemToAdd = new Item(name, imageToAdd, cost, inventory);
             itemToAdd.setId(itemId);
 
             shop.addItem(itemToAdd);
@@ -112,7 +86,7 @@ public class ItemController {
                                        @RequestParam (value = "url") String url,
                                        @RequestParam (value = "altText") String altText,
                                        @RequestParam (value = "itemName") String itemName,
-                                       @RequestParam (value = "cost") String cost,
+                                       @RequestParam (value = "cost") Double cost,
                                        @RequestParam (value = "inventory") int inventory,
                                          Model model){
 
@@ -125,8 +99,14 @@ public class ItemController {
         if (checkShop != null){
             if (checkShop.getItem(itemId) != null){
                 checkShop.getItem(itemId).setInventory(inventory);
-                checkShop.getItem(itemId).setUrl(0, url);
-                checkShop.getItem(itemId).setAltText(0, altText);
+
+                if ((checkShop.getItem(itemId).getImages().size() > 0) && (!url.equals(""))) {
+                    checkShop.getItem(itemId).setUrl(0, url);
+                    checkShop.getItem(itemId).setAltText(0, altText);
+                } else if ((checkShop.getItem(itemId).getImages().size() > 0) && (url.equals(""))) {
+                    checkShop.getItem(itemId).setImages(new ArrayList<Image>());
+                }
+
                 checkShop.getItem(itemId).setItemName(itemName);
                 checkShop.getItem(itemId).setCost(cost);
             }

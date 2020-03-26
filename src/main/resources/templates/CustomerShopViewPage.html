@@ -39,7 +39,7 @@
 
             <td style="text-align:center" th:text="${item.inventory}"/>
 
-            <td style="text-align:center" th:text="${item.cost}"/>
+            <td style="text-align:center" th:text="'$' + ${item.cost}"/>
 
             <div id="inventory" th:if="${item.inventory != 0}">
                 <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox onclick="checkboxClicked()"></td>

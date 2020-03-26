@@ -27,7 +27,7 @@ class CustomerTest {
 
     @Test
     public void appendNewBoughItem() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewBoughtItem(newItem);
 
         assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
@@ -36,7 +36,7 @@ class CustomerTest {
 
     @Test
     public void appendNewCartItem() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewCartItem(newItem);
 
         assertEquals(newItem, testCustomer.getCartItemById(newItem.getId()));
@@ -45,22 +45,22 @@ class CustomerTest {
 
     @Test
     public void getBoughItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewBoughtItem(newItem);
         assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
     }
 
     @Test
     public void getCartItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewCartItem(newItem);
         assertEquals(newItem, testCustomer.getCartItemById(newItem.getId()));
     }
 
     @Test
     public void removeBoughtItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
+        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), 0.0, 0);
 
         testCustomer.appendNewBoughtItem(newItem);
         testCustomer.appendNewBoughtItem(newItem2);
@@ -80,8 +80,8 @@ class CustomerTest {
 
     @Test
     public void removeCartItemById() {
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
+        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), 0.0, 0);
 
         testCustomer.appendNewCartItem(newItem);
         testCustomer.appendNewCartItem(newItem2);
