@@ -27,11 +27,18 @@ public class CloudTestController {
     public static final String purchaseItemFromShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/testPurchaseItems";
     public static final String createMerchant = "https://us-central1-engineeringlabproject.cloudfunctions.net/testCreateMerchant";
     public static final String createCustomer = "https://us-central1-engineeringlabproject.cloudfunctions.net/testCreateCustomer";
+    public static final String merchantLogin = "https://us-central1-engineeringlabproject.cloudfunctions.net/testMerchantLogin";
 
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
+    private final String callErrorMsg = "Sorry, the HTTP request failed.\n";
+
     private void close() throws IOException {
         httpClient.close();
+    }
+
+    public String getCallErrorMsg() {
+        return callErrorMsg;
     }
 
     public String sendPost(String url, HashMap<String, String> data) throws Exception {
@@ -42,12 +49,12 @@ public class CloudTestController {
         data.forEach((key, value) -> urlParameters.add(new BasicNameValuePair(key, value)));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(post)) {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault(); CloseableHttpResponse response = httpClient.execute(post)) {
             returnValue = EntityUtils.toString(response.getEntity());
 
         } catch (Exception e) {
-            System.out.println("Sorry, the HTTP request failed.\n");
+            returnValue = callErrorMsg;
+            System.out.println(returnValue);
             e.printStackTrace();
         } finally {
             close();

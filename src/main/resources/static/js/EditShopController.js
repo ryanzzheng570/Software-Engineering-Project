@@ -22,6 +22,10 @@ async function asyncAddItem(formData) {
     return itemId;
 }
 
+async function asyncEditItem(formData) {
+    const resp = await cloudEditItem(formData);
+}
+
 async function asyncRemoveItem(formData) {
     const resp = await cloudRemoveItem(formData);
 }
@@ -44,7 +48,6 @@ function editShopNameHandler(e){
     } else {
         showLoading();
         asyncUpdateShopName(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                url: "/changeShopName?" + $(editNameFormId).serialize(),
                type: "POST",
@@ -65,7 +68,6 @@ function removeTag(btn, shopId, tagId) {
 
     showLoading();
     asyncRemoveTag(infoJson).then(function(data) {
-        console.log(data);
         return $.ajax({
             url: "/removeTag?shopId=" + shopId + "&tagId=" + tagId,
             type: "POST",
@@ -101,7 +103,6 @@ function addTagHandler(e){
     } else {
         showLoading();
         asyncAddTag(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                 url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data,
                 type: "POST",
@@ -144,7 +145,6 @@ function removeItem(btn, shopId, itemId) {
 
     showLoading();
     asyncRemoveItem(infoJson).then(function(data) {
-        console.log(data);
         return $.ajax({
             url: "/removeItem?shopId=" + shopId + "&itemId=" + itemId,
             type: "POST",
@@ -164,7 +164,10 @@ function removeItem(btn, shopId, itemId) {
 
 function editItemHandler(btn){
     var shopId = $("#shopId").val();
+    var merchantId = $("#currUserId").val();
     var rowId = btn.parentNode.parentNode.id;
+    var itemId = rowId.replace("ITEM_", "");
+
     var row = $('#' + rowId);
     var itemData = {};
     $("td input", row).each(function() {
@@ -172,30 +175,30 @@ function editItemHandler(btn){
          var val = $(this).val();
          itemData[name] = val;
     });
-         itemId = rowId.replace("ITEM_", "");
 
     var callStr = "/editItem?";
     itemData["shopId"] = shopId;
     itemData["itemId"] = itemId;
+    itemData["merchantId"] = merchantId;
 
-    console.log(itemData);
-
-    $.ajax({
+    showLoading();
+    asyncEditItem(itemData).then(function(data) {
+        return $.ajax({
             url: callStr + $.param(itemData),
             type: "POST",
             dataType: "json"
-        }).then(function(data) {
-
-            if (data.items.length === 0) {
-                $("#noItemDiv").css("display", "block");
-                $("#nonEmptyItemDiv").css("display", "none");
-            }
-            window.location.href = '/goToEditShopPage?shopId=' + data.id;
-        });
+        })
+    }).then(function(data) {
+        hideLoading();
+        if (data.items.length === 0) {
+            $("#noItemDiv").css("display", "block");
+            $("#nonEmptyItemDiv").css("display", "none");
+        }
+        window.location.href = '/goToEditShopPage?shopId=' + data.id;
+    });
 }
 
 function addItemHandler(e){
-    console.log("ADDING ITEM");
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -217,7 +220,6 @@ function addItemHandler(e){
     } else {
         showLoading();
         asyncAddItem(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                 url: "/addItem?" + $(addItemFormId).serialize() + "&setId=" + data,
                 type: "POST",
@@ -295,7 +297,7 @@ function addItemHandler(e){
             costText.type = "number";
             costText.step = "0.01";
             costText.min = "0";
-            costText.value = parseInt(data.cost.substring(1));
+            costText.value = data.cost;
             costText.name = "cost";
             costElem.appendChild(costText);
             newRow.appendChild(costElem);
@@ -344,7 +346,7 @@ $(document).ready(function() {
     });
 
     $(".removeItemButton").on('click', function() {
-        tagId = this.id.replace("ITEM_", "");
+        tagId = this.parentNode.parentNode.id.replace("ITEM_", "");
         removeItem(this, $("#shopId").val(), tagId);
     });
 

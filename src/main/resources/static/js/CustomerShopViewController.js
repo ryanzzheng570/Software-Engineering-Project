@@ -7,9 +7,11 @@ $(document).ready(() => {
 async function createAddToCartHandler(itemID) {
     const STORE = $("#storeID").val();
     const ITEM = itemID;
+    const CUSTOMER = $("#customerID").val();
     showLoading();
 
     const RESP = await cloudAddToCart({
+        customerID: CUSTOMER,
         shopID: STORE,
         itemID: ITEM,
     });

@@ -27,7 +27,7 @@ public class ShopTest {
 
     @Test
     public void testAddItem(){
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
 
         testShop.addItem(newItem);
 
@@ -37,8 +37,8 @@ public class ShopTest {
 
     @Test
     public void testRemoveItem(){
-        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
-        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
+        Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
+        Item newItem2 = new Item("ITEM_2", new ArrayList<Image>(), 0.0, 0);
 
 
         testShop.addItem(newItem);
@@ -58,9 +58,9 @@ public class ShopTest {
 
     @Test
     public void testClearItems(){
-        Item item1 = new Item("ITEM_1", new ArrayList<Image>(), "0.00", 0);
-        Item item2 = new Item("ITEM_2", new ArrayList<Image>(), "0.00", 0);
-        Item item3 = new Item("ITEM_3", new ArrayList<Image>(), "0.00", 0);
+        Item item1 = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
+        Item item2 = new Item("ITEM_2", new ArrayList<Image>(), 0.0, 0);
+        Item item3 = new Item("ITEM_3", new ArrayList<Image>(), 0.0, 0);
 
         testShop.addItem(item1);
         testShop.addItem(item2);

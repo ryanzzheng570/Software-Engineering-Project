@@ -18,11 +18,13 @@ public class SearchController {
 
     @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
+        FirebaseController.loadDbInfo(false);
+
         ArrayList<Shop> matchingShops = new ArrayList<>();
 
         String lowercaseQuery = query.toLowerCase();
 
-        for (Shop shop : FirebaseController.getCurrShops()) {
+        for (Shop shop : FirebaseController.getDbShops()) {
             boolean isAdded = false;
 
             Set<Tag> tags = shop.getTags();

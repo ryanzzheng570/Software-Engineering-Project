@@ -9,17 +9,22 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 @Entity
-public class Merchant extends User{
-    private String id;
+public class Merchant extends User {
     private List<Shop> shops;
     private String contactPhoneNumber;
     private String email;
     private int rating;
+    private String id;
 
     private static final AtomicLong counter = new AtomicLong();
 
     public Merchant() {
         super();
+    }
+
+    public Merchant(String id) {
+        this("","","","");
+        this.id = id;
     }
 
     public Merchant(String name, String contactPhoneNumber, String email, String password) {

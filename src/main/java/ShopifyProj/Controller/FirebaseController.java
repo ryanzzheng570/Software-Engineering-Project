@@ -16,8 +16,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FirebaseController {
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
+    public static final String TEST_MODE = "TEST";
+    public static final String PRODUCTION_MODE = "PRODUCTION";
+    private static ArrayList<Shop> dbShops;
 
-    private static ArrayList<Shop> currShops = null;
+    private static User currUser = null;
 
     private static final AtomicLong counter = new AtomicLong();
 
@@ -45,7 +48,8 @@ public class FirebaseController {
     }
 
     private static ArrayList<Shop> initializeDbInfo() {
-        ArrayList<Shop> dbShops = new ArrayList<Shop>();
+        ArrayList<Shop> tempDbShops = new ArrayList<Shop>();
+
         CountDownLatch wait = new CountDownLatch(1);
         FirebaseController.getInstance().getReference("store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -78,8 +82,19 @@ public class FirebaseController {
                                 Map<String, Object> currItemData = (Map<String, Object>) itemData.get(itemId);
 
                                 String itemName = (String) currItemData.get("name");
-//                                String cost = ((String) currItemData.get("cost"));
-                                String cost = "1.99";
+
+                                Double cost = null;
+                                try {
+                                    Long costVal = (Long) currItemData.get("cost");
+                                    cost = costVal != null ? costVal.doubleValue() : null;
+                                } catch (Exception e) {
+                                    try {
+                                        cost = (Double) currItemData.get("cost");
+                                    } catch (Exception f) {
+                                        String costVal = (String) currItemData.get("cost");
+                                        cost = Double.parseDouble(costVal);
+                                    }
+                                }
 
                                 Long invVal = (Long) currItemData.get("inventory");
                                 int inventory = invVal != null ? invVal.intValue() : null;
@@ -94,11 +109,13 @@ public class FirebaseController {
 
                                 Item itemToAdd = new Item(itemName, itemImages, cost, inventory);
                                 itemToAdd.setId(itemId);
+                                itemToAdd.setStoreID(shopId);
+                                itemToAdd.setStoreName(shopName);
                                 shopToAdd.addItem(itemToAdd);
                             }
                         }
 
-                        dbShops.add(shopToAdd);
+                        tempDbShops.add(shopToAdd);
 
                     }
                 }
@@ -118,7 +135,7 @@ public class FirebaseController {
             e.printStackTrace();
         }
 
-        return (dbShops);
+        return (tempDbShops);
     }
 
     public static FirebaseDatabase getInstance() {
@@ -129,16 +146,19 @@ public class FirebaseController {
         return (dbInst);
     }
 
-    public static ArrayList<Shop> getCurrShops() {
-        if (currShops == null) {
-            currShops = initializeDbInfo();
+    public static void loadDbInfo(boolean reloadIfLoaded) {
+        if ((dbShops == null) || (reloadIfLoaded)) {
+            dbShops = initializeDbInfo();
         }
-        return currShops;
+    }
+
+    public static ArrayList<Shop> getDbShops() {
+        return dbShops;
     }
 
     public static Shop getShopWithId(String shopId) throws Exception {
         Shop checkShop = null;
-        for (Shop shop : currShops) {
+        for (Shop shop : dbShops) {
             if (shop.getId().equals(shopId)) {
                 checkShop = shop;
                 break;
@@ -172,7 +192,7 @@ public class FirebaseController {
     }
 
     public static Shop findByShopName(String name) throws Exception {
-        for (Shop shop : currShops) {
+        for (Shop shop : dbShops) {
             if (shop.getShopName().equals(name)) {
                 return shop;
             }
@@ -216,11 +236,68 @@ public class FirebaseController {
     }
 
     public static void addShop(Shop toAdd) {
-        currShops.add(toAdd);
+        dbShops.add(toAdd);
     }
 
     public static String getCounterAndIterate() {
         return Integer.toString(Math.toIntExact(counter.incrementAndGet()));
+    }
+
+    public static User getCurrUser() {
+        return currUser;
+    }
+
+    public static void setCurrUser(User newUser) {
+        currUser = newUser;
+    }
+
+    public static List<Shop> getCurrUsersShops() {
+        List<Shop> toRet = null;
+        if (FirebaseController.getCurrUser() instanceof Merchant) {
+            toRet = ((Merchant) FirebaseController.getCurrUser()).getShops();
+        }
+        return toRet;
+    }
+
+    public static Object[] getShoppingCartItems(String userID, String mode) {
+        String root = "";
+        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> shops = new ArrayList<String>();
+        CountDownLatch wait = new CountDownLatch(1);
+        if (mode == TEST_MODE) {
+            root = "/test/";
+        }
+        FirebaseController.getInstance().getReference(root + "users/customers/" + userID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot storeData : dataSnapshot.getChildren()) {
+
+                        Map<String, Object> mapData = (Map<String, Object>) storeData.getValue();
+
+                        String itemID = (String) mapData.get("itemID");
+                        items.add(itemID);
+                        String shopID = (String) mapData.get("shopID");
+                        shops.add(shopID);
+
+                    }
+                }
+                wait.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+                wait.countDown();
+            }
+
+        });
+        try {
+            wait.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Object[]{shops, items};
     }
 
 }

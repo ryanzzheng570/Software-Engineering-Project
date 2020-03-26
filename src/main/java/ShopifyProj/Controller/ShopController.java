@@ -1,13 +1,11 @@
 package ShopifyProj.Controller;
 
-import ShopifyProj.Model.Item;
-import ShopifyProj.Model.Shop;
+import ShopifyProj.Model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -20,6 +18,12 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
+        boolean isLoggedIn = false;
+        String customerID = "";
+        if(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
+            isLoggedIn = true;
+            customerID = FirebaseController.getCurrUser().getId();
+        }
         Shop shopToView = null;
         try {
             shopToView = FirebaseController.getShopWithId(aShopId);
@@ -29,6 +33,8 @@ public class ShopController {
 
         model.addAttribute("shopID", aShopId);
         model.addAttribute("shop", shopToView);
+        model.addAttribute("loggedIn", isLoggedIn);
+        model.addAttribute("customerID", customerID);
 
         return "CustomerShopViewPage";
     }
@@ -109,22 +115,29 @@ public class ShopController {
 
         FirebaseController.addShop(newShop);
 
+        ((Merchant) FirebaseController.getCurrUser()).appendNewShop(newShop);
+
         return newShop;
     }
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
-        Shop checkShop = null;
-        try {
-            checkShop = FirebaseController.getShopWithId(shopId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (FirebaseController.getCurrUser() == null) {
+            return "Login";
+        } else {
+            Shop checkShop = null;
+            try {
+                checkShop = FirebaseController.getShopWithId(shopId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            model.addAttribute("shop", checkShop);
+            model.addAttribute("item", new Item());
+            model.addAttribute("tag", new Tag());
+            model.addAttribute("currUser", FirebaseController.getCurrUser());
+
+            return "EditShopPage";
         }
-
-        model.addAttribute("shop", checkShop);
-        model.addAttribute("item", new Item());
-        model.addAttribute("tag", new Tag());
-
-        return "EditShopPage";
     }
 }

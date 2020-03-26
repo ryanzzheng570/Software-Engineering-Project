@@ -1,5 +1,6 @@
 package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Customer;
 import ShopifyProj.Model.Item;
 import ShopifyProj.Model.Shop;
 import org.springframework.ui.Model;
@@ -20,8 +21,11 @@ public class CheckoutController {
 
 
     @GetMapping("/goToCart")
-    public String goToCart(@RequestParam(value = "userID") String user,
-                           Model model) {
+    public String goToCart(
+            Model model) {
+//        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
+//            return "Login";
+//        }
 //        String itemIds = "";
 //        ArrayList<Item> retItems = new ArrayList<Item>();
 //
@@ -39,11 +43,11 @@ public class CheckoutController {
 //        model.addAttribute("itemIDs", itemIds);
 //        model.addAttribute("storeID", store);
 //        model.addAttribute("items", retItems);
-
-//        return "CheckoutPage";
-        return "HomePage";
+        Object[] temp = FirebaseController.getShoppingCartItems(FirebaseController.getCurrUser().getId(), FirebaseController.PRODUCTION_MODE);
+        ArrayList<String> stores = (ArrayList<String>)temp[0];
+        ArrayList<String> shops = (ArrayList<String>)temp[1];
+        return "CheckoutPage";
     }
-
 
     @PostMapping("/addToCart")
     public String addToCart(@RequestParam(value = "item") Optional<String[]> items,

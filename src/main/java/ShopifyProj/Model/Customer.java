@@ -18,7 +18,6 @@ public class Customer extends User{
     private String phoneNumber;
     private String note;
     private Set<Item> boughtItems;
-    private Set<Item> cart;
 
     @Autowired
     public Customer() {
@@ -30,7 +29,7 @@ public class Customer extends User{
     }
 
     public Customer(String name, String email, String address, String phoneNumber, String note,
-                    Set<Item> boughtItems, Set<Item> cart, String password) {
+                    Set<Item> boughtItems, String password) {
         super(name, password);
         this.id = Integer.toString(Math.toIntExact(counter.incrementAndGet()));
         this.email = email;
@@ -38,7 +37,6 @@ public class Customer extends User{
         this.phoneNumber = phoneNumber;
         this.note = note;
         this.boughtItems = boughtItems;
-        this.cart = cart;
     }
     /*
         Append new item to the existing set
@@ -47,12 +45,7 @@ public class Customer extends User{
         boughtItems.add(item);
     }
 
-    /*
-        Append new item to the existing cart
-     */
-    public void appendNewCartItem(Item item) {
-        cart.add(item);
-    }
+
 
     /*
         Get bough item using Id
@@ -61,12 +54,6 @@ public class Customer extends User{
         return itemSetIterator(boughtItems, itemId);
     }
 
-    /*
-    Get Cart item using Id
- */
-    public Item getCartItemById(String itemId) {
-        return itemSetIterator(cart, itemId);
-    }
 
     private Item itemSetIterator(Set<Item> set, String itemId) {
         for (Item item : set) {
@@ -81,13 +68,6 @@ public class Customer extends User{
         Item toRemove = getBoughtItemById(itemId);
         if(toRemove != null) {
             this.boughtItems.remove(toRemove);
-        }
-    }
-
-    public void removeCartItemById(String itemId) {
-        Item toRemove = getCartItemById(itemId);
-        if(toRemove != null) {
-            this.cart.remove(toRemove);
         }
     }
 
@@ -147,14 +127,5 @@ public class Customer extends User{
 
     public void setBoughtItems(Set<Item> boughtItems) {
         this.boughtItems = boughtItems;
-    }
-
-    @OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    public Set<Item> getCart() {
-        return cart;
-    }
-
-    public void setCart(Set<Item> cart) {
-        this.cart = cart;
     }
 }

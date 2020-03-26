@@ -3,17 +3,18 @@
 
 <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title th:text="${shop.shopName}"></title>
 </head>
 
 <body>
+    <div id="isLogIn" th:if="${loggedIn}"><input id="customerID" type="hidden" th:value="${customerID}"
+            name="customer" /></div>
+    <div id="pageTitle">
+        <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
+    </div>
 
-<div id="pageTitle">
-    <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
-</div>
-
-<div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store
+    <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store
     yet!</h2>
 </div>
 <div id="itemSection" th:unless="${#lists.isEmpty(shop.items)}"></div>
@@ -38,20 +39,21 @@
 
         <td style="text-align:center" th:text="${item.inventory}"/>
 
-        <td style="text-align:center" th:text="${item.cost}"/>
+            <td style="text-align:center" th:text="'$' + ${item.cost}"/>
 
-        <div id="inventory" th:if="${item.inventory != 0}">
-            <input id="storeID" type="hidden" th:value="${shopID}" name="store"/>
-            <td style="text-align:center">
-                <button type="button" class="a2c" th:value="${item.id}">Add to Cart</button>
-            </td>
+        <div id="add2Cart" th:if="${loggedIn}">
+            <div id="inventory" th:if="${item.inventory != 0}">
+                <input id="storeID" type="hidden" th:value="${shopID}" name="store"/>
+                <td style="text-align:center">
+                    <button type="button" class="a2c" th:value="${item.id}">Add to Cart</button>
+                </td>
+            </div>
+            <div id="noInventory" th:if="${item.inventory <= 0}">
+                <td style="text-align:center">
+                    <button type="button" disabled>Add to Cart</button>
+                </td>
+            </div>
         </div>
-        <div id="noInventory" th:if="${item.inventory <= 0}">
-            <td style="text-align:center">
-                <button type="button" disabled>Add to Cart</button>
-            </td>
-        </div>
-
     </tr>
 </table>
 <br>
