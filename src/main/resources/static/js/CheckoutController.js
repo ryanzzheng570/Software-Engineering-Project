@@ -34,6 +34,7 @@ function updateCost() {
                 }
             });
             let cost = dataCells[3].innerHTML;
+            cost = cost.replace("$", "");
 
             totalCost += quantity * cost;
         }
@@ -115,7 +116,7 @@ async function submit(aStoreID, itemIDs, quantities) {
 
         alert("Thank you " + name + " for your purchase.");
 
-        window.history.back();
+        window.location = document.referrer;
     } else {
         hideLoading();
         alert("Error: there was a problem with the transaction");

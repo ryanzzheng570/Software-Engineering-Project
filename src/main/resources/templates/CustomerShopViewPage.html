@@ -24,7 +24,7 @@
             <th>Image</th>
             <th>Remaining</th>
             <th>Cost</th>
-            <th>Checkout</th>
+            <th>Add to Cart</th>
         </tr>
         <tr th:each="item: ${shop.items}">
             <td style="text-align:center" th:text="${item.itemName}"/>
@@ -42,7 +42,7 @@
             <td style="text-align:center" th:text="'$' + ${item.cost}"/>
 
             <div id="inventory" th:if="${item.inventory != 0}">
-                <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox></td>
+                <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox onclick="checkboxClicked()"></td>
             </div>
             <div id="noInventory" th:if="${item.inventory <= 0}">
                 <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox disabled/>
@@ -54,7 +54,7 @@
     <br>
     <div id="shoppingCartButton" th:unless="${#lists.isEmpty(shop.items)}">
         <input type="hidden" th:value="${shopID}" name="store"/>
-        <input id="shoppingCart" type="submit" value="Add to Cart"/>
+        <input id="shoppingCart" type="submit" value="Add to Cart" disabled/>
     </div>
 </form>
 
@@ -70,6 +70,7 @@
 </form>
 
 <script type="text/javascript" src="/js/CloudServiceController.js"></script>
+<script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
 <script type="text/javascript" src="/js/SidebarController.js"></script>
 
 </body>
