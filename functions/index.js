@@ -105,8 +105,6 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
         }
     }
 
-    console.log(itemInfo);
-
     var retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
         var validChange = false;
         var ssv = snapshot.val();
@@ -384,7 +382,6 @@ function encrypt(text) {
 }
 
 function decrypt(text) {
-    console.log("DECRYPTING", text);
     var key = crypto.createDecipher(ENCRYPTION_METHOD, ENCRYPTION_PASSWORD);
     var unencryptedVal = key.update(text, ENCRYPTED_FORM, UNENCRYPTED_FORM)
     unencryptedVal += key.final(UNENCRYPTED_FORM);

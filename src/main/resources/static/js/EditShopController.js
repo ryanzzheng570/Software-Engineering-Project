@@ -48,7 +48,6 @@ function editShopNameHandler(e){
     } else {
         showLoading();
         asyncUpdateShopName(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                url: "/changeShopName?" + $(editNameFormId).serialize(),
                type: "POST",
@@ -69,7 +68,6 @@ function removeTag(btn, shopId, tagId) {
 
     showLoading();
     asyncRemoveTag(infoJson).then(function(data) {
-        console.log(data);
         return $.ajax({
             url: "/removeTag?shopId=" + shopId + "&tagId=" + tagId,
             type: "POST",
@@ -105,7 +103,6 @@ function addTagHandler(e){
     } else {
         showLoading();
         asyncAddTag(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                 url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data,
                 type: "POST",
@@ -148,7 +145,6 @@ function removeItem(btn, shopId, itemId) {
 
     showLoading();
     asyncRemoveItem(infoJson).then(function(data) {
-        console.log(data);
         return $.ajax({
             url: "/removeItem?shopId=" + shopId + "&itemId=" + itemId,
             type: "POST",
@@ -185,8 +181,6 @@ function editItemHandler(btn){
     itemData["itemId"] = itemId;
     itemData["merchantId"] = merchantId;
 
-    console.log(itemData);
-
     showLoading();
     asyncEditItem(itemData).then(function(data) {
         return $.ajax({
@@ -205,7 +199,6 @@ function editItemHandler(btn){
 }
 
 function addItemHandler(e){
-    console.log("ADDING ITEM");
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -227,7 +220,6 @@ function addItemHandler(e){
     } else {
         showLoading();
         asyncAddItem(infoJson).then(function(data) {
-            console.log(data);
             return $.ajax({
                 url: "/addItem?" + $(addItemFormId).serialize() + "&setId=" + data,
                 type: "POST",
@@ -354,7 +346,7 @@ $(document).ready(function() {
     });
 
     $(".removeItemButton").on('click', function() {
-        tagId = this.id.replace("ITEM_", "");
+        tagId = this.parentNode.parentNode.id.replace("ITEM_", "");
         removeItem(this, $("#shopId").val(), tagId);
     });
 

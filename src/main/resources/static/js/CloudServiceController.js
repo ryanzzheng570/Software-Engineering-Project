@@ -1,5 +1,4 @@
 async function PurchaseItems(quantityData) {
-    console.log("HERE");
     var response = await callCloudFunction("purchaseItemsFromShop", quantityData);
     return response;
 }
