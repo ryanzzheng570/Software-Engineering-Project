@@ -15,6 +15,7 @@ public class HomeController {
         temp.setId("-M3NF6_5RmDrIcO8cTQz");
         temp.setUserName("tempUserName");
         FirebaseController.setCurrUser(temp);
+        FirebaseController.loadDbInfo(true);
         return "HomePage";
     }
 }

@@ -2,7 +2,7 @@ function addShoppingCartLink() {
     sessionStorage.setItem('token', '-M3JTMoy32z1v1Makgq1');
 
     var scLink = document.createElement("a");
-    var scText = document.createTextNode("Your Shopping Cart");
+    var scText = document.createTextNode("Shopping Cart");
     scLink.href = "/goToCart"
     scLink.appendChild(scText);
     return scLink;

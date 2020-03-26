@@ -23,53 +23,23 @@ public class CheckoutController {
     @GetMapping("/goToCart")
     public String goToCart(
             Model model) {
-//        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
-//            return "Login";
-//        }
-//        String itemIds = "";
-//        ArrayList<Item> retItems = new ArrayList<Item>();
-//
-//        if (items.isPresent()) {
-//            for (int a = 0; a < items.get().length; a++) {
-//                itemIds += items.get()[a];
-//                if (a != items.get().length - 1) {
-//                    itemIds += "$";
-//                }
-//            }
-//
-//            retItems = FirebaseController.getItemsFromStoreByIds(store, items.get());
-//        }
-//
-//        model.addAttribute("itemIDs", itemIds);
-//        model.addAttribute("storeID", store);
-//        model.addAttribute("items", retItems);
-        Object[] temp = FirebaseController.getShoppingCartItems(FirebaseController.getCurrUser().getId(), FirebaseController.PRODUCTION_MODE);
-        ArrayList<String> stores = (ArrayList<String>)temp[0];
-        ArrayList<String> shops = (ArrayList<String>)temp[1];
-        return "CheckoutPage";
-    }
-
-    @PostMapping("/addToCart")
-    public String addToCart(@RequestParam(value = "item") Optional<String[]> items,
-                            @RequestParam(value = "store") String store,
-                            Model model) {
-        String itemIds = "";
-        ArrayList<Item> retItems = new ArrayList<Item>();
-
-        if (items.isPresent()) {
-            for (int a = 0; a < items.get().length; a++) {
-                itemIds += items.get()[a];
-                if (a != items.get().length - 1) {
-                    itemIds += "$";
-                }
-            }
-
-            retItems = FirebaseController.getItemsFromStoreByIds(store, items.get());
+        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
+            return "Login";
         }
 
-        model.addAttribute("itemIDs", itemIds);
-        model.addAttribute("storeID", store);
+        ArrayList<Item> retItems = new ArrayList<Item>();
+        Object[] temp= FirebaseController.getShoppingCartItems(FirebaseController.getCurrUser().getId(), FirebaseController.PRODUCTION_MODE);
+        ArrayList<String> storeIds = (ArrayList<String>)temp[0];
+        ArrayList<String> itemIds = (ArrayList<String>)temp[1];
+        for(int a = 0; a < storeIds.size(); a++) {
+            Item tempItem = FirebaseController.getItemFromStore(storeIds.get(a), itemIds.get(a));
+            if(tempItem != null) {
+                retItems.add(tempItem);
+            }
+        }
         model.addAttribute("items", retItems);
+//        model.addAttribute("itemIDs", itemIds);
+//        model.addAttribute("storeIDs", storeIds);
 
         return "CheckoutPage";
     }

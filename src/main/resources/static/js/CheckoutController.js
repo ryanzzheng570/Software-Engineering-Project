@@ -19,26 +19,14 @@ function addItemIDs() {
 }
 
 function updateCost() {
-    let isFirstRow = true;
     let totalCost = 0;
 
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
-        } else {
-            let dataCells = $(this).find('td');
-            let quantity;
-            $(this).closest('tr').find("input").each(function () {
-                if (!isNaN(this.value)) {
-                    quantity = this.value;
-                }
-            });
-            let cost = dataCells[3].innerHTML;
-
-            totalCost += quantity * cost;
-        }
+    $(".inv").each(function () {
+        let quantity = $(this).val();
+        let cost = $(this).closest('tr').children('td.cost').text();
+        totalCost += quantity * cost;
     })
-    $("#totalCost").text("Total Cost: " + totalCost.toFixed(2));
+    $("#totalCost").text("Total Cost: $" + totalCost.toFixed(2));
 }
 
 function checkout() {
@@ -115,7 +103,7 @@ async function submit(aStoreID, itemIDs, quantities) {
 
         alert("Thank you " + name + " for your purchase.");
 
-        window.history.back();
+        window.location = document.referrer;
     } else {
         hideLoading();
         alert("Error: there was a problem with the transaction");

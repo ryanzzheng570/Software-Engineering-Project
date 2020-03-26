@@ -262,7 +262,7 @@ public class FirebaseController {
     public static Object[] getShoppingCartItems(String userID, String mode) {
         String root = "";
         ArrayList<String> items = new ArrayList<String>();
-        ArrayList<String> shops = new ArrayList<String>();
+        ArrayList<String> stores = new ArrayList<String>();
         CountDownLatch wait = new CountDownLatch(1);
         if (mode == TEST_MODE) {
             root = "/test/";
@@ -277,9 +277,8 @@ public class FirebaseController {
 
                         String itemID = (String) mapData.get("itemID");
                         items.add(itemID);
-                        String shopID = (String) mapData.get("shopID");
-                        shops.add(shopID);
-
+                        String storeID = (String) mapData.get("shopID");
+                        stores.add(storeID);
                     }
                 }
                 wait.countDown();
@@ -297,7 +296,23 @@ public class FirebaseController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new Object[]{shops, items};
+        return new Object[]{stores, items};
+    }
+
+    public static Item getItemFromStore(String aShopID, String itemID) {
+        Shop toParse = null;
+        try {
+            toParse = FirebaseController.getShopWithId(aShopID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (Item item : toParse.getItems()) {
+            if (itemID.equals(item.getId())) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }
