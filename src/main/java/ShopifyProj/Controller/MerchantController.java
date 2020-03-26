@@ -47,7 +47,7 @@ public class MerchantController {
         } else {
             model.addAttribute("shops", FirebaseController.getCurrUsersShops());
             model.addAttribute("shop", new Shop());
-            model.addAttribute("currUser", FirebaseController.getCurrUser().getId());
+            model.addAttribute("currUser", FirebaseController.getCurrUser());
 
             return "CreateShopPage";
         }
@@ -60,7 +60,7 @@ public class MerchantController {
         } else {
             model.addAttribute("shops", FirebaseController.getCurrUsersShops());
             model.addAttribute("shop", new Shop());
-            model.addAttribute("currUser", FirebaseController.getCurrUser().getId());
+            model.addAttribute("currUser", FirebaseController.getCurrUser());
 
             return "MerchantMenuPage";
         }

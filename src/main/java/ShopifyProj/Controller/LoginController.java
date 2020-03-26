@@ -36,6 +36,7 @@ public class LoginController {
 
     @PostMapping("/loginAsMerchant")
     public @ResponseBody Merchant signInAsMerchant(@RequestParam(value = "id") String userId,
+                                                   @RequestParam(value = "userName") String name,
                                                    @RequestParam(value = "shops[]") Optional<String[]> shopIds,
                                                    Model model) throws Exception {
         Merchant toRet = new Merchant(userId);
@@ -53,6 +54,8 @@ public class LoginController {
                 toRet.appendNewShop(currShop);
             }
         }
+
+        toRet.setUserName(name);
 
         FirebaseController.setCurrUser(toRet);
 

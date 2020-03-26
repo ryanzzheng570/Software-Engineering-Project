@@ -35,7 +35,7 @@ async function cloudRemoveItem(shopData) {
 }
 
 async function cloudEditItem(data) {
-    var response = await callCloudFunction("editItem2", data);
+    var response = await callCloudFunction("editItem", data);
     return response;
 }
 

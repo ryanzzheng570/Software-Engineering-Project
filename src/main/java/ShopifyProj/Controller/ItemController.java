@@ -99,8 +99,14 @@ public class ItemController {
         if (checkShop != null){
             if (checkShop.getItem(itemId) != null){
                 checkShop.getItem(itemId).setInventory(inventory);
-                checkShop.getItem(itemId).setUrl(0, url);
-                checkShop.getItem(itemId).setAltText(0, altText);
+
+                if ((checkShop.getItem(itemId).getImages().size() > 0) && (!url.equals(""))) {
+                    checkShop.getItem(itemId).setUrl(0, url);
+                    checkShop.getItem(itemId).setAltText(0, altText);
+                } else if ((checkShop.getItem(itemId).getImages().size() > 0) && (url.equals(""))) {
+                    checkShop.getItem(itemId).setImages(new ArrayList<Image>());
+                }
+
                 checkShop.getItem(itemId).setItemName(itemName);
                 checkShop.getItem(itemId).setCost(cost);
             }

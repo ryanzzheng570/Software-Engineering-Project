@@ -93,11 +93,38 @@ function removeItemFromShop(shopID, itemID, mode = '') {
     return database.ref(mode + '/store/' + shopID + "/item/" + itemID).remove();
 }
 
-function editItemInShop(shopID, itemID, itemInfo, mode = '') {
-    if (!ValidateString(shopID) || !ValidateString(itemID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
+function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
+    if (!ValidateString(shopID) || !ValidateString(itemID) || !ValidateString(merchantID) ||
+        !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+
+    for (var key in itemInfo) {
+        if (itemInfo[key] === undefined) {
+            itemInfo[key] = "";
+        }
+    }
+
+    console.log(itemInfo);
+
+    var retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
+        var validChange = false;
+        var ssv = snapshot.val();
+        if (ssv) {
+            for (var shopKey in ssv) {
+                if (ssv[shopKey] === shopID) {
+                    database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+                    validChange = true;
+                    break;
+                }
+            }
+        }
+
+        return validChange;
+    });
+
+    return retVal;
+
 }
 
 function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
@@ -162,7 +189,8 @@ function merchantLogin(username, password, mode = '') {
                 }
                 return {
                     id: merchantId,
-                    shops: shops
+                    shops: shops,
+                    name: checkUsername
                 };
             }
         }
@@ -268,9 +296,10 @@ exports.testRemoveItem = functions.https.onRequest((request, response) => {
     });
 });
 
-exports.editItem2 = functions.https.onCall((data, context) => {
+exports.editItem = functions.https.onCall((data, context) => {
     var itemId = data.itemId;
     var shopId = data.shopId;
+    var merchantId = data.merchantId;
 
     var inventory = parseInt(data.inventory);
     var cost = parseFloat(data.cost);
@@ -282,7 +311,7 @@ exports.editItem2 = functions.https.onCall((data, context) => {
         inventory: inventory
     };
 
-    return editItemInShop(shopId, itemId, itemData);
+    return editItemInShop(shopId, itemId, merchantId, itemData);
 });
 exports.editItemTest = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
@@ -294,7 +323,7 @@ exports.editItemTest = functions.https.onRequest((request, response) => {
             cost: request.body.cost,
             inventory: numInventory
         };
-        response.status(200).send(editItemInShop(request.body.shopID, request.body.itemId, itemData, TEST_MODE));
+        response.status(200).send(editItemInShop(request.body.shopID, request.body.itemId, request.body.merchantId, itemData, TEST_MODE));
     });
 });
 

@@ -27,6 +27,7 @@ function merchantLoginHandler(e) {
         merchantLogin(infoJson).then(function(data) {
             data = data.data;
             var id = data.id;
+            var name = data.name;
             var shops = [];
             if ("shops" in data) {
                 var tempShops = data["shops"];
@@ -36,7 +37,8 @@ function merchantLoginHandler(e) {
             }
             data = {
                 id: id,
-                shops: shops
+                shops: shops,
+                userName: name
             };
 
             var callStr = "/loginAsMerchant?" + $.param(data);

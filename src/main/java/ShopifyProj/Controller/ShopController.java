@@ -117,17 +117,22 @@ public class ShopController {
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
-        Shop checkShop = null;
-        try {
-            checkShop = FirebaseController.getShopWithId(shopId);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (FirebaseController.getCurrUser() == null) {
+            return "Login";
+        } else {
+            Shop checkShop = null;
+            try {
+                checkShop = FirebaseController.getShopWithId(shopId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            model.addAttribute("shop", checkShop);
+            model.addAttribute("item", new Item());
+            model.addAttribute("tag", new Tag());
+            model.addAttribute("currUser", FirebaseController.getCurrUser());
+
+            return "EditShopPage";
         }
-
-        model.addAttribute("shop", checkShop);
-        model.addAttribute("item", new Item());
-        model.addAttribute("tag", new Tag());
-
-        return "EditShopPage";
     }
 }

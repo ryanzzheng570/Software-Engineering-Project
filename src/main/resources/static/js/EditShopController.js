@@ -168,7 +168,10 @@ function removeItem(btn, shopId, itemId) {
 
 function editItemHandler(btn){
     var shopId = $("#shopId").val();
+    var merchantId = $("#currUserId").val();
     var rowId = btn.parentNode.parentNode.id;
+    var itemId = rowId.replace("ITEM_", "");
+
     var row = $('#' + rowId);
     var itemData = {};
     $("td input", row).each(function() {
@@ -176,11 +179,11 @@ function editItemHandler(btn){
          var val = $(this).val();
          itemData[name] = val;
     });
-         itemId = rowId.replace("ITEM_", "");
 
     var callStr = "/editItem?";
     itemData["shopId"] = shopId;
     itemData["itemId"] = itemId;
+    itemData["merchantId"] = merchantId;
 
     console.log(itemData);
 
@@ -302,7 +305,7 @@ function addItemHandler(e){
             costText.type = "number";
             costText.step = "0.01";
             costText.min = "0";
-            costText.value = parseInt(data.cost.substring(1));
+            costText.value = data.cost;
             costText.name = "cost";
             costElem.appendChild(costText);
             newRow.appendChild(costElem);

@@ -10,6 +10,7 @@
     <body>
         <h1>Edit Shop Form</h1>
         <input type="hidden" th:value="${shop.id}" id="shopId"/>
+        <input type="hidden" th:value="${currUser.id}" id="currUserId"/>
         <p th:text="'Id: ' + ${shop.id}"/>
 
         <h2>Edit Shop Name</h2>
@@ -75,11 +76,11 @@
                     </td>
                     <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text'  th:value="${item.images[0]?.url}" name="url"/> </td>
-                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text'  value="No URL"/> </td>
+                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text' th:value="${item.images[0]?.url}" name="url"/> </td>
+                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text' value="" name="url"/> </td>
 
-                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text'  th:value="${item.images[0]?.altText}" name="altText"/> </td>
-                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text'  value="No AltText"/> </td>
+                    <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text' th:value="${item.images[0]?.altText}" name="altText"/> </td>
+                    <td th:if="${#lists.isEmpty(item.images)}"> <input type='text' value="" name="altText"/> </td>
 
                     <td> <input type='number' step="1" min="0" th:value="${item.inventory}" name="inventory"/> </td>
                     <td> <input type='number' step="0.01" min="0" th:value="${item.cost}" name="cost"/> </td>
