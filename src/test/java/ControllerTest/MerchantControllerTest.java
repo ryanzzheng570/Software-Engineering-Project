@@ -32,8 +32,8 @@ public class MerchantControllerTest {
     }
 
     @Test
-    public void goToAddShopPage() throws Exception {
+    public void goToAddShopPageRequiresLogin() throws Exception {
         assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToAddShopPage",
-                String.class)).contains("Create Shop Page");
+                String.class)).contains("Login");
     }
 }
