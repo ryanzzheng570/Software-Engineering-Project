@@ -1,7 +1,7 @@
 var merchantLoginFormId = "#merchantLoginForm";
 
 async function merchantLogin(shopData) {
-    const resp = await cloudSaveShop(shopData);
+    const resp = await cloudMerchantLogin(shopData);
     return resp;
 }
 
@@ -26,32 +26,38 @@ function merchantLoginHandler(e) {
         showLoading();
         merchantLogin(infoJson).then(function(data) {
             data = data.data;
-            var id = data.id;
-            var name = data.name;
-            var shops = [];
-            if ("shops" in data) {
-                var tempShops = data["shops"];
-                for (var shopKey in tempShops) {
-                    shops.push(tempShops[shopKey]);
+            if (data === null) {
+                alert("Error: Invalid login.");
+                return {
+                    id: null
+                };
+            } else {
+                var id = data.id;
+                var name = data.name;
+                var shops = [];
+                if ("shops" in data) {
+                    var tempShops = data["shops"];
+                    for (var shopKey in tempShops) {
+                        shops.push(tempShops[shopKey]);
+                    }
                 }
-            }
-            data = {
-                id: id,
-                shops: shops,
-                userName: name
-            };
 
-            var callStr = "/loginAsMerchant?" + $.param(data);
-            return $.ajax({
-                url: callStr,
-                type: "POST",
-                dataType: "json"
-            });
+                data = {
+                    id: id,
+                    shops: shops,
+                    userName: name
+                };
+
+                var callStr = "/loginAsMerchant?" + $.param(data);
+                return $.ajax({
+                    url: callStr,
+                    type: "POST",
+                    dataType: "json"
+                });
+            }
         }).then(function(data){
             hideLoading();
-            if (data.id === null) {
-                alert("Error: Invalid login.");
-            } else {
+            if (data.id !== null) {
                 window.location.href = '/goToMerchantMenuPage';
             }
         });
