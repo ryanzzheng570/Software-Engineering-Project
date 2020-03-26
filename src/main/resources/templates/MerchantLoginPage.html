@@ -7,16 +7,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<form action="#" th:action="@{/loginAsMerchant}" method="post">
-    <h1>Login As A Customer</h1>
-    <div th:if="${isLoginFailed}">
-        Error: User Name/Password incorrect
-    </div>
-    <p>UserName: <input type="text" name="userName"/></p>
-    <p>Password: <input type="text" name="password"/></p>
+    <form action="#" th:action="@{/loginAsMerchant}" method="post" id="merchantLoginForm">
+        <h1>Login As A Merchant</h1>
+        <div th:if="${isLoginFailed}">
+            Error: User Name/Password incorrect
+        </div>
 
-    <p><input type="submit" value="Login In"/></p>
-    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-</form>
+        <p>UserName: <input type="text" name="userName"/></p>
+        <p>Password: <input type="text" name="password"/></p>
+
+        <p><input type="submit" value="Login In"/></p>
+
+        <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/LoginController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
+    </form>
 </body>
 </html>

@@ -1,5 +1,4 @@
 async function PurchaseItems(quantityData) {
-    console.log("HERE");
     var response = await callCloudFunction("purchaseItemsFromShop", quantityData);
     return response;
 }
@@ -34,6 +33,11 @@ async function cloudRemoveItem(shopData) {
     return response;
 }
 
+async function cloudEditItem(data) {
+    var response = await callCloudFunction("editItem", data);
+    return response;
+}
+
 async function cloudDeleteShop(shopData) {
     var response = await callCloudFunction("deleteShop", shopData);
     return response;
@@ -41,6 +45,11 @@ async function cloudDeleteShop(shopData) {
 
 async function cloudSaveMerchant(merchantData) {
     var response = await callCloudFunction("createMerchant", merchantData);
+    return response;
+}
+
+async function merchantLogin(merchantData) {
+    var response = await callCloudFunction("merchantLogin", merchantData);
     return response;
 }
 

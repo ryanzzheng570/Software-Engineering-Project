@@ -16,20 +16,44 @@ const iv = crypto.randomBytes(16);
 
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
-function addShop(shopName, mode = '') {
-    if (!ValidateString(shopName)) {
+function addShop(shopName, merchantId, mode = '') {
+    if (!ValidateString(shopName) || !ValidateString(merchantId))  {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/').push({
-        shopName: shopName
-    }).key;
+
+    var storeKey = database.ref(mode + '/store/').push({
+                           shopName: shopName
+                       }).key;
+
+    database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
+
+    return storeKey;
 }
 
-function deleteShop(shopID, mode = '') {
-    if (!ValidateString(shopID)) {
+function deleteShop(shopID, merchantId, mode = '') {
+    if (!ValidateString(shopID) || !ValidateString(merchantId)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID).remove();
+
+    var path = mode + '/users/merchants/' + merchantId + "/shops/";
+    var retVal = database.ref(path).once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+
+        var found = false;
+        for (var shopKey in ssv) {
+            if (ssv[shopKey] === shopID) {
+                database.ref(path + shopKey).remove();
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    });
+
+    retVal = database.ref(mode + '/store/' + shopID).remove();
+
+    return retVal;
 }
 
 function changeShopName(shopID, shopName, mode = '') {
@@ -67,6 +91,38 @@ function removeItemFromShop(shopID, itemID, mode = '') {
         return "Sorry, invalid input was entered!";
     }
     return database.ref(mode + '/store/' + shopID + "/item/" + itemID).remove();
+}
+
+function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
+    if (!ValidateString(shopID) || !ValidateString(itemID) || !ValidateString(merchantID) ||
+        !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
+        return "Sorry, invalid input was entered!";
+    }
+
+    for (var key in itemInfo) {
+        if (itemInfo[key] === undefined) {
+            itemInfo[key] = "";
+        }
+    }
+
+    var retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
+        var validChange = false;
+        var ssv = snapshot.val();
+        if (ssv) {
+            for (var shopKey in ssv) {
+                if (ssv[shopKey] === shopID) {
+                    database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+                    validChange = true;
+                    break;
+                }
+            }
+        }
+
+        return validChange;
+    });
+
+    return retVal;
+
 }
 
 function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
@@ -114,6 +170,34 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
     }).key;
 }
 
+function merchantLogin(username, password, mode = '') {
+    password = encrypt(password);
+    var retVal = database.ref(mode + "/users/merchants").once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+        for (var merchantId in ssv) {
+            var currData = ssv[merchantId];
+
+            var checkUsername = currData["userName"];
+            var checkPass = currData["password"];
+
+            if ((checkUsername === username) && (checkPass === password)) {
+                var shops = [];
+                if ("shops" in currData) {
+                    shops = currData["shops"];
+                }
+                return {
+                    id: merchantId,
+                    shops: shops,
+                    name: checkUsername
+                };
+            }
+        }
+
+        return null;
+    });
+    return retVal;
+}
+
 function createCustomer(username, password, email, address, phoneNumber, note, mode = '') {
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
@@ -131,20 +215,20 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
 
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
 exports.addShop = functions.https.onCall((data, context) => {
-    return addShop(data.shopName);
+    return addShop(data.shopName, data.userId);
 });
 exports.testAddShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(addShop(request.body.shopName, TEST_MODE));
+        response.status(200).send(addShop(request.body.shopName, request.body.userId, TEST_MODE));
     });
 });
 
 exports.deleteShop = functions.https.onCall((data, context) => {
-    return deleteShop(data.shopId);
+    return deleteShop(data.shopId, data.userId);
 });
 exports.testDeleteShop = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(deleteShop(request.body.shopID, TEST_MODE));
+        response.status(200).send(deleteShop(request.body.shopID, request.body.userId, TEST_MODE));
     });
 });
 
@@ -177,7 +261,7 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 
 exports.addItem = functions.https.onCall((data, context) => {
     var inventory = parseInt(data.inventory);
-
+    var cost = parseFloat(data.cost);
     const itemData = {
         url: data.url,
         altText: data.altText,
@@ -210,6 +294,37 @@ exports.testRemoveItem = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.editItem = functions.https.onCall((data, context) => {
+    var itemId = data.itemId;
+    var shopId = data.shopId;
+    var merchantId = data.merchantId;
+
+    var inventory = parseInt(data.inventory);
+    var cost = parseFloat(data.cost);
+    const itemData = {
+        url: data.url,
+        altText: data.altText,
+        name: data.itemName,
+        cost: cost,
+        inventory: inventory
+    };
+
+    return editItemInShop(shopId, itemId, merchantId, itemData);
+});
+exports.editItemTest = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        const numInventory = Number(request.body.inventory);
+        const itemData = {
+            url: request.body.url,
+            altText: request.body.altText,
+            name: request.body.itemName,
+            cost: request.body.cost,
+            inventory: numInventory
+        };
+        response.status(200).send(editItemInShop(request.body.shopID, request.body.itemId, request.body.merchantId, itemData, TEST_MODE));
+    });
+});
+
 exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
     return purchaseItemFromShop(data.shopID, data.itemIDs, data.quantities);
 });
@@ -234,6 +349,15 @@ exports.testCreateMerchant = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.merchantLogin = functions.https.onCall((data, context) => {
+    return merchantLogin(data.userName, data.password);
+});
+exports.testMerchantLogin = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(merchantLogin(request.body.userName, request.body.password, TEST_MODE));
+    });
+});
+
 exports.createCustomer = functions.https.onCall((data, context) => {
     return createCustomer(data.userName, data.password, data.email, data.address, data.phoneNumber, data.note);
 });
@@ -245,20 +369,23 @@ exports.testCreateCustomer = functions.https.onRequest((request, response) => {
 
 // !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
 
+const ENCRYPTION_PASSWORD = "password";
+const ENCRYPTION_METHOD = 'aes-128-cbc';
+const UNENCRYPTED_FORM = "utf8";
+const ENCRYPTED_FORM = "hex";
+
 function encrypt(text) {
-    let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let encrypted = cipher.update(text);
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return encrypted.toString('hex');
+    var key = crypto.createCipher(ENCRYPTION_METHOD, ENCRYPTION_PASSWORD);
+    var encryptedVal = key.update(text, UNENCRYPTED_FORM, ENCRYPTED_FORM)
+    encryptedVal += key.final(ENCRYPTED_FORM);
+    return encryptedVal;
 }
 
 function decrypt(text) {
-    let iv = Buffer.from(text.iv, 'hex');
-    let encryptedText = Buffer.from(text.encryptedData, 'hex');
-    let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
+    var key = crypto.createDecipher(ENCRYPTION_METHOD, ENCRYPTION_PASSWORD);
+    var unencryptedVal = key.update(text, ENCRYPTED_FORM, UNENCRYPTED_FORM)
+    unencryptedVal += key.final(UNENCRYPTED_FORM);
+    return unencryptedVal;
 }
 
 function ValidateString(string) {
