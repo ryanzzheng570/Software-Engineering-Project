@@ -18,6 +18,8 @@ public class SearchController {
 
     @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
+        FirebaseController.loadDbInfo(false);
+
         ArrayList<Shop> matchingShops = new ArrayList<>();
 
         String lowercaseQuery = query.toLowerCase();

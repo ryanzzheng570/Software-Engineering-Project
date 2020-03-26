@@ -17,7 +17,7 @@ const iv = crypto.randomBytes(16);
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
 function addShop(shopName, merchantId, mode = '') {
-    if (!ValidateString(shopName)) {
+    if (!ValidateString(shopName) || !ValidateString(merchantId))  {
         return "Sorry, invalid input was entered!";
     }
 
@@ -31,7 +31,7 @@ function addShop(shopName, merchantId, mode = '') {
 }
 
 function deleteShop(shopID, merchantId, mode = '') {
-    if (!ValidateString(shopID)) {
+    if (!ValidateString(shopID) || !ValidateString(merchantId)) {
         return "Sorry, invalid input was entered!";
     }
 

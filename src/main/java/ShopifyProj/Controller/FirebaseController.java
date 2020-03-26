@@ -17,7 +17,7 @@ public class FirebaseController {
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
 
-    private static ArrayList<Shop> dbShops = initializeDbInfo();
+    private static ArrayList<Shop> dbShops;
 
     private static User currUser = null;
 
@@ -141,6 +141,12 @@ public class FirebaseController {
         }
 
         return (dbInst);
+    }
+
+    public static void loadDbInfo(boolean reloadIfLoaded) {
+        if ((dbShops == null) || (reloadIfLoaded)) {
+            dbShops = initializeDbInfo();
+        }
     }
 
     public static ArrayList<Shop> getDbShops() {

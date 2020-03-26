@@ -28,7 +28,9 @@ public class ShopAndDiffViewIntegrationTest {
     public void addBasicShop() throws Exception {
         String name = "TEST_SHOP";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -36,7 +38,8 @@ public class ShopAndDiffViewIntegrationTest {
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(name)));
+                .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(merchantUsername)));
     }
 
     @Test
@@ -44,7 +47,9 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP";
         String newName = "NEW_NAME";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -52,7 +57,8 @@ public class ShopAndDiffViewIntegrationTest {
 
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(name)));
+                .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(merchantUsername)));
 
         String shopId = FirebaseController.findByShopName(name).getId();
 
@@ -70,7 +76,9 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP_DEL";
         String name2 = "TEST_SHOP_2_DEL";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -82,7 +90,8 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)))
-                .andExpect(content().string(containsString(name2)));
+                .andExpect(content().string(containsString(name2)))
+                .andExpect(content().string(containsString(merchantUsername)));
 
         String shopId = FirebaseController.findByShopName(name).getId();
 
@@ -100,7 +109,9 @@ public class ShopAndDiffViewIntegrationTest {
         String name = "TEST_SHOP_ONE_TAG";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -115,6 +126,7 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(merchantUsername)))
                 .andExpect(content().string(containsString(tag1)));
     }
 
@@ -124,7 +136,9 @@ public class ShopAndDiffViewIntegrationTest {
         String tag1 = "TAG_1";
         String tag2 = "TAG_2";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -142,6 +156,7 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(merchantUsername)))
                 .andExpect(content().string(containsString(tag1)))
                 .andExpect(content().string(containsString(tag2)));
     }
@@ -152,7 +167,9 @@ public class ShopAndDiffViewIntegrationTest {
         String tag1 = "TAG_1_REM_TAG";
         String tag2 = "TAG_2";
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
@@ -169,6 +186,7 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)))
+                .andExpect(content().string(containsString(merchantUsername)))
                 .andExpect(content().string(containsString(tag1)))
                 .andExpect(content().string(containsString(tag2)));
 
@@ -194,7 +212,12 @@ public class ShopAndDiffViewIntegrationTest {
         String itemCost = "45";
         int itemInventory = 56;
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
+
+        requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -238,7 +261,12 @@ public class ShopAndDiffViewIntegrationTest {
         String item2Cost = "698";
         int item2Inventory = 9867;
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
+
+        requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -311,6 +339,11 @@ public class ShopAndDiffViewIntegrationTest {
     public void goToNewShop() throws Exception {
         String shopName = "goToNewShop";
 
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
+
         String addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
 
         this.mockMvc.perform(post(addShopQuery));
@@ -335,6 +368,11 @@ public class ShopAndDiffViewIntegrationTest {
         String itemName = "ITEM";
         String cost = "10";
         String inventory = "30";
+
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
 
         String addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addShopQuery));
@@ -381,6 +419,11 @@ public class ShopAndDiffViewIntegrationTest {
         String shopName = "goToShopWithoutItems";
         String noItemsMessage = "Sorry, the merchant did not add items to their store yet!";
 
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
+
         String query = String.format("/addShop?shopName=%s&setId=%s", shopName, FirebaseController.getCounterAndIterate());
 
         this.mockMvc.perform(post(query));
@@ -411,13 +454,16 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Login")));
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", FirebaseController.getCounterAndIterate());
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         // Should bring you to merchant menu page when logged in
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Merchant Menu Page")));
+                .andExpect(content().string(containsString("Merchant Menu Page")))
+                .andExpect(content().string(containsString(merchantUsername)));
     }
 
     @Test
@@ -431,7 +477,10 @@ public class ShopAndDiffViewIntegrationTest {
         String shopId1 = FirebaseController.getCounterAndIterate();
         String shopId2 = FirebaseController.getCounterAndIterate();
 
-        String requestStr = String.format("/loginAsMerchant?id=%s", merchId1);
+        String merchantUsername = "USERNAME";
+        String merchantUsername2 = "USER_NAME_2";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", merchId1, merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         String addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName1, shopId1);
@@ -441,10 +490,11 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Merchant Menu Page")))
+                .andExpect(content().string(containsString(merchantUsername)))
                 .andExpect(content().string(containsString(shopName1)))
                 .andExpect(content().string(not(containsString(shopName2))));
 
-        requestStr = String.format("/loginAsMerchant?id=%s", merchId2);
+        requestStr = String.format("/loginAsMerchant?id=%s&userName=%s", merchId2, merchantUsername2);
         this.mockMvc.perform(post(requestStr));
 
         addShopQuery = String.format("/addShop?shopName=%s&setId=%s", shopName2, shopId2);
@@ -454,16 +504,18 @@ public class ShopAndDiffViewIntegrationTest {
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Merchant Menu Page")))
+                .andExpect(content().string(containsString(merchantUsername2)))
                 .andExpect(content().string(not(containsString(shopName1))))
                 .andExpect(content().string(containsString(shopName2)));
 
-        requestStr = String.format("/loginAsMerchant?id=%s&shops[]=%s", merchId1, shopId1);
+        requestStr = String.format("/loginAsMerchant?id=%s&shops[]=%s&userName=%s", merchId1, shopId1, merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
         // Should bring you to merchant menu page when logged in
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Merchant Menu Page")))
+                .andExpect(content().string(containsString(merchantUsername)))
                 .andExpect(content().string(containsString(shopName1)))
                 .andExpect(content().string(not(containsString(shopName2))));
     }

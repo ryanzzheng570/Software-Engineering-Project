@@ -396,11 +396,6 @@ public class MerchantServicesTest {
 
                 assertEquals("No key removed.", keyList.size(), 2);
 
-                System.out.println("######################################################");
-                for (String temp2 : keyList) {
-                    System.out.println(temp2);
-                }
-
                 setResult((String) temp.get(keyList.get(0)));
             }
 
