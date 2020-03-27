@@ -19,13 +19,13 @@ const ERROR_CONSTANT = "ERROR - Please contact the developer";
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
 function addShop(shopName, merchantId, mode = '') {
-    if (!ValidateString(shopName) || !ValidateString(merchantId))  {
+    if (!ValidateString(shopName) || !ValidateString(merchantId)) {
         return "Sorry, invalid input was entered!";
     }
 
     var storeKey = database.ref(mode + '/store/').push({
-                           shopName: shopName
-                       }).key;
+        shopName: shopName
+    }).key;
 
     database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
 
@@ -127,34 +127,39 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
 
 }
 
-function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
-    const SHOP_ID = shopID;
-    const ITEM_IDS = itemID;
+function purchaseItemFromShop(shopIDs, itemIDs, quantities, mode = '') {
+    const SHOP_IDS = shopIDs;
+    const ITEM_IDS = itemIDs;
     const QUANTITIES = quantities;
-    if (!ValidateString(SHOP_ID) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
+    if (!ValidateArray(SHOP_IDS, ValidateString) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
         return "Sorry, invalid input was entered!";
     }
-    var returnVal = database.ref(mode + "/store/" + SHOP_ID).once("value").then((snapshot) => {
+    var returnVal = database.ref(mode + "/store/").once("value").then((snapshot) => {
         if (snapshot.val()) {
             const res = snapshot.val();
-            for (var id in ITEM_IDS) {
-                var tempItem = res.item[ITEM_IDS[id]];
-                var itemID = ITEM_IDS[id];
+            for (var check in SHOP_IDS) {
+                var tempItem = res[SHOP_IDS[check]].item[ITEM_IDS[check]];
 
-                var newInventoryCount = tempItem.inventory - QUANTITIES[id];
+                var newInventoryCount = tempItem.inventory - QUANTITIES[check];
                 if (newInventoryCount < 0) {
-                    return "Error - Not enough inventory!";
-
-                } else {
-                    database.ref(mode + "/store/" + SHOP_ID).child("item/" + itemID).update({
-                        inventory: newInventoryCount
-                    })
+                    return "Item " + tempItem.name + " from " + res[SHOP_IDS[check]].shopName + " could not be bought. Please double check the inventory, and if you think this is a mistake please contact a developer.";
                 }
             }
-            return "Success";
+
+            for (var id in SHOP_IDS) {
+                var newTempItem = res[SHOP_IDS[id]].item[ITEM_IDS[id]];
+                var newItemID = ITEM_IDS[id];
+
+                var officialInvCount = newTempItem.inventory - QUANTITIES[id];
+
+                database.ref(mode + "/store/" + SHOP_IDS[id]).child("item/" + newItemID).update({
+                    inventory: officialInvCount
+                })
+            }
+            return SUCCESS_CONSTANT;
 
         }
-        return "Something went wrong!"
+        return "Something went wrong! Please contact a developer."
 
     });
     return returnVal;
@@ -248,7 +253,7 @@ exports.addToCart = functions.https.onCall((data, context) => {
 });
 exports.testAddToCart = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(addItemToShoppingCart("testCustomerID","testShopID", "testItemID", TEST_MODE));
+        response.status(200).send(addItemToShoppingCart("testCustomerID", "testShopID", "testItemID", TEST_MODE));
     });
 });
 exports.addShop = functions.https.onCall((data, context) => {
@@ -363,7 +368,7 @@ exports.editItemTest = functions.https.onRequest((request, response) => {
 });
 
 exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
-    return purchaseItemFromShop(data.shopID, data.itemIDs, data.quantities);
+    return purchaseItemFromShop(data.shopIDs, data.itemIDs, data.quantities);
 });
 exports.testPurchaseItems = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
@@ -373,7 +378,7 @@ exports.testPurchaseItems = functions.https.onRequest((request, response) => {
         for (var a in quantities) {
             qties.push(Number(quantities[a]));
         }
-        response.status(200).send(purchaseItemFromShop(request.body.shopID, items, qties, TEST_MODE));
+        response.status(200).send(purchaseItemFromShop(request.body.shopIDs, items, qties, TEST_MODE));
     });
 });
 

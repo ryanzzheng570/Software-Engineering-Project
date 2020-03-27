@@ -39,7 +39,7 @@ public class LoginController {
                                                    @RequestParam(value = "userName") String name,
                                                    @RequestParam(value = "shops[]") Optional<String[]> shopIds,
                                                    Model model) throws Exception {
-        FirebaseController.loadDbInfo(false);
+        FirebaseController.loadDbInfo(true);
 
         Merchant toRet = new Merchant(userId);
 

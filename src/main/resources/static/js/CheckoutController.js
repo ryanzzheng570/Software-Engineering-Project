@@ -29,39 +29,42 @@ function updateCost() {
     $("#totalCost").text("Total Cost: $" + totalCost.toFixed(2));
 }
 
-function checkout() {
-    let isFirstRow = true;
-    let itemIDs = [];
-    let quantities = [];
-    let noErrors = true;
 
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
+
+function checkout() {
+    var storeIDs = [];
+    var itemIDs = [];
+    var quantities = [];
+    var submitFlag = true;
+    $(".store").each(function () {
+        let storeID = $(this).attr('value');
+        let itemID = $(this).closest('tr').children('td.item').attr('value');
+        let request = $(this).closest('tr').children('td.itemQuantity').children('input.inv').val()
+        let max = $(this).closest('tr').children('td.maxInv').text();
+
+        if (storeID && storeID != "" && itemID && itemID != "") {
+            storeIDs.push(storeID);
+            itemIDs.push(itemID);
         } else {
-            $(this).closest('tr').find("input").each(function () {
-                if (isNaN(this.value)) {
-                    itemIDs.push(this.value);
-                }
-                if (!isNaN(this.value)) {
-                    let maxValue = parseInt($(this)[0].max);
-                    if (this.value == "" || isNaN(this.value) || parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
-                        alert("Error - Please enter a valid quantity!");
-                        noErrors = false;
-                        return;
-                    }
-                    quantities.push(this.value);
-                }
-            });
+            alert("Something went wrong. Contact a developer.");
+            submitFlag = false;
+            return false;
         }
-    })
-    if (noErrors === true) {
-        let storeId = $("#storeID").val();
-        submit(storeId, itemIDs, quantities);
+
+        if (!isNaN(request) && request > 0 && request <= (Number(max))) {
+            quantities.push(request);
+        } else {
+            alert("Please enter valid quantities.")
+            submitFlag = false;
+            return false;
+        }
+    });
+    if (submitFlag) {
+        submit(storeIDs, itemIDs, quantities);
     }
 }
 
-async function submit(aStoreID, itemIDs, quantities) {
+async function submit(storeIDs, itemIDs, quantities) {
     let ccNum = $("#ccNum").val();
     let name = $("#paymentName").val();
 
@@ -74,39 +77,25 @@ async function submit(aStoreID, itemIDs, quantities) {
         return;
     }
 
-    var checkoutData = {
-        storeId: aStoreID,
-        itemIds: itemIDs,
-        quantities: quantities
-    };
-
-    console.log(checkoutData);
-
     showLoading();
 
     var resp = await PurchaseItems({
-        shopID: aStoreID,
+        shopIDs: storeIDs,
         itemIDs: itemIDs,
         quantities: quantities
     });
 
-    console.log(resp.data);
-
-    if (resp.data == "Success") {
-        $.ajax({
-            url: "/checkout?" + $.param(checkoutData),
-            type: "POST",
-            dataType: "json"
-        });
-
+    if (resp.data === "SUCCESS") {
         hideLoading();
-
         alert("Thank you " + name + " for your purchase.");
-
         window.location = document.referrer;
     } else {
         hideLoading();
-        alert("Error: there was a problem with the transaction");
+        if (resp.data && resp.data != "") {
+            alert(resp.data);
+        } else {
+            alert("Error: there was a problem with the transaction. Please contact a developer.");
+        }
     }
 
 }

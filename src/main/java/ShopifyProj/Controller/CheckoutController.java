@@ -38,8 +38,8 @@ public class CheckoutController {
             }
         }
         model.addAttribute("items", retItems);
-//        model.addAttribute("itemIDs", itemIds);
-//        model.addAttribute("storeIDs", storeIds);
+        model.addAttribute("itemIDs", itemIds);
+        model.addAttribute("storeIDs", storeIds);
 
         return "CheckoutPage";
     }
