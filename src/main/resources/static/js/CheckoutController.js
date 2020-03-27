@@ -1,21 +1,34 @@
 $(document).ready(() => {
-    addItemIDs();
     updateCost();
+    $(".rem").click(function () {
+        removeFromCartHandler($(this));
+    });
 })
 
-function addItemIDs() {
-    const ids_str = $("#itemIDs").text();
-    const ids = ids_str.split("$");
-    let counter = 0;
-    let isFirstRow = true;
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
+async function removeFromCartHandler(obj) {
+    var customer = $("#customerID").attr('value');
+    var item = obj.val();
+    if (customer && customer != "" && item && item != "") {
+        showLoading();
+        const resp = await cloudRemoveItemFromSC({
+            customerID: customer,
+            itemID: item
+        });
+        hideLoading();
+        if (resp.data === "SUCCESS") {
+            obj.closest('tr').remove()
         } else {
-            $(this).append('<input name=item value="' + ids[counter] + '" type=hidden /></td>');
-            counter++;
+            if (resp.data != "") {
+                alert(resp.data);
+            } else {
+                alert("Error: there was a problem with the transaction. Please contact a developer.");
+            }
         }
-    })
+
+    } else {
+        alert("Something went wrong. Contact a developer.")
+    }
+
 }
 
 function updateCost() {
@@ -79,18 +92,16 @@ async function submit(storeIDs, itemIDs, quantities) {
 
     showLoading();
 
-    var resp = await PurchaseItems({
+    const resp = await PurchaseItems({
         shopIDs: storeIDs,
         itemIDs: itemIDs,
         quantities: quantities
     });
-
+    hideLoading();
     if (resp.data === "SUCCESS") {
-        hideLoading();
         alert("Thank you " + name + " for your purchase.");
         window.location = document.referrer;
     } else {
-        hideLoading();
         if (resp.data && resp.data != "") {
             alert(resp.data);
         } else {

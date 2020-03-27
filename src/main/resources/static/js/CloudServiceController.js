@@ -60,8 +60,13 @@ async function cloudSaveCustomer(customerData) {
 }
 
 async function cloudAddToCart(data) {
-   var response = await callCloudFunction("addToCart", data);
-   return response;
+    var response = await callCloudFunction("addToCart", data);
+    return response;
+}
+
+async function cloudRemoveItemFromSC(data) {
+    var response = await callCloudFunction("removeItemFromSC", data);
+    return response;
 }
 
 // !--- PLACE ALL CLOUD SERVICE CALLS ABOVE HERE --- SHOULD NOT HAVE TO CHANGE ANYTHING BELOW ---!

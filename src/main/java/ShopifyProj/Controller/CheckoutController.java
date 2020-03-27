@@ -23,8 +23,9 @@ public class CheckoutController {
     @GetMapping("/goToCart")
     public String goToCart(
             Model model) {
+        FirebaseController.loadDbInfo(true);
         if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
-            return "Login";
+            return "CustomerLoginPage";
         }
 
         ArrayList<Item> retItems = new ArrayList<Item>();
@@ -40,35 +41,8 @@ public class CheckoutController {
         model.addAttribute("items", retItems);
         model.addAttribute("itemIDs", itemIds);
         model.addAttribute("storeIDs", storeIds);
+        model.addAttribute("customer", FirebaseController.getCurrUser().getId());
 
         return "CheckoutPage";
-    }
-
-    @PostMapping("/checkout")
-    public @ResponseBody
-    Shop checkoutUser(@RequestParam(value = "storeId") String shopId,
-                      @RequestParam(value = "itemIds[]") Optional<String[]> itemIds,
-                      @RequestParam(value = "quantities[]") Optional<int[]> quantities,
-                      Model model) {
-        Shop toMod = null;
-        try {
-            toMod = FirebaseController.getShopWithId(shopId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (itemIds.isPresent() && (quantities.isPresent())) {
-            List<String> itemIdList = Arrays.asList(itemIds.get());
-
-            for (Item currItem : toMod.getItems()) {
-                String currId = currItem.getId();
-                if (itemIdList.contains(currId)) {
-                    int ind = itemIdList.indexOf(currId);
-                    currItem.reduceQuantity(quantities.get()[ind]);
-                }
-            }
-        }
-
-        return toMod;
     }
 }

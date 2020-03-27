@@ -23,7 +23,7 @@
     <tr>
         <th>Name</th>
         <th>Image</th>
-        <th>Remaining</th>
+        <th>Inventory</th>
         <th>Cost</th>
     </tr>
     <tr th:each="item: ${shop.items}">
@@ -70,7 +70,6 @@
     <input type="submit" value="Go To Home Page"/>
 </form>
 <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-<script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
 <script type="text/javascript" src="/js/SidebarController.js"></script>
 <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
 <script type="text/javascript" src="/js/CustomerShopViewController.js"></script>

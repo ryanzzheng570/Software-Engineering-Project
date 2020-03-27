@@ -159,13 +159,16 @@ function purchaseItemFromShop(shopIDs, itemIDs, quantities, mode = '') {
             return SUCCESS_CONSTANT;
 
         }
-        return "Something went wrong! Please contact a developer."
+        return ERROR_CONSTANT;
 
     });
     return returnVal;
 }
 
 function createMerchant(username, password, email, phoneNumber, mode = '') {
+    if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(phoneNumber)) {
+        return "Invalid username, password, email or phone number was entered.";
+    }
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedPhoneNumber = encrypt(phoneNumber);
@@ -178,6 +181,9 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
 }
 
 function merchantLogin(username, password, mode = '') {
+    if (!ValidateString(username) || !(ValidateString(password))) {
+        return "Invalid username or password was entered.";
+    }
     password = encrypt(password);
     var retVal = database.ref(mode + "/users/merchants").once("value").then((snapshot) => {
         var ssv = snapshot.val();
@@ -206,6 +212,9 @@ function merchantLogin(username, password, mode = '') {
 }
 
 function createCustomer(username, password, email, address, phoneNumber, note, mode = '') {
+    if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(address) || !ValidateString(phoneNumber)) {
+        return "Invalid username, password, email, address or phone number was entered.";
+    }
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedAddress = encrypt(address);
@@ -221,6 +230,9 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
 }
 
 function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
+    if (!ValidateString(customerID) || !ValidateString(shopID) || !ValidateString(itemID)) {
+        return "Incorrect customer, shop or user was entered.";
+    }
     var returnVal = database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').once("value").then((snapshot) => {
         if (snapshot.val()) {
             const SC = snapshot.val();
@@ -247,7 +259,38 @@ function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
     return returnVal;
 }
 
+function remItemFromSC(customer, itemToRemove, mode = "") {
+    if (!ValidateString(customer) || !ValidateString(itemToRemove)) {
+        return "Incorrect customer or item was entered.";
+    }
+    var returnVal = database.ref(mode + '/users/customers/' + customer + '/shoppingCart/').once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const SC = snapshot.val();
+            for (var item in SC) {
+                if (SC[item].itemID === itemToRemove) {
+                    database.ref(mode + '/users/customers/' + customer + '/shoppingCart/' + item).remove();
+                    return SUCCESS_CONSTANT;
+                }
+            }
+            return ERROR_CONSTANT;
+        } else {
+            return ERROR_CONSTANT;
+        }
+
+    });
+    return returnVal;
+}
+
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
+exports.removeItemFromSC = functions.https.onCall((data, context) => {
+    return remItemFromSC(data.customerID, data.itemID);
+});
+exports.testRemoveItemFromSC = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(remItemFromSC("testCustomerID", "testItemID", TEST_MODE));
+    });
+});
+
 exports.addToCart = functions.https.onCall((data, context) => {
     return addItemToShoppingCart(data.customerID, data.shopID, data.itemID);
 });
@@ -256,6 +299,7 @@ exports.testAddToCart = functions.https.onRequest((request, response) => {
         response.status(200).send(addItemToShoppingCart("testCustomerID", "testShopID", "testItemID", TEST_MODE));
     });
 });
+
 exports.addShop = functions.https.onCall((data, context) => {
     return addShop(data.shopName, data.userId);
 });
