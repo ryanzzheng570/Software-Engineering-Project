@@ -72,41 +72,29 @@ function checkout() {
             return false;
         }
     });
-    if (submitFlag) {
-        submit(storeIDs, itemIDs, quantities);
+    var customer = $("#customerID").attr('value');
+    if (customer && customer != "") {
+        if (submitFlag) {
+            submit(storeIDs, itemIDs, quantities, customer);
+        }
     }
 }
 
-async function submit(storeIDs, itemIDs, quantities) {
-    let ccNum = $("#ccNum").val();
-    let name = $("#paymentName").val();
-
-    if (name == "") {
-        alert("Please enter a name!");
-        return;
-    }
-    if (ccNum == "") {
-        alert("Please enter a credit card number!");
-        return;
-    }
-
+async function submit(storeIDs, itemIDs, quantities, customer) {
     showLoading();
 
     const resp = await PurchaseItems({
         shopIDs: storeIDs,
         itemIDs: itemIDs,
-        quantities: quantities
+        quantities: quantities,
+        customerID: customer
     });
     hideLoading();
-    if (resp.data === "SUCCESS") {
-        alert("Thank you " + name + " for your purchase.");
+    if (resp.data.res) {
+        alert(resp.data.str);
         window.location = document.referrer;
     } else {
-        if (resp.data && resp.data != "") {
-            alert(resp.data);
-        } else {
-            alert("Error: there was a problem with the transaction. Please contact a developer.");
-        }
+        alert(resp.data);
     }
 
 }

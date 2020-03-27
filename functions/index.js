@@ -127,11 +127,12 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
 
 }
 
-function purchaseItemFromShop(shopIDs, itemIDs, quantities, mode = '') {
+function purchaseItemFromShop(shopIDs, itemIDs, quantities, customerID, mode = '') {
     const SHOP_IDS = shopIDs;
     const ITEM_IDS = itemIDs;
     const QUANTITIES = quantities;
-    if (!ValidateArray(SHOP_IDS, ValidateString) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
+    const CUSTOMER = customerID
+    if (!ValidateString(CUSTOMER) || !ValidateArray(SHOP_IDS, ValidateString) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
         return "Sorry, invalid input was entered!";
     }
     var returnVal = database.ref(mode + "/store/").once("value").then((snapshot) => {
@@ -156,7 +157,19 @@ function purchaseItemFromShop(shopIDs, itemIDs, quantities, mode = '') {
                     inventory: officialInvCount
                 })
             }
-            return SUCCESS_CONSTANT;
+            return database.ref(mode + "/users/customers/" + CUSTOMER).once("value").then((snapshot) => {
+                if (snapshot.val()) {
+                    var name = snapshot.val().userName;
+                    var address = snapshot.val().address;
+                    var decryptedAddress = decrypt(address);
+                    return {
+                        res: true,
+                        str: "Thank you for your purchase " + name + "! We will send the item(s) to " + decryptedAddress + "."
+                    };
+                } else {
+                    return ERROR_CONSTANT;
+                }
+            });
 
         }
         return ERROR_CONSTANT;
@@ -412,7 +425,7 @@ exports.editItemTest = functions.https.onRequest((request, response) => {
 });
 
 exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
-    return purchaseItemFromShop(data.shopIDs, data.itemIDs, data.quantities);
+    return purchaseItemFromShop(data.shopIDs, data.itemIDs, data.quantities, data.customerID);
 });
 exports.testPurchaseItems = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
@@ -422,7 +435,7 @@ exports.testPurchaseItems = functions.https.onRequest((request, response) => {
         for (var a in quantities) {
             qties.push(Number(quantities[a]));
         }
-        response.status(200).send(purchaseItemFromShop(request.body.shopIDs, items, qties, TEST_MODE));
+        response.status(200).send(purchaseItemFromShop(request.body.shopIDs, items, qties, request.body.customerID, TEST_MODE));
     });
 });
 
