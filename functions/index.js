@@ -152,7 +152,6 @@ function purchaseItemFromShop(shopIDs, itemIDs, quantities, customerID, mode = '
                 var newItemID = ITEM_IDS[id];
 
                 var officialInvCount = newTempItem.inventory - QUANTITIES[id];
-
                 database.ref(mode + "/store/" + SHOP_IDS[id]).child("item/" + newItemID).update({
                     inventory: officialInvCount
                 })
@@ -160,11 +159,15 @@ function purchaseItemFromShop(shopIDs, itemIDs, quantities, customerID, mode = '
             return database.ref(mode + "/users/customers/" + CUSTOMER).once("value").then((snapshot) => {
                 if (snapshot.val()) {
                     var name = snapshot.val().userName;
-                    var address = snapshot.val().address;
-                    var decryptedAddress = decrypt(address);
+                    var address = "";
+                    if (mode === TEST_MODE) {
+                        address = snapshot.val().address;
+                    } else {
+                        address = decrypt(address);
+                    }
                     return {
                         res: true,
-                        str: "Thank you for your purchase " + name + "! We will send the item(s) to " + decryptedAddress + "."
+                        str: "Thank you for your purchase " + name + "! We will send the item(s) to " + address + "."
                     };
                 } else {
                     return ERROR_CONSTANT;
@@ -429,12 +432,13 @@ exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
 exports.testPurchaseItems = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const items = request.body.itemIDs.split(', ');
+        const stores = request.body.shopIDs.split(', ');
         const quantities = request.body.quantities.split(', ');
         var qties = [];
         for (var a in quantities) {
             qties.push(Number(quantities[a]));
         }
-        response.status(200).send(purchaseItemFromShop(request.body.shopIDs, items, qties, request.body.customerID, TEST_MODE));
+        response.status(200).send(purchaseItemFromShop(stores, items, qties, request.body.customerID, TEST_MODE));
     });
 });
 

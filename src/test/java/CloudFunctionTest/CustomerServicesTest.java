@@ -66,7 +66,7 @@ public class CustomerServicesTest {
         firebaseDelay();
         HashMap<String, String> param = new HashMap<>();
         param.put("shopIDs", SHOP_ID);
-        param.put("itemIDs",  SECOND_ITEM_ID);
+        param.put("itemIDs", SECOND_ITEM_ID);
         param.put("quantities", SECOND_ITEM_PURC);
         param.put("customerID", CUSTOMER_ID);
 
@@ -81,14 +81,12 @@ public class CustomerServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> curStoreData = (Map<String, Object>) ((Map<String, Object>) dataSnapshot.getValue()).get("item");
                 Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
-                Long invVal = (Long) firstItemData.get("inventory");
-                int inventory = invVal != null ? invVal.intValue() : null;
-                assertThat("Incorrect inventory", inventory, is(Integer.parseInt(FIRST_ITEM_QTY)));
+                String inv = (String) firstItemData.get("inventory");
+                assertThat("Incorrect inventory", inv, is(FIRST_ITEM_QTY));
 
-                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
-                Long secInvVal = (Long) secondItemData.get("inventory");
-                int secInventory = secInvVal != null ? secInvVal.intValue() : null;
-                assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY)));
+                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(SECOND_ITEM_ID);
+                String secInvVal = (String) secondItemData.get("inventory");
+                assertThat("Incorrect inventory", secInvVal, is(SECOND_ITEM_QTY));
                 setResult(PASS_FLAG);
             }
 
@@ -117,7 +115,18 @@ public class CustomerServicesTest {
         final String SECOND_ITEM_COST = "1.99";
         final String FIRST_ITEM_PURC = "3";
         final String SECOND_ITEM_PURC = "1";
+        final String CUSTOMER_ID = "aCustomerIDForThis";
 
+        DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put("address", "123 Map St");
+        customMap.put("email", "a@a.com");
+        customMap.put("note", "");
+        customMap.put("password", "aPassword");
+        customMap.put("phoneNum", "(xxx)xxx-xxxx");
+        customMap.put("userName", "aUsername");
+        customerRef.updateChildrenAsync(customMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -136,9 +145,10 @@ public class CustomerServicesTest {
 
         firebaseDelay();
         HashMap<String, String> param = new HashMap<>();
-        param.put("shopID", SHOP_ID);
+        param.put("shopIDs", SHOP_ID + ", " + SHOP_ID);
         param.put("itemIDs", FIRST_ITEM_ID + ", " + SECOND_ITEM_ID);
         param.put("quantities", FIRST_ITEM_PURC + ", " + SECOND_ITEM_PURC);
+        param.put("customerID", CUSTOMER_ID);
 
         try {
             functionCaller.sendPost(CloudTestController.purchaseItemFromShop, param);
@@ -153,12 +163,12 @@ public class CustomerServicesTest {
                 Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
                 Long invVal = (Long) firstItemData.get("inventory");
                 int inventory = invVal != null ? invVal.intValue() : null;
-                assertThat("Incorrect inventory", inventory, is(Integer.parseInt(FIRST_ITEM_QTY)- Integer.parseInt(FIRST_ITEM_PURC)));
+                assertThat("Incorrect inventory", inventory, is(Integer.parseInt(FIRST_ITEM_QTY) - Integer.parseInt(FIRST_ITEM_PURC)));
 
-                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
+                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(SECOND_ITEM_ID);
                 Long secInvVal = (Long) secondItemData.get("inventory");
                 int secInventory = secInvVal != null ? secInvVal.intValue() : null;
-                assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY)- Integer.parseInt(SECOND_ITEM_PURC)));
+                assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY) - Integer.parseInt(SECOND_ITEM_PURC)));
                 setResult(PASS_FLAG);
             }
 
