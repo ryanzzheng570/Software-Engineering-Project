@@ -2,6 +2,7 @@ package ShopifyProj;
 
 import ShopifyProj.Controller.FirebaseController;
 import ShopifyProj.Model.Merchant;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -205,6 +206,11 @@ public class ShopAndSearchIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(name)))
                 .andExpect(content().string(containsString(tag1)));
+    }
+
+    @AfterEach
+    public void cleanup() {
+        FirebaseController.setCurrUser(null);
     }
 
 }
