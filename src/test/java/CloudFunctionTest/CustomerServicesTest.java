@@ -46,7 +46,6 @@ public class CustomerServicesTest {
         customMap.put("phoneNum", "(xxx)xxx-xxxx");
         customMap.put("userName", "aUsername");
         customerRef.updateChildrenAsync(customMap);
-        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -54,7 +53,6 @@ public class CustomerServicesTest {
         map.put("cost", FIRST_ITEM_COST);
         map.put("inventory", FIRST_ITEM_QTY);
         firstItemRef.updateChildrenAsync(map);
-        firebaseDelay();
 
         DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + SECOND_ITEM_ID);
         Map<String, Object> secMap = new HashMap<>();
@@ -126,7 +124,6 @@ public class CustomerServicesTest {
         customMap.put("phoneNum", "(xxx)xxx-xxxx");
         customMap.put("userName", "aUsername");
         customerRef.updateChildrenAsync(customMap);
-        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -134,7 +131,6 @@ public class CustomerServicesTest {
         map.put("cost", FIRST_ITEM_COST);
         map.put("inventory", FIRST_ITEM_QTY);
         firstItemRef.updateChildrenAsync(map);
-        firebaseDelay();
 
         DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + SECOND_ITEM_ID);
         Map<String, Object> secMap = new HashMap<>();
