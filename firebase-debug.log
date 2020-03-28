@@ -1,0 +1,130 @@
+[debug] [2020-03-28T16:37:37.536Z] ----------------------------------------------------------------------
+[debug] [2020-03-28T16:37:37.537Z] Command:       /Users/haseebthegreat/.nvm/versions/node/v12.13.0/bin/node /Users/haseebthegreat/.nvm/versions/node/v12.13.0/bin/firebase deploy --only functions:addTag,functions:addToCart,functions:changeShopName,functions:createCustomer,functions:editItem,functions:merchantLogin,functions:purchaseItemsFromShop,functions:removeItem,functions:removeItemFromSC,functions:removeItemFromShoppingCart,functions:testAddItem,functions:testAddTag,functions:testAddToCart,functions:testCreateCustomer,functions:testCreateMerchant,functions:testMerchantLogin,functions:testRemoveItemFromSC
+[debug] [2020-03-28T16:37:37.537Z] CLI Version:   7.16.1
+[debug] [2020-03-28T16:37:37.537Z] Platform:      darwin
+[debug] [2020-03-28T16:37:37.537Z] Node Version:  v12.13.0
+[debug] [2020-03-28T16:37:37.538Z] Time:          Sat Mar 28 2020 12:37:37 GMT-0400 (Eastern Daylight Time)
+[debug] [2020-03-28T16:37:37.538Z] ----------------------------------------------------------------------
+[debug] [2020-03-28T16:37:37.538Z] 
+[debug] [2020-03-28T16:37:37.543Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-28T16:37:37.544Z] > authorizing via signed-in user
+[debug] [2020-03-28T16:37:37.544Z] [iam] checking project engineeringlabproject for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-03-28T16:37:37.545Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/engineeringlabproject:testIamPermissions  
+
+[debug] [2020-03-28T16:37:37.904Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'engineeringlabproject'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script.
+[debug] [2020-03-28T16:37:39.604Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "dependencies": {
+    "firebase-admin": "^8.6.0",
+    "firebase-functions": "^3.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "firebase-functions-test": "^0.1.6"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2020-03-28T16:37:39.605Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/engineeringlabproject/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2020-03-28T16:37:39.605Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/engineeringlabproject/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2020-03-28T16:37:40.006Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-28T16:37:40.050Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2020-03-28T16:37:40.052Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/engineeringlabproject/adminSdkConfig  
+ 
+[debug] [2020-03-28T16:37:40.318Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2020-03-28T16:37:40.322Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/engineeringlabproject/configs  
+ 
+[debug] [2020-03-28T16:37:40.566Z] <<< HTTP RESPONSE 200
+[info] i  functions: packaged functions (42.65 KB) for uploading
+[debug] [2020-03-28T16:37:40.696Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/engineeringlabproject/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2020-03-28T16:37:41.253Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-28T16:37:41.255Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-692effda-46de-4679-ad91-be717dd750a4/c7b5cb48-2088-41d9-a31c-253bc2ad62bd.zip?GoogleAccessId=service-523387019136@gcf-admin-robot.iam.gserviceaccount.com&Expires=1585415261&Signature=H7JvSuG6Rq%2BtfoYEC7tpKakZTG2TewIszIVuTsGbLjaA7ItatNNQ06P2ZBRzEfuVhVPEe1ykF5JL9ZYS3i0LOYuC6mwvLz%2BAj46U6T2ZCUsfgjkeZjV1bIAyamNUXMCMVJQDWZacWpl4T4mhJl6Z0Z%2F7%2FVMCwcD51QIS9rSvbiMC1SKzm4oP1fW17PcB1zQtm3X10W2MaL0kbLGjxFijpQWI9u4H0Pg4juF9u6LDWrWDyn65MfkglN7O8b6oICLClbvmVFoZHFHHLxBJH8%2BN2rZprOW4cr4%2BMCzSS%2BViw9hiVF8ELyduI8kihVsecm0qeKeHatbjEB68SE7ARf4GBQ%3D%3D  
+ <request body omitted>
+[debug] [2020-03-28T16:37:41.614Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[debug] [2020-03-28T16:37:41.620Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/engineeringlabproject/locations/-/functions  
+ 
+[debug] [2020-03-28T16:37:41.979Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-28T16:37:41.984Z] > [functions] filtering triggers to: [
+  "projects/engineeringlabproject/locations/us-central1/functions/removeItemFromShoppingCart",
+  "projects/engineeringlabproject/locations/us-central1/functions/testRemoveItemFromSC",
+  "projects/engineeringlabproject/locations/us-central1/functions/addToCart",
+  "projects/engineeringlabproject/locations/us-central1/functions/testAddToCart",
+  "projects/engineeringlabproject/locations/us-central1/functions/changeShopName",
+  "projects/engineeringlabproject/locations/us-central1/functions/addTag",
+  "projects/engineeringlabproject/locations/us-central1/functions/testAddTag",
+  "projects/engineeringlabproject/locations/us-central1/functions/testAddItem",
+  "projects/engineeringlabproject/locations/us-central1/functions/removeItem",
+  "projects/engineeringlabproject/locations/us-central1/functions/editItem",
+  "projects/engineeringlabproject/locations/us-central1/functions/purchaseItemsFromShop",
+  "projects/engineeringlabproject/locations/us-central1/functions/testCreateMerchant",
+  "projects/engineeringlabproject/locations/us-central1/functions/merchantLogin",
+  "projects/engineeringlabproject/locations/us-central1/functions/testMerchantLogin",
+  "projects/engineeringlabproject/locations/us-central1/functions/createCustomer",
+  "projects/engineeringlabproject/locations/us-central1/functions/testCreateCustomer",
+  "projects/engineeringlabproject/locations/us-central1/functions/removeItemFromSC"
+]
+[info] i  functions: current functions in project: addItem(us-central1), addShop(us-central1), addTag(us-central1), addToCart(us-central1), changeShopName(us-central1), createCustomer(us-central1), createMerchant(us-central1), deleteShop(us-central1), editItem(us-central1), merchantLogin(us-central1), purchaseItemsFromShop(us-central1), removeItem(us-central1), removeItemFromSC(us-central1), removeItemFromShoppingCart(us-central1), removeTag(us-central1), testAddItem(us-central1), testAddShop(us-central1), testAddTag(us-central1), testAddToCart(us-central1), testChangeShopName(us-central1), testCreateCustomer(us-central1), testCreateMerchant(us-central1), testDeleteShop(us-central1), testEditItem(us-central1), testMerchantLogin(us-central1), testPurchaseItems(us-central1), testRemoveItem(us-central1), testRemoveItemFromSC(us-central1), testRemoveTag(us-central1)
+[info] i  functions: uploading functions in project: removeItemFromShoppingCart(us-central1), testRemoveItemFromSC(us-central1), addToCart(us-central1), testAddToCart(us-central1), changeShopName(us-central1), addTag(us-central1), testAddTag(us-central1), testAddItem(us-central1), removeItem(us-central1), editItem(us-central1), purchaseItemsFromShop(us-central1), testCreateMerchant(us-central1), merchantLogin(us-central1), testMerchantLogin(us-central1), createCustomer(us-central1), testCreateCustomer(us-central1), removeItemFromSC(us-central1)
+[info] i  functions: updating Node.js 8 function removeItemFromShoppingCart(us-central1)...
+[debug] [2020-03-28T16:37:41.999Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testRemoveItemFromSC(us-central1)...
+[debug] [2020-03-28T16:37:41.999Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function addToCart(us-central1)...
+[debug] [2020-03-28T16:37:41.999Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testAddToCart(us-central1)...
+[debug] [2020-03-28T16:37:41.999Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function changeShopName(us-central1)...
+[debug] [2020-03-28T16:37:42.000Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function addTag(us-central1)...
+[debug] [2020-03-28T16:37:42.000Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testAddTag(us-central1)...
+[debug] [2020-03-28T16:37:42.000Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testAddItem(us-central1)...
+[debug] [2020-03-28T16:37:42.000Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function removeItem(us-central1)...
+[debug] [2020-03-28T16:37:42.000Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function editItem(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function purchaseItemsFromShop(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testCreateMerchant(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function merchantLogin(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testMerchantLogin(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function createCustomer(us-central1)...
+[debug] [2020-03-28T16:37:42.001Z] Trigger is:  {"httpsTrigger":{}}
+[info] i  functions: updating Node.js 8 function testCreateCustomer(us-central1)...
+[debug] [2020-03-28T16:37:42.002Z] Trigger is:  {"httpsTrigger":{}}
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	removeItemFromSC(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+

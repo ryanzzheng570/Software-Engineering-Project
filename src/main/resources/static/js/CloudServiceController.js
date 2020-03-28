@@ -65,7 +65,7 @@ async function cloudAddToCart(data) {
 }
 
 async function cloudRemoveItemFromSC(data) {
-    var response = await callCloudFunction("removeItemFromSC", data);
+    var response = await callCloudFunction("removeItemFromShoppingCart", data);
     return response;
 }
 

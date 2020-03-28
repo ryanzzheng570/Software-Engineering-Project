@@ -292,7 +292,7 @@ function remItemFromSC(customer, itemToRemove, mode = "") {
 }
 
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
-exports.removeItemFromSC = functions.https.onCall((data, context) => {
+exports.removeItemFromShoppingCart = functions.https.onCall((data, context) => {
     return remItemFromSC(data.customerID, data.itemID);
 });
 exports.testRemoveItemFromSC = functions.https.onRequest((request, response) => {
