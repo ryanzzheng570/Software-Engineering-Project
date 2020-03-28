@@ -75,11 +75,12 @@ public class CustomerServicesTest {
         testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                setResult(PASS_FLAG);
                 for (DataSnapshot cartData : dataSnapshot.getChildren()) {
+                    setResult("Shouldn't come here");
                     String itemID = (String) ((Map<String, Object>) cartData.getValue()).get("itemID");
                     String storeID = (String) ((Map<String, Object>) cartData.getValue()).get("shopID");
                     assertThat("Incorrect itemID", itemID, is(not(REMOVE_ITEM_ID)));
-                    setResult(PASS_FLAG);
                 }
             }
 

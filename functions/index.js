@@ -159,10 +159,8 @@ function purchaseItemFromShop(shopIDs, itemIDs, quantities, customerID, mode = '
             return database.ref(mode + "/users/customers/" + CUSTOMER).once("value").then((snapshot) => {
                 if (snapshot.val()) {
                     var name = snapshot.val().userName;
-                    var address = "";
-                    if (mode === TEST_MODE) {
-                        address = snapshot.val().address;
-                    } else {
+                    var address = snapshot.val().address;
+                    if (mode !== TEST_MODE) {
                         address = decrypt(address);
                     }
                     return {
