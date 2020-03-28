@@ -7,6 +7,7 @@ import com.google.firebase.database.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 
 import static org.junit.Assert.*;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class CustomerServicesTest {
     private static FirebaseDatabase testDbInstance = null;
     private static CloudTestController functionCaller = null;
+    private static String result = "";
+    private static final String PASS_FLAG = "PASS";
 
     @Test
     public void itPreventsPurchaseOfOutOfInventoryItems() {
@@ -32,6 +35,18 @@ public class CustomerServicesTest {
         final String SECOND_ITEM_QTY = "1";
         final String SECOND_ITEM_COST = "1.99";
         final String SECOND_ITEM_PURC = "2";
+        final String CUSTOMER_ID = "aCustomerID";
+
+        DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put("address", "123 Map St");
+        customMap.put("email", "a@a.com");
+        customMap.put("note", "");
+        customMap.put("password", "aPassword");
+        customMap.put("phoneNum", "(xxx)xxx-xxxx");
+        customMap.put("userName", "aUsername");
+        customerRef.updateChildrenAsync(customMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -50,9 +65,10 @@ public class CustomerServicesTest {
 
         firebaseDelay();
         HashMap<String, String> param = new HashMap<>();
-        param.put("shopID", SHOP_ID);
+        param.put("shopIDs", SHOP_ID);
         param.put("itemIDs",  SECOND_ITEM_ID);
         param.put("quantities", SECOND_ITEM_PURC);
+        param.put("customerID", CUSTOMER_ID);
 
         try {
             functionCaller.sendPost(CloudTestController.purchaseItemFromShop, param);
@@ -73,6 +89,7 @@ public class CustomerServicesTest {
                 Long secInvVal = (Long) secondItemData.get("inventory");
                 int secInventory = secInvVal != null ? secInvVal.intValue() : null;
                 assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY)));
+                setResult(PASS_FLAG);
             }
 
             @Override
@@ -84,6 +101,7 @@ public class CustomerServicesTest {
         firebaseDelay();
         // Need second delay because slow update of cloud function
         firebaseDelay();
+        assertThat("Database did not update correctly after trying to purchase out of stock items.", getResult(), is(PASS_FLAG));
     }
 
     @Test
@@ -141,6 +159,7 @@ public class CustomerServicesTest {
                 Long secInvVal = (Long) secondItemData.get("inventory");
                 int secInventory = secInvVal != null ? secInvVal.intValue() : null;
                 assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY)- Integer.parseInt(SECOND_ITEM_PURC)));
+                setResult(PASS_FLAG);
             }
 
             @Override
@@ -152,6 +171,7 @@ public class CustomerServicesTest {
         firebaseDelay();
         // Need second delay because slow update of cloud function
         firebaseDelay();
+        assertThat("Database did not update correctly after purchasing items.", getResult(), is(PASS_FLAG));
     }
 
     @Test
@@ -183,6 +203,7 @@ public class CustomerServicesTest {
                 assertThat("Incorrect username", userName, is(USERNAME));
                 String note = (String) currItemData.get("note");
                 assertThat("Incorrect note", note, is(NOTE));
+                setResult(PASS_FLAG);
             }
 
             @Override
@@ -192,6 +213,7 @@ public class CustomerServicesTest {
 
         });
         firebaseDelay();
+        assertThat("Customer was not created correctly.", getResult(), is(PASS_FLAG));
     }
 
 
@@ -217,6 +239,19 @@ public class CustomerServicesTest {
         testDbInstance = null;
         functionCaller = null;
 
+    }
+
+    @BeforeEach
+    public static void resetResult() {
+        result = "";
+    }
+
+    public static void setResult(String res) {
+        result = res;
+    }
+
+    public static String getResult() {
+        return result;
     }
 
 }

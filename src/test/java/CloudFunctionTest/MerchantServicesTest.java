@@ -20,6 +20,7 @@ public class MerchantServicesTest {
     private static FirebaseDatabase testDbInstance = null;
     private static CloudTestController functionCaller = null;
     private static String result = "";
+    private static final String PASS_FLAG = "PASS";
 
     @Test
     public void itRemovesAItemFromAShop() {
@@ -60,6 +61,7 @@ public class MerchantServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     assertThat("Item was not deleted", storeData.getKey(), is(not(REMOVE_ITEM_ID)));
+                    setResult(PASS_FLAG);
                 }
             }
 
@@ -70,6 +72,8 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        assertThat("Item was not deleted", getResult(), is(PASS_FLAG));
+
     }
 
     @Test
@@ -124,6 +128,8 @@ public class MerchantServicesTest {
 
                 String altText = (String) currItemData.get("altText");
                 assertThat("Incorrect alt text", altText, is(ALT_TEXT));
+
+                setResult(PASS_FLAG);
             }
 
             @Override
@@ -133,6 +139,7 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        assertThat("The item was not correctly added to the shop.", getResult(), is(PASS_FLAG));
     }
 
     @Test
@@ -175,6 +182,7 @@ public class MerchantServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     assertThat("Store was not deleted", storeData.getKey(), is(not(REMOVE_TAG_ID)));
+                    setResult(PASS_FLAG);
                 }
             }
 
@@ -185,6 +193,7 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        assertThat("The store was not correctly deleted.", getResult(), is(PASS_FLAG));
     }
 
     @Test

@@ -300,7 +300,7 @@ exports.removeItemFromSC = functions.https.onCall((data, context) => {
 });
 exports.testRemoveItemFromSC = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(remItemFromSC("testCustomerID", "testItemID", TEST_MODE));
+        response.status(200).send(remItemFromSC(request.body.userID, request.body.itemID, TEST_MODE));
     });
 });
 
@@ -309,7 +309,7 @@ exports.addToCart = functions.https.onCall((data, context) => {
 });
 exports.testAddToCart = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
-        response.status(200).send(addItemToShoppingCart("testCustomerID", "testShopID", "testItemID", TEST_MODE));
+        response.status(200).send(addItemToShoppingCart(request.body.customerID, request.body.shopID, request.body.itemID, TEST_MODE));
     });
 });
 
@@ -360,7 +360,6 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 
 exports.addItem = functions.https.onCall((data, context) => {
     var inventory = parseInt(data.inventory);
-    var cost = parseFloat(data.cost);
     const itemData = {
         url: data.url,
         altText: data.altText,
@@ -410,7 +409,7 @@ exports.editItem = functions.https.onCall((data, context) => {
 
     return editItemInShop(shopId, itemId, merchantId, itemData);
 });
-exports.editItemTest = functions.https.onRequest((request, response) => {
+exports.testEditItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
         const itemData = {

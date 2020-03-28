@@ -28,6 +28,9 @@ public class CloudTestController {
     public static final String createMerchant = "https://us-central1-engineeringlabproject.cloudfunctions.net/testCreateMerchant";
     public static final String createCustomer = "https://us-central1-engineeringlabproject.cloudfunctions.net/testCreateCustomer";
     public static final String merchantLogin = "https://us-central1-engineeringlabproject.cloudfunctions.net/testMerchantLogin";
+    public static final String editItemInShop = "";
+    public static final String addItemToSC = "";
+    public static final String removeitemFromSC = "";
 
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
