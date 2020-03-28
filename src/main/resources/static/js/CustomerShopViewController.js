@@ -16,8 +16,8 @@ async function createAddToCartHandler(itemID) {
         itemID: ITEM,
     });
 
-    if (RESP.data != "SUCCESS") {
-        alert(RESP.data);
+    if (RESP.data.resp) {
+        alert(RESP.data.str);
     }
     hideLoading();
 }

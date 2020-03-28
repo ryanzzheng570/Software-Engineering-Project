@@ -6,14 +6,19 @@ function addCustomerInfo(sidebarDiv) {
         if (isCustomer) {
             type = "Customer"
         }
+        var aDiv = document.createElement("div");
+        aDiv.className = "infoDiv";
+
         var h2 = document.createElement("H2");
         var t2 = document.createTextNode(type);
         h2.appendChild(t2);
-        sidebarDiv.appendChild(h2);
+        aDiv.appendChild(h2);
         var h3 = document.createElement("H3");
         var t3 = document.createTextNode(username);
         h3.appendChild(t3);
-        sidebarDiv.appendChild(h3);
+        aDiv.appendChild(h3);
+
+        sidebarDiv.appendChild(aDiv);
     }
 }
 

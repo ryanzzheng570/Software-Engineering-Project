@@ -254,21 +254,22 @@ function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
             const SC = snapshot.val();
             for (var item in SC) {
                 if (SC[item].itemID === itemID) {
-                    return "That item is already in your shopping cart!"
+                    return {
+                        resp: true,
+                        str: "That item is already in your shopping cart!"
+                    }
                 }
             }
-            database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
+            return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
                 itemID: itemID,
                 shopID: shopID
             }).key;
-            return SUCCESS_CONSTANT;
 
         } else {
-            database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
+            return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
                 itemID: itemID,
                 shopID: shopID
             }).key;
-            return SUCCESS_CONSTANT;
         }
 
     });

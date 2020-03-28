@@ -11,11 +11,11 @@
 
 <body>
     <h1 style="text-align:center">Shopping Cart</h1>
+    <span hidden id="customerID" th:value="${customer.id}"></span>
+    <span hidden id="username" th:value="${customer.userName}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
     <div id="emptyCart" th:if="${#lists.isEmpty(items)}"><h2>Your cart is empty!</h2></div>
     <div id="cartSection" th:unless="${#lists.isEmpty(items)}">
-        <span hidden id="customerID" th:value="${customer.id}"></span>
-        <span hidden id="username" th:value="${customer.userName}"></span>
-        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
         <table id="cartTable">
             <tr>
                 <th>Store</th>

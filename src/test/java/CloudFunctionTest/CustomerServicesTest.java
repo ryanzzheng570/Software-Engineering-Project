@@ -24,6 +24,66 @@ public class CustomerServicesTest {
     private static final String PASS_FLAG = "PASS";
 
     @Test
+    public void itAddsItemToShoppingCart() {
+        final String CUSTOMER_ID = "aCustomerID";
+        final String SHOP_ID = "itPurchaseItemsFromStoresID";
+        final String ADD_ITEM_NAME = "addItemSCName";
+        final String ADD_ITEM_QTY = "300";
+        final String ADD_ITEM_COST = "9.99";
+        final String ADD_ITEM_ID = "addItemSCID";
+        String key = "";
+
+        DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put("address", "123 Map St");
+        customMap.put("email", "a@a.com");
+        customMap.put("note", "");
+        customMap.put("password", "aPassword");
+        customMap.put("phoneNum", "(xxx)xxx-xxxx");
+        customMap.put("userName", "aUsername");
+        customerRef.updateChildrenAsync(customMap);
+
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + ADD_ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", ADD_ITEM_NAME);
+        map.put("cost", ADD_ITEM_COST);
+        map.put("inventory", ADD_ITEM_QTY);
+        firstItemRef.updateChildrenAsync(map);
+
+        firebaseDelay();
+        HashMap<String, String> param = new HashMap<>();
+        param.put("customerID", CUSTOMER_ID);
+        param.put("shopID", SHOP_ID);
+        param.put("itemID", ADD_ITEM_ID);
+
+        try {
+            key = functionCaller.sendPost(CloudTestController.addItemToSC, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                    String ret = (String)((Map<String, Object>)dataSnapshot.getValue()).get("itemID");
+//                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(SECOND_ITEM_ID);
+//                String secInvVal = (String) secondItemData.get("inventory");
+//                assertThat("Incorrect inventory", secInvVal, is(SECOND_ITEM_QTY));
+                setResult(PASS_FLAG);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+        firebaseDelay();
+        assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
+    }
+
+    @Test
     public void itPreventsPurchaseOfOutOfInventoryItems() {
         final String SHOP_ID = "itPurchaseItemsFromStoresID";
         final String FIRST_ITEM_ID = "firstItemID";
