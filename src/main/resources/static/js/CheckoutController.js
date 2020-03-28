@@ -16,7 +16,8 @@ async function removeFromCartHandler(obj) {
         });
         hideLoading();
         if (resp.data === "SUCCESS") {
-            obj.closest('tr').remove()
+            obj.closest('tr').remove();
+            updateCost();
         } else {
             if (resp.data != "") {
                 alert(resp.data);

@@ -30,7 +30,7 @@ public class CloudTestController {
     public static final String merchantLogin = "https://us-central1-engineeringlabproject.cloudfunctions.net/testMerchantLogin";
     public static final String editItemInShop = "https://us-central1-engineeringlabproject.cloudfunctions.net/testEditItem";
     public static final String addItemToSC = "https://us-central1-engineeringlabproject.cloudfunctions.net/testAddToCart";
-    public static final String removeitemFromSC = "";
+    public static final String removeItemFromSC = "https://us-central1-engineeringlabproject.cloudfunctions.net/testRemoveItemFromSC";
 
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 

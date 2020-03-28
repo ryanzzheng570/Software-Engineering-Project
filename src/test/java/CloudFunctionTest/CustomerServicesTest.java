@@ -24,14 +24,84 @@ public class CustomerServicesTest {
     private static final String PASS_FLAG = "PASS";
 
     @Test
+    public void itRemovesItemFromShoppingCart() {
+        final String CUSTOMER_ID = "itRemovesItemFromShoppingCart";
+        final String SHOP_ID = "aSHOPID";
+        final String REMOVE_ITEM_NAME = "addItemSCName";
+        final String REMOVE_ITEM_QTY = "300";
+        final String REMOVE_ITEM_COST = "9.99";
+        final String REMOVE_ITEM_ID = "secItemSCID";
+        final String SECOND_ITEM_NAME = "secItemSCName";
+        final String SECOND_ITEM_QTY = "30000";
+        final String SECOND_ITEM_COST = "19.99";
+        final String SECOND_ITEM_ID = "secItemSCID";
+
+        DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put("address", "123 Map St");
+        customMap.put("email", "a@a.com");
+        customMap.put("note", "");
+        customMap.put("password", "aPassword");
+        customMap.put("phoneNum", "(xxx)xxx-xxxx");
+        customMap.put("userName", "aUsername");
+        customerRef.updateChildrenAsync(customMap);
+
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + REMOVE_ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", REMOVE_ITEM_NAME);
+        map.put("cost", REMOVE_ITEM_COST);
+        map.put("inventory", REMOVE_ITEM_QTY);
+        firstItemRef.updateChildrenAsync(map);
+
+        DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + SECOND_ITEM_ID);
+        Map<String, Object> secMap = new HashMap<>();
+        secMap.put("name", SECOND_ITEM_NAME);
+        secMap.put("cost", SECOND_ITEM_COST);
+        secMap.put("inventory", SECOND_ITEM_QTY);
+        secItemRef.updateChildrenAsync(secMap);
+
+        firebaseDelay();
+        HashMap<String, String> param = new HashMap<>();
+        param.put("userID", CUSTOMER_ID);
+        param.put("itemID", REMOVE_ITEM_ID);
+
+        try {
+            functionCaller.sendPost(CloudTestController.removeItemFromSC, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+
+        testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot cartData : dataSnapshot.getChildren()) {
+                    String itemID = (String) ((Map<String, Object>) cartData.getValue()).get("itemID");
+                    String storeID = (String) ((Map<String, Object>) cartData.getValue()).get("shopID");
+                    assertThat("Incorrect itemID", itemID, is(not(REMOVE_ITEM_ID)));
+                    setResult(PASS_FLAG);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+        firebaseDelay();
+        firebaseDelay();
+        assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
+    }
+
+    @Test
     public void itAddsItemToShoppingCart() {
-        final String CUSTOMER_ID = "aCustomerID";
-        final String SHOP_ID = "itPurchaseItemsFromStoresID";
+        final String CUSTOMER_ID = "itAddsItemToShoppingCart";
+        final String SHOP_ID = "aSHOPID";
         final String ADD_ITEM_NAME = "addItemSCName";
         final String ADD_ITEM_QTY = "300";
         final String ADD_ITEM_COST = "9.99";
         final String ADD_ITEM_ID = "addItemSCID";
-        String key = "";
 
         DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
         Map<String, Object> customMap = new HashMap<>();
@@ -57,20 +127,22 @@ public class CustomerServicesTest {
         param.put("itemID", ADD_ITEM_ID);
 
         try {
-            key = functionCaller.sendPost(CloudTestController.addItemToSC, param);
+            functionCaller.sendPost(CloudTestController.addItemToSC, param);
         } catch (Exception e) {
             fail("sendPost exception");
         }
         firebaseDelay();
 
-        testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/" + key).addListenerForSingleValueEvent(new ValueEventListener() {
+        testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                    String ret = (String)((Map<String, Object>)dataSnapshot.getValue()).get("itemID");
-//                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(SECOND_ITEM_ID);
-//                String secInvVal = (String) secondItemData.get("inventory");
-//                assertThat("Incorrect inventory", secInvVal, is(SECOND_ITEM_QTY));
-                setResult(PASS_FLAG);
+                for (DataSnapshot cartData : dataSnapshot.getChildren()) {
+                    String itemID = (String) ((Map<String, Object>) cartData.getValue()).get("itemID");
+                    String storeID = (String) ((Map<String, Object>) cartData.getValue()).get("shopID");
+                    assertThat("Incorrect itemID", itemID, is(ADD_ITEM_ID));
+                    assertThat("Incorrect storeID", storeID, is(SHOP_ID));
+                    setResult(PASS_FLAG);
+                }
             }
 
             @Override
@@ -79,6 +151,7 @@ public class CustomerServicesTest {
             }
 
         });
+        firebaseDelay();
         firebaseDelay();
         assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
     }
@@ -236,6 +309,7 @@ public class CustomerServicesTest {
         });
         firebaseDelay();
         // Need second delay because slow update of cloud function
+        firebaseDelay();
         firebaseDelay();
         assertThat("Database did not update correctly after purchasing items.", getResult(), is(PASS_FLAG));
     }

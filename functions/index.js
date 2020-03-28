@@ -260,17 +260,12 @@ function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
                     }
                 }
             }
-            return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
-                itemID: itemID,
-                shopID: shopID
-            }).key;
-
-        } else {
-            return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
-                itemID: itemID,
-                shopID: shopID
-            }).key;
         }
+
+        return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
+            itemID: itemID,
+            shopID: shopID
+        }).key;
 
     });
     return returnVal;

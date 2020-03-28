@@ -27,6 +27,12 @@ public class ShopControllerTest {
     }
 
     @Test
+    public void goToCustomerShopViewPage() throws Exception {
+        assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/goToCustomerShopView",
+                String.class)).contains("Shop");
+    }
+
+    @Test
     public void shopContextLoads() throws Exception {
         assertThat(shopCont).isNotNull();
     }

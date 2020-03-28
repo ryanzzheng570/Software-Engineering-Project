@@ -109,6 +109,7 @@ public class MerchantServicesTest {
         firebaseDelay();
         // Need second delay because slow update of cloud function
         firebaseDelay();
+        firebaseDelay();
         assertThat("Database did not update correctly after trying to purchase out of stock items.", getResult(), is(PASS_FLAG));
 
 
@@ -231,6 +232,7 @@ public class MerchantServicesTest {
             }
 
         });
+        firebaseDelay();
         firebaseDelay();
         assertThat("The item was not correctly added to the shop.", getResult(), is(PASS_FLAG));
     }
@@ -546,6 +548,8 @@ public class MerchantServicesTest {
             }
 
         });
+        firebaseDelay();
+        // Slow Firebase update
         firebaseDelay();
         assertThat("Store name was not updated.", getResult(), is(NEW_NAME));
 
