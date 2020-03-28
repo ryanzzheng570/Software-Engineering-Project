@@ -16,6 +16,14 @@ public class HomeController {
         temp.setUserName("tempUserName");
         FirebaseController.setCurrUser(temp);
         FirebaseController.loadDbInfo(true);
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
         return "HomePage";
     }
 }

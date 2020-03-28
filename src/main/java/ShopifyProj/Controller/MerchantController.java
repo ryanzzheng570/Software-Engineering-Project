@@ -1,5 +1,6 @@
 package ShopifyProj.Controller;
 
+import ShopifyProj.Model.Customer;
 import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.Shop;
 import ShopifyProj.Model.Tag;
@@ -42,12 +43,13 @@ public class MerchantController {
 
     @GetMapping("/goToAddShopPage")
     public String viewAddShopPage(Model model) {
-        if (FirebaseController.getCurrUser() == null) {
-            return "Login";
+        if (FirebaseController.getCurrUser() == null ||(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) ) {
+            return "MerchantLoginPage";
         } else {
             model.addAttribute("shops", FirebaseController.getCurrUsersShops());
             model.addAttribute("shop", new Shop());
             model.addAttribute("currUser", FirebaseController.getCurrUser());
+            model.addAttribute("isCustomer", FirebaseController.isCurrUserCustomer());
 
             return "CreateShopPage";
         }
@@ -55,12 +57,13 @@ public class MerchantController {
 
     @GetMapping("/goToMerchantMenuPage")
     public String viewMerchantMenuPage(Model model) {
-        if (FirebaseController.getCurrUser() == null) {
-            return "Login";
+        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer)) {
+            return "MerchantLoginPage";
         } else {
             model.addAttribute("shops", FirebaseController.getCurrUsersShops());
             model.addAttribute("shop", new Shop());
             model.addAttribute("currUser", FirebaseController.getCurrUser());
+            model.addAttribute("isCustomer", FirebaseController.isCurrUserCustomer());
 
             return "MerchantMenuPage";
         }

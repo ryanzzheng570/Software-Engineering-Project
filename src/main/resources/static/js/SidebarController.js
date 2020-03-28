@@ -51,7 +51,7 @@ function addSidebar() {
     sidebarDiv.appendChild(scLink);
 
     var loginLink = document.createElement("a");
-    var loginText = document.createTextNode("User Login");
+    var loginText = document.createTextNode("Login");
     loginLink.href = "/login";
     loginLink.appendChild(loginText);
     sidebarDiv.appendChild(loginLink);

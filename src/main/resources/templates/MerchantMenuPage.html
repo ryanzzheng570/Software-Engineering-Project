@@ -14,7 +14,8 @@
 
         <h3>You're Logged in as: </h3>
         <p th:text="'Id: ' + ${currUser.userName}"/>
-
+        <span hidden id="username" th:value="${currUser.userName}"></span>
+        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
         <h3>Your Current Shops:</h3>
         <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
             <p>You currently do not have any shops!</p>

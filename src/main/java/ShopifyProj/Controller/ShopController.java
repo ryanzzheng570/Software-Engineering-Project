@@ -37,6 +37,15 @@ public class ShopController {
         model.addAttribute("loggedIn", isLoggedIn);
         model.addAttribute("customerID", customerID);
 
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         return "CustomerShopViewPage";
     }
 
@@ -123,8 +132,8 @@ public class ShopController {
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
-        if (FirebaseController.getCurrUser() == null) {
-            return "Login";
+        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer)) {
+            return "MerchantLoginPage";
         } else {
             Shop checkShop = null;
             try {
@@ -137,6 +146,7 @@ public class ShopController {
             model.addAttribute("item", new Item());
             model.addAttribute("tag", new Tag());
             model.addAttribute("currUser", FirebaseController.getCurrUser());
+            model.addAttribute("isCustomer", FirebaseController.isCurrUserCustomer());
 
             return "EditShopPage";
         }

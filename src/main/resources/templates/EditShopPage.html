@@ -12,7 +12,8 @@
         <input type="hidden" th:value="${shop.id}" id="shopId"/>
         <input type="hidden" th:value="${currUser.id}" id="currUserId"/>
         <p th:text="'Id: ' + ${shop.id}"/>
-
+        <span hidden id="username" th:value="${currUser.userName}"></span>
+        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
         <h2>Edit Shop Name</h2>
         <form action="#" th:action="@{/changeShopName}" th:object="${shop}" method="post" id="editNameForm">
             <input type="hidden" th:value="${shop.id}" name="shopId"/>

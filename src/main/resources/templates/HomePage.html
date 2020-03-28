@@ -10,7 +10,8 @@
 </head>
 
 <body>
-
+<span hidden id="username" th:value="${username}"></span>
+<span hidden id="isCustomer" th:value="${isCustomer}"></span>
     <h1>Home Page</h1>
     <form action="#" th:action="@{/goToMerchantMenuPage}">
         <input type="submit" value="Go To Merchant Menu Page" />
