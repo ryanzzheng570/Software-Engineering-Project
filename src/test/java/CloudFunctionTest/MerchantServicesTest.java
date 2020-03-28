@@ -85,6 +85,7 @@ public class MerchantServicesTest {
         final String ITEM_NAME = "anItemName";
         final String COST = "5.99";
         final String INVENTORY = "20";
+        final int INT_INV = 20;
         String key = "";
 
         DatabaseReference ref = testDbInstance.getReference("test/store/");
@@ -121,7 +122,7 @@ public class MerchantServicesTest {
 
                 Long invVal = (Long) currItemData.get("inventory");
                 int inventory = invVal != null ? invVal.intValue() : null;
-                assertThat("Incorrect inventory", inventory, is(INVENTORY));
+                assertThat("Incorrect inventory", inventory, is(INT_INV));
 
                 String url = (String) currItemData.get("url");
                 assertThat("Incorrect URL", url, is(URL));

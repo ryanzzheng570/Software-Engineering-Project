@@ -406,7 +406,7 @@ public class ShopAndDiffViewIntegrationTest {
 
         this.mockMvc.perform(get("/goToEditShopPage?shopId=" + shopId)).andDo(print())
                 .andExpect(status().isOk())
-                //.andExpect(content().string((containsString(shopName))))
+                .andExpect(content().string((containsString(shopName))))
                 .andExpect(content().string((containsString(tagOne))))
                 .andExpect(content().string((containsString(tagTwo))))
                 .andExpect(content().string((containsString(itemName))))
