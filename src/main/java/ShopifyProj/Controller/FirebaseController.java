@@ -19,7 +19,7 @@ public class FirebaseController {
     public static final String TEST_MODE = "TEST";
     public static final String PRODUCTION_MODE = "PRODUCTION";
     private static ArrayList<Shop> dbShops;
-
+    private static boolean isCustomer = false;
     private static User currUser = null;
 
     private static final AtomicLong counter = new AtomicLong();
@@ -247,7 +247,14 @@ public class FirebaseController {
         return currUser;
     }
 
+    public static boolean isCurrUserCustomer() {return isCustomer;}
+
     public static void setCurrUser(User newUser) {
+        if(newUser instanceof Customer) {
+            isCustomer = true;
+        } else {
+            isCustomer = false;
+        }
         currUser = newUser;
     }
 

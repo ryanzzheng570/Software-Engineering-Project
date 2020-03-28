@@ -41,7 +41,8 @@ public class CheckoutController {
         model.addAttribute("items", retItems);
         model.addAttribute("itemIDs", itemIds);
         model.addAttribute("storeIDs", storeIds);
-        model.addAttribute("customer", FirebaseController.getCurrUser().getId());
+        model.addAttribute("customer", FirebaseController.getCurrUser());
+        model.addAttribute("isCustomer", FirebaseController.isCurrUserCustomer());
 
         return "CheckoutPage";
     }

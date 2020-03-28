@@ -1,11 +1,20 @@
-function addShoppingCartLink() {
-    sessionStorage.setItem('token', '-M3JTMoy32z1v1Makgq1');
-
-    var scLink = document.createElement("a");
-    var scText = document.createTextNode("Shopping Cart");
-    scLink.href = "/goToCart"
-    scLink.appendChild(scText);
-    return scLink;
+function addCustomerInfo(sidebarDiv) {
+    var isCustomer = $("#isCustomer").attr('value');
+    var username = $("#username").attr('value');
+    if (username && username != "") {
+        var type = "Merchant"
+        if (isCustomer) {
+            type = "Customer"
+        }
+        var h2 = document.createElement("H2");
+        var t2 = document.createTextNode(type);
+        h2.appendChild(t2);
+        sidebarDiv.appendChild(h2);
+        var h3 = document.createElement("H3");
+        var t3 = document.createTextNode(username);
+        h3.appendChild(t3);
+        sidebarDiv.appendChild(h3);
+    }
 }
 
 function addSidebar() {
@@ -15,23 +24,7 @@ function addSidebar() {
     var sidebarDiv = document.createElement("div");
     sidebarDiv.className = "sidenav";
 
-    var loginLink = document.createElement("a");
-    var loginText = document.createTextNode("User Login");
-    loginLink.href = "/login";
-    loginLink.appendChild(loginText);
-    sidebarDiv.appendChild(loginLink);
-
-    var signUpLink = document.createElement("a");
-    var signUpText = document.createTextNode("Sign Up");
-    signUpLink.href = "/signUp";
-    signUpLink.appendChild(signUpText);
-    sidebarDiv.appendChild(signUpLink);
-
-    var searchLink = document.createElement("a");
-    var searchText = document.createTextNode("Search");
-    searchLink.href = "/search";
-    searchLink.appendChild(searchText);
-    sidebarDiv.appendChild(searchLink);
+    addCustomerInfo(sidebarDiv);
 
     var homeLink = document.createElement("a");
     var homeText = document.createTextNode("Home");
@@ -45,13 +38,30 @@ function addSidebar() {
     merchantMenuLink.appendChild(merchantMenuText);
     sidebarDiv.appendChild(merchantMenuLink);
 
-    var createShopLink = document.createElement("a");
-    var createShopText = document.createTextNode("Create Shop");
-    createShopLink.href = "/goToAddShopPage";
-    createShopLink.appendChild(createShopText);
-    sidebarDiv.appendChild(createShopLink);
+    var searchLink = document.createElement("a");
+    var searchText = document.createTextNode("Search");
+    searchLink.href = "/search";
+    searchLink.appendChild(searchText);
+    sidebarDiv.appendChild(searchLink);
 
-    sidebarDiv.appendChild(addShoppingCartLink());
+    var scLink = document.createElement("a");
+    var scText = document.createTextNode("Your Cart");
+    scLink.href = "/goToCart"
+    scLink.appendChild(scText);
+    sidebarDiv.appendChild(scLink);
+
+    var loginLink = document.createElement("a");
+    var loginText = document.createTextNode("User Login");
+    loginLink.href = "/login";
+    loginLink.appendChild(loginText);
+    sidebarDiv.appendChild(loginLink);
+
+    var signUpLink = document.createElement("a");
+    var signUpText = document.createTextNode("Sign Up");
+    signUpLink.href = "/signUp";
+    signUpLink.appendChild(signUpText);
+    sidebarDiv.appendChild(signUpLink);
+
 
     $("body").prepend(sidebarDiv);
 }
