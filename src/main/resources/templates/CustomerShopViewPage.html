@@ -3,6 +3,9 @@
 
 <head>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title th:text="${shop.shopName}"></title>
 </head>
@@ -27,29 +30,29 @@
         <th>Cost</th>
     </tr>
     <tr th:each="item: ${shop.items}">
-        <td style="text-align:center" th:text="${item.itemName}"/>
+        <td th:text="${item.itemName}"/>
 
-        <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
+        <td th:if="${not #lists.isEmpty(item.images)}">
             <a th:href="${item.images[0]?.url}">
                 <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
                      style="width:200px;height:200px;border:0;">
             </a>
         </td>
-        <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+        <td th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-        <td style="text-align:center" th:text="${item.inventory}"/>
+        <td th:text="${item.inventory}"/>
 
-            <td style="text-align:center" th:text="'$' + ${item.cost}"/>
+        <td th:text="'$' + ${item.cost}"/>
 
         <div id="add2Cart" th:if="${loggedIn}">
             <div id="inventory" th:if="${item.inventory != 0}">
                 <input id="storeID" type="hidden" th:value="${shopID}" name="store"/>
-                <td style="text-align:center">
+                <td>
                     <button type="button" class="a2c" th:value="${item.id}">Add to Cart</button>
                 </td>
             </div>
             <div id="noInventory" th:if="${item.inventory <= 0}">
-                <td style="text-align:center">
+                <td>
                     <button type="button" disabled>Add to Cart</button>
                 </td>
             </div>

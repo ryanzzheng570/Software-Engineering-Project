@@ -2,10 +2,7 @@ function addCustomerInfo(sidebarDiv) {
     var isCustomer = $("#isCustomer").attr('value');
     var username = $("#username").attr('value');
     if (username && username != "") {
-        var type = "Merchant"
-        if (isCustomer) {
-            type = "Customer"
-        }
+        var type = "Account Name";
         var aDiv = document.createElement("div");
         aDiv.className = "infoDiv";
 

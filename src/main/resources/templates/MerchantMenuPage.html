@@ -5,6 +5,8 @@
     <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
     </script>
 
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <title>Merchant Menu Page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -13,46 +15,46 @@
     <h1>Merchant Menu Page</h1>
     <input type="hidden" th:value="${currUser.id}" id="currUserId" />
 
-    <h3>You're Logged in as: </h3>
-    <p th:text="'Id: ' + ${currUser.userName}" />
+    <h3 th:text="'You are Logged in as: ' + ${currUser.userName}" />
+<!--    <p th:text="'Id: ' + ${currUser.userName}" />-->
     <span hidden id="username" th:value="${currUser.userName}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
     <h3>Your Current Shops:</h3>
     <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
-            <p>You currently do not have any shops!</p>
-        </div>
-        <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">
-        <table>
-                <tr>
-                    <th>Shop ID</th>
-                    <th>Name</th>
-                    <th>Tags</th>
-                </tr>
+        <p>You currently do not have any shops!</p>
+    </div>
+    <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">
+    <table>
+            <tr>
+                <th>Shop ID</th>
+                <th>Name</th>
+                <th>Tags</th>
+            </tr>
 
-                <tr th:each="shop: ${shops}" th:id="'SHOP_' + ${shop.id}">
-                    <td style="text-align:center" th:text="${shop.id}"></td>
-                    <td style="text-align:center" th:text="${shop.shopName}"></td>
-                    <td style="text-align:center" th:text="${shop.tags}"></td>
-                    <td style="text-align:center">
-                        <input type="button" value="Edit Shop" class="editShopButton"/>
-                    </td>
-                    <td style="text-align:center">
-                        <input type="button" value="View as Customer" class="viewAsCustButton"/>
-                    </td>
-                    <td style="text-align:center">
-                        <input type="button" value="Delete Shop" class="deleteShopButton"/>
-                    </td>
-                </tr>
-            </table>
-        </div>
+            <tr th:each="shop: ${shops}" th:id="'SHOP_' + ${shop.id}">
+                <td th:text="${shop.id}"></td>
+                <td th:text="${shop.shopName}"></td>
+                <td th:text="${shop.tags}"></td>
+                <td>
+                    <input type="button" value="Edit Shop" class="editShopButton"/>
+                </td>
+                <td>
+                    <input type="button" value="View as Customer" class="viewAsCustButton"/>
+                </td>
+                <td>
+                    <input type="button" value="Delete Shop" class="deleteShopButton"/>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-        <form action="#" th:action="@{/goToAddShopPage}">
-            <input type="submit" value="Go To Add Shop Page"/>
-        </form>
+    <form action="#" th:action="@{/goToAddShopPage}">
+        <input type="submit" value="Go To Add Shop Page"/>
+    </form>
 
-        <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/MerchantMenuController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
-    </body>
+    <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/MerchantMenuController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
+</body>
 </html>

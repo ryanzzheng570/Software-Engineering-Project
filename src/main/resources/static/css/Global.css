@@ -1,0 +1,51 @@
+body {
+    padding-top: 80px;
+    text-align: center;
+    font-family: monaco, monospace;
+    background-size: cover;
+    background-color: lightgreen;
+}
+
+h1, h2 {
+    display: inline-block;
+}
+
+h1 {
+    font-size: 30px;
+    text-align: center;
+}
+
+h2 {
+    font-size: 20px;
+}
+
+span {
+    background: #fd0;
+}
+
+td {
+    text-align: center;
+}
+
+img {
+    width:200px;
+    height:200px;
+    border:0;
+}
+
+table {
+    margin: 0 auto;
+}
+
+input {
+    border-radius: 12px;
+    background-color: #e7e7e7;
+    color: black;
+    font-size: 20px;
+    padding: 5px 12px;
+    margin: 10px;
+}
+
+input:hover {
+    background-color: darkgrey;
+}
