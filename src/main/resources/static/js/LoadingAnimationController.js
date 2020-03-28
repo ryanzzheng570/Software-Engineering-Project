@@ -1,4 +1,4 @@
-function addLoadingAnimation(){
+function addLoadingAnimation() {
     $("head").prepend("<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/Loading.css\">");
 
     var loadingDiv = document.createElement("div");
@@ -19,11 +19,10 @@ function hideLoading() {
 }
 
 function showLoading() {
-    console.log("HERE");
     $('#loading').show();
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
     addLoadingAnimation();
     hideLoading();
 })

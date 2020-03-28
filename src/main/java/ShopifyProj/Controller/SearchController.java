@@ -13,6 +13,14 @@ import java.util.ArrayList;
 public class SearchController {
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
         return "ShopSearchPage";
     }
 

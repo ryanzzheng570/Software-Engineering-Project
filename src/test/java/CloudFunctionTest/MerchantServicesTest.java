@@ -20,6 +20,100 @@ public class MerchantServicesTest {
     private static FirebaseDatabase testDbInstance = null;
     private static CloudTestController functionCaller = null;
     private static String result = "";
+    private static final String PASS_FLAG = "PASS";
+
+    @Test
+    public void itEditsAnItemInAShop() {
+        final String SHOP_ID = "itEditsAItemInAShop";
+        final String MERCHANT_ID = "aMerchantId";
+        final String FIRST_ITEM_ID = "firstItemID";
+        final String FIRST_ITEM_COST = "29.99";
+        final String FIRST_ITEM_INV = "1000";
+        final String EDIT_ITEM_ID = "editItemID";
+        final String EDIT_ITEM_NAME = "editItemName";
+        final String EDIT_ITEM_COST = "1.99";
+        final String EDIT_ITEM_INV = "50";
+        final String EDITED_ITEM_COST = "0.49";
+        final String EDITED_ITEM_INV = "5000";
+
+        DatabaseReference customerRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> customMap = new HashMap<>();
+        customMap.put("email", "a@a.com");
+        customMap.put("password", "aPassword");
+        customMap.put("phoneNum", "(xxx)xxx-xxxx");
+        customMap.put("userName", "aUsername");
+        customerRef.updateChildrenAsync(customMap);
+
+        DatabaseReference associateRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> associateMap = new HashMap<>();
+        associateMap.put("aRandomId", SHOP_ID);
+        associateRef.updateChildrenAsync(associateMap);
+
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", "FirstItemName");
+        map.put("inventory", FIRST_ITEM_INV);
+        map.put("cost", FIRST_ITEM_COST);
+        firstItemRef.updateChildrenAsync(map);
+
+        DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + EDIT_ITEM_ID);
+        Map<String, Object> secMap = new HashMap<>();
+        secMap.put("name", "EditItemName");
+        secMap.put("inventory", EDIT_ITEM_INV);
+        secMap.put("cost", EDIT_ITEM_COST);
+        secItemRef.updateChildrenAsync(secMap);
+        firebaseDelay();
+
+        HashMap<String, String> param = new HashMap<>();
+        param.put("shopID", SHOP_ID);
+        param.put("itemId", EDIT_ITEM_ID);
+        param.put("merchantId", MERCHANT_ID);
+        param.put("url", "a.com");
+        param.put("altText", "someAltText");
+        param.put("itemName", EDIT_ITEM_NAME);
+        param.put("cost", EDITED_ITEM_COST);
+        param.put("inventory", EDITED_ITEM_INV);
+
+        try {
+            functionCaller.sendPost(CloudTestController.editItemInShop, param);
+        } catch (Exception e) {
+            fail("sendPost exception");
+        }
+        firebaseDelay();
+        testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, Object> curStoreData = (Map<String, Object>) ((Map<String, Object>) dataSnapshot.getValue()).get("item");
+                Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
+                String inv = (String) firstItemData.get("inventory");
+                assertThat("Incorrect inventory", inv, is(FIRST_ITEM_INV));
+                String cost = (String) firstItemData.get("cost");
+                assertThat("Incorrect cost", cost, is(FIRST_ITEM_COST));
+
+
+                Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(EDIT_ITEM_ID);
+                Long invVal = (Long) secondItemData.get("inventory");
+                int inventory = invVal != null ? invVal.intValue() : null;
+                assertThat("Incorrect inventory", inventory, is(Integer.parseInt(EDITED_ITEM_INV)));
+                String secondInvVal = (String) secondItemData.get("cost");
+                assertThat("Incorrect cost", secondInvVal, is(EDITED_ITEM_COST));
+                setResult(PASS_FLAG);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+        firebaseDelay();
+        // Need second delay because slow update of cloud function
+        firebaseDelay();
+        firebaseDelay();
+        assertThat("Database did not update correctly after trying to purchase out of stock items.", getResult(), is(PASS_FLAG));
+
+
+    }
 
     @Test
     public void itRemovesAItemFromAShop() {
@@ -60,6 +154,7 @@ public class MerchantServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     assertThat("Item was not deleted", storeData.getKey(), is(not(REMOVE_ITEM_ID)));
+                    setResult(PASS_FLAG);
                 }
             }
 
@@ -70,6 +165,8 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        assertThat("Item was not deleted", getResult(), is(PASS_FLAG));
+
     }
 
     @Test
@@ -81,6 +178,7 @@ public class MerchantServicesTest {
         final String ITEM_NAME = "anItemName";
         final String COST = "5.99";
         final String INVENTORY = "20";
+        final int INT_INV = 20;
         String key = "";
 
         DatabaseReference ref = testDbInstance.getReference("test/store/");
@@ -117,13 +215,15 @@ public class MerchantServicesTest {
 
                 Long invVal = (Long) currItemData.get("inventory");
                 int inventory = invVal != null ? invVal.intValue() : null;
-                assertThat("Incorrect inventory", inventory, is(INVENTORY));
+                assertThat("Incorrect inventory", inventory, is(INT_INV));
 
                 String url = (String) currItemData.get("url");
                 assertThat("Incorrect URL", url, is(URL));
 
                 String altText = (String) currItemData.get("altText");
                 assertThat("Incorrect alt text", altText, is(ALT_TEXT));
+
+                setResult(PASS_FLAG);
             }
 
             @Override
@@ -133,6 +233,8 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        firebaseDelay();
+        assertThat("The item was not correctly added to the shop.", getResult(), is(PASS_FLAG));
     }
 
     @Test
@@ -175,6 +277,7 @@ public class MerchantServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     assertThat("Store was not deleted", storeData.getKey(), is(not(REMOVE_TAG_ID)));
+                    setResult(PASS_FLAG);
                 }
             }
 
@@ -185,6 +288,7 @@ public class MerchantServicesTest {
 
         });
         firebaseDelay();
+        assertThat("The store was not correctly deleted.", getResult(), is(PASS_FLAG));
     }
 
     @Test
@@ -444,6 +548,8 @@ public class MerchantServicesTest {
             }
 
         });
+        firebaseDelay();
+        // Slow Firebase update
         firebaseDelay();
         assertThat("Store name was not updated.", getResult(), is(NEW_NAME));
 

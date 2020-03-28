@@ -1,14 +1,11 @@
 package ShopifyProj.Controller;
 
-import ShopifyProj.Model.Item;
-import ShopifyProj.Model.Merchant;
-import ShopifyProj.Model.Shop;
+import ShopifyProj.Model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
-import ShopifyProj.Model.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -21,6 +18,13 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
+        FirebaseController.loadDbInfo(false);
+        boolean isLoggedIn = false;
+        String customerID = "";
+        if(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
+            isLoggedIn = true;
+            customerID = FirebaseController.getCurrUser().getId();
+        }
         Shop shopToView = null;
         try {
             shopToView = FirebaseController.getShopWithId(aShopId);
@@ -30,6 +34,17 @@ public class ShopController {
 
         model.addAttribute("shopID", aShopId);
         model.addAttribute("shop", shopToView);
+        model.addAttribute("loggedIn", isLoggedIn);
+        model.addAttribute("customerID", customerID);
+
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
 
         return "CustomerShopViewPage";
     }
@@ -105,6 +120,7 @@ public class ShopController {
     public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
                                       @RequestParam(value = "setId") String newId,
                                       Model model) {
+        FirebaseController.loadDbInfo(false);
         Shop newShop = new Shop(name, Optional.empty());
         newShop.setId(newId);
 
@@ -117,8 +133,8 @@ public class ShopController {
 
     @GetMapping("/goToEditShopPage")
     public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
-        if (FirebaseController.getCurrUser() == null) {
-            return "Login";
+        if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer)) {
+            return "MerchantLoginPage";
         } else {
             Shop checkShop = null;
             try {
@@ -131,6 +147,7 @@ public class ShopController {
             model.addAttribute("item", new Item());
             model.addAttribute("tag", new Tag());
             model.addAttribute("currUser", FirebaseController.getCurrUser());
+            model.addAttribute("isCustomer", FirebaseController.isCurrUserCustomer());
 
             return "EditShopPage";
         }

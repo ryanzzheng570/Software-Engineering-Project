@@ -16,9 +16,10 @@ import java.util.concurrent.atomic.AtomicLong;
 public class FirebaseController {
     private static FirebaseController inst = null;
     private static FirebaseDatabase dbInst = null;
-
+    public static final String TEST_MODE = "TEST";
+    public static final String PRODUCTION_MODE = "PRODUCTION";
     private static ArrayList<Shop> dbShops;
-
+    private static boolean isCustomer = false;
     private static User currUser = null;
 
     private static final AtomicLong counter = new AtomicLong();
@@ -108,6 +109,8 @@ public class FirebaseController {
 
                                 Item itemToAdd = new Item(itemName, itemImages, cost, inventory);
                                 itemToAdd.setId(itemId);
+                                itemToAdd.setStoreID(shopId);
+                                itemToAdd.setStoreName(shopName);
                                 shopToAdd.addItem(itemToAdd);
                             }
                         }
@@ -162,7 +165,7 @@ public class FirebaseController {
             }
         }
         if (checkShop == null) {
-            System.out.println(String.format("No shop found with ID %d", shopId));
+            System.out.println(String.format("No shop found with ID %s", shopId));
             throw new Exception();
         }
         return checkShop;
@@ -244,7 +247,14 @@ public class FirebaseController {
         return currUser;
     }
 
+    public static boolean isCurrUserCustomer() {return isCustomer;}
+
     public static void setCurrUser(User newUser) {
+        if(newUser instanceof Customer) {
+            isCustomer = true;
+        } else {
+            isCustomer = false;
+        }
         currUser = newUser;
     }
 
@@ -254,6 +264,62 @@ public class FirebaseController {
             toRet = ((Merchant) FirebaseController.getCurrUser()).getShops();
         }
         return toRet;
+    }
+
+    public static Object[] getShoppingCartItems(String userID, String mode) {
+        String root = "";
+        ArrayList<String> items = new ArrayList<String>();
+        ArrayList<String> stores = new ArrayList<String>();
+        CountDownLatch wait = new CountDownLatch(1);
+        if (mode == TEST_MODE) {
+            root = "/test/";
+        }
+        FirebaseController.getInstance().getReference(root + "users/customers/" + userID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot storeData : dataSnapshot.getChildren()) {
+
+                        Map<String, Object> mapData = (Map<String, Object>) storeData.getValue();
+
+                        String itemID = (String) mapData.get("itemID");
+                        items.add(itemID);
+                        String storeID = (String) mapData.get("shopID");
+                        stores.add(storeID);
+                    }
+                }
+                wait.countDown();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+                wait.countDown();
+            }
+
+        });
+        try {
+            wait.await();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Object[]{stores, items};
+    }
+
+    public static Item getItemFromStore(String aShopID, String itemID) {
+        Shop toParse = null;
+        try {
+            toParse = FirebaseController.getShopWithId(aShopID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        for (Item item : toParse.getItems()) {
+            if (itemID.equals(item.getId())) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }

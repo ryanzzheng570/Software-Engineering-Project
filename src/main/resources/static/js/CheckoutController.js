@@ -1,125 +1,101 @@
 $(document).ready(() => {
-    addItemIDs();
     updateCost();
+    $(".rem").click(function () {
+        removeFromCartHandler($(this));
+    });
 })
 
-function addItemIDs() {
-    const ids_str = $("#itemIDs").text();
-    const ids = ids_str.split("$");
-    let counter = 0;
-    let isFirstRow = true;
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
+async function removeFromCartHandler(obj) {
+    var customer = $("#customerID").attr('value');
+    var item = obj.val();
+    if (customer && customer != "" && item && item != "") {
+        showLoading();
+        const resp = await cloudRemoveItemFromSC({
+            customerID: customer,
+            itemID: item
+        });
+        hideLoading();
+        if (resp.data === "SUCCESS") {
+            obj.closest('tr').remove();
+            updateCost();
         } else {
-            $(this).append('<input name=item value="' + ids[counter] + '" type=hidden /></td>');
-            counter++;
+            if (resp.data != "") {
+                alert(resp.data);
+            } else {
+                alert("Error: there was a problem with the transaction. Please contact a developer.");
+            }
         }
-    })
+
+    } else {
+        alert("Something went wrong. Contact a developer.")
+    }
+
 }
 
 function updateCost() {
-    let isFirstRow = true;
     let totalCost = 0;
 
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
-        } else {
-            let dataCells = $(this).find('td');
-            let quantity;
-            $(this).closest('tr').find("input").each(function () {
-                if (!isNaN(this.value)) {
-                    quantity = this.value;
-                }
-            });
-            let cost = dataCells[3].innerHTML;
-            cost = cost.replace("$", "");
-
-            totalCost += quantity * cost;
-        }
+    $(".inv").each(function () {
+        let quantity = $(this).val();
+        let cost = $(this).closest('tr').children('td.cost').text();
+        totalCost += quantity * cost;
     })
-    $("#totalCost").text("Total Cost: " + totalCost.toFixed(2));
+    $("#totalCost").text("Total Cost: $" + totalCost.toFixed(2));
 }
+
+
 
 function checkout() {
-    let isFirstRow = true;
-    let itemIDs = [];
-    let quantities = [];
-    let noErrors = true;
+    var storeIDs = [];
+    var itemIDs = [];
+    var quantities = [];
+    var submitFlag = true;
+    $(".store").each(function () {
+        let storeID = $(this).attr('value');
+        let itemID = $(this).closest('tr').children('td.item').attr('value');
+        let request = $(this).closest('tr').children('td.itemQuantity').children('input.inv').val()
+        let max = $(this).closest('tr').children('td.maxInv').text();
 
-    $("#cartTable tr").each(function () {
-        if (isFirstRow) {
-            isFirstRow = false;
+        if (storeID && storeID != "" && itemID && itemID != "") {
+            storeIDs.push(storeID);
+            itemIDs.push(itemID);
         } else {
-            $(this).closest('tr').find("input").each(function () {
-                if (isNaN(this.value)) {
-                    itemIDs.push(this.value);
-                }
-                if (!isNaN(this.value)) {
-                    let maxValue = parseInt($(this)[0].max);
-                    if (this.value == "" || isNaN(this.value) || parseInt(this.value) > maxValue || parseInt(this.value) < 1) {
-                        alert("Error - Please enter a valid quantity!");
-                        noErrors = false;
-                        return;
-                    }
-                    quantities.push(this.value);
-                }
-            });
+            alert("Something went wrong. Contact a developer.");
+            submitFlag = false;
+            return false;
         }
-    })
-    if (noErrors === true) {
-        let storeId = $("#storeID").val();
-        submit(storeId, itemIDs, quantities);
+
+        if (!isNaN(request) && request > 0 && request <= (Number(max))) {
+            quantities.push(request);
+        } else {
+            alert("Please enter valid quantities.")
+            submitFlag = false;
+            return false;
+        }
+    });
+    var customer = $("#customerID").attr('value');
+    if (customer && customer != "") {
+        if (submitFlag) {
+            submit(storeIDs, itemIDs, quantities, customer);
+        }
     }
 }
 
-async function submit(aStoreID, itemIDs, quantities) {
-    let ccNum = $("#ccNum").val();
-    let name = $("#paymentName").val();
-
-    if (name == "") {
-        alert("Please enter a name!");
-        return;
-    }
-    if (ccNum == "") {
-        alert("Please enter a credit card number!");
-        return;
-    }
-
-    var checkoutData = {
-        storeId: aStoreID,
-        itemIds: itemIDs,
-        quantities: quantities
-    };
-
-    console.log(checkoutData);
-
+async function submit(storeIDs, itemIDs, quantities, customer) {
     showLoading();
 
-    var resp = await PurchaseItems({
-        shopID: aStoreID,
+    const resp = await PurchaseItems({
+        shopIDs: storeIDs,
         itemIDs: itemIDs,
-        quantities: quantities
+        quantities: quantities,
+        customerID: customer
     });
-
-    console.log(resp.data);
-
-    if (resp.data == "Success") {
-        $.ajax({
-            url: "/checkout?" + $.param(checkoutData),
-            type: "POST",
-            dataType: "json"
-        });
-
-        hideLoading();
-
-        alert("Thank you " + name + " for your purchase.");
-
+    hideLoading();
+    if (resp.data.res) {
+        alert(resp.data.str);
         window.location = document.referrer;
     } else {
-        hideLoading();
-        alert("Error: there was a problem with the transaction");
+        alert(resp.data);
     }
 
 }

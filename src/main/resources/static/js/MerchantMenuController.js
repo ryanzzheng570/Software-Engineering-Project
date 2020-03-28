@@ -9,14 +9,14 @@ function deleteShop(btn, shopId) {
     };
 
     showLoading();
-    asyncDeleteShop(infoJson).then(function(data) {
+    asyncDeleteShop(infoJson).then(function (data) {
         console.log(data);
         return $.ajax({
             url: "/deleteShop?shopId=" + shopId,
             type: "POST",
             dataType: "json"
         })
-    }).then(function(data){
+    }).then(function (data) {
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
 
@@ -38,18 +38,18 @@ function viewAsCustomer(shopId) {
     window.location.href = '/goToShopCustomerView?shopId=' + shopId;
 }
 
-$(document).ready(function() {
-    $(".deleteShopButton").on('click', function() {
+$(document).ready(function () {
+    $(".deleteShopButton").on('click', function () {
         shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
         deleteShop(this, shopId);
     });
 
-    $(".viewAsCustButton").on('click', function() {
+    $(".viewAsCustButton").on('click', function () {
         shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
         viewAsCustomer(shopId);
     });
 
-    $(".editShopButton").on('click', function() {
+    $(".editShopButton").on('click', function () {
         shopId = this.parentNode.parentNode.id.replace("SHOP_", "");
         editShop(shopId);
     });

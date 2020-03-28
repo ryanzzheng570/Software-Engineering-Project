@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-        <title>Mini-Shopify Project</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
 
-    <body>
+    <title>Mini-Shopify Project</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-        <h1>Home Page</h1>
-        <form action="#" th:action="@{/goToMerchantMenuPage}">
-            <input type="submit" value="Go To Merchant Menu Page"/>
-        </form>
+<body>
+    <span hidden id="username" th:value="${username}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+    <h1>Home Page</h1>
+    <form action="#" th:action="@{/goToMerchantMenuPage}">
+        <input type="submit" value="Go To Merchant Menu Page" />
+    </form>
 
-        <form action="#" th:action="@{/search}">
-            <input type="submit" value="Go To Search Page"/>
-        </form>
+    <form action="#" th:action="@{/search}">
+        <input type="submit" value="Go To Search Page" />
+    </form>
 
-        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-    </body>
+    <form action="#" th:action="@{/goToCart}">
+        <input type="submit" value="Go To Your Cart Page" />
+    </form>
+
+    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+</body>
+
 </html>

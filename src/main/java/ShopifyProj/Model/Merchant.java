@@ -20,11 +20,13 @@ public class Merchant extends User {
 
     public Merchant() {
         super();
+        this.shops = new ArrayList<Shop>();
     }
 
     public Merchant(String id) {
         this("","","","");
         this.id = id;
+        this.shops = new ArrayList<Shop>();
     }
 
     public Merchant(String name, String contactPhoneNumber, String email, String password) {

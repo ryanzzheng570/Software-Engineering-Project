@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @Entity
 public class Item {
+
     private String id;
 
     private String itemName;
@@ -19,6 +20,25 @@ public class Item {
 
     private List<Image> images;
     private Double cost;
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(String storeID) {
+        this.storeID = storeID;
+    }
+
+    private String storeName;
+    private String storeID;
 
     private static final AtomicLong counter = new AtomicLong();
 

@@ -29,6 +29,8 @@ public class LoginController {
 
     @GetMapping("/loginAsCustomer")
     public String viewCustomerLogin(Model model) {
+        FirebaseController.loadDbInfo(false);
+
         model.addAttribute("customer", new Customer());
         model.addAttribute("isLoginFailed", false);
         return "CustomerLoginPage";

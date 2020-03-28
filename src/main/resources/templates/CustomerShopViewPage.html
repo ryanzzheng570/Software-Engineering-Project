@@ -8,70 +8,71 @@
 </head>
 
 <body>
-
+    <div id="isLogIn" th:if="${loggedIn}"><input id="customerID" type="hidden" th:value="${customerID}"
+            name="customer" /></div>
     <div id="pageTitle">
         <h1 align="center" th:text="'Welcome to the online store for ' + ${shop.shopName}"></h1>
     </div>
-
+    <span hidden id="username" th:value="${username}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
     <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>
 </div>
-<form method="post" id="cartForm" th:action="@{/addToCart}">
-    <div id="itemSection" th:unless="${#lists.isEmpty(shop.items)}"></div>
-    <h2>Items</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Image</th>
-            <th>Remaining</th>
-            <th>Cost</th>
-            <th>Add to Cart</th>
-        </tr>
-        <tr th:each="item: ${shop.items}">
-            <td style="text-align:center" th:text="${item.itemName}"/>
+<div id="itemSection" th:unless="${#lists.isEmpty(shop.items)}"></div>
+<h2>Items</h2>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Inventory</th>
+        <th>Cost</th>
+    </tr>
+    <tr th:each="item: ${shop.items}">
+        <td style="text-align:center" th:text="${item.itemName}"/>
 
-            <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
-                <a th:href="${item.images[0]?.url}">
-                    <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
-                         style="width:200px;height:200px;border:0;">
-                </a>
-            </td>
-            <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+        <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
+            <a th:href="${item.images[0]?.url}">
+                <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
+                     style="width:200px;height:200px;border:0;">
+            </a>
+        </td>
+        <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
-            <td style="text-align:center" th:text="${item.inventory}"/>
+        <td style="text-align:center" th:text="${item.inventory}"/>
 
             <td style="text-align:center" th:text="'$' + ${item.cost}"/>
 
+        <div id="add2Cart" th:if="${loggedIn}">
             <div id="inventory" th:if="${item.inventory != 0}">
-                <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox onclick="checkboxClicked()"></td>
-            </div>
-            <div id="noInventory" th:if="${item.inventory <= 0}">
-                <td style="text-align:center"><input name=item th:value="${item.id}" type=checkbox disabled/>
+                <input id="storeID" type="hidden" th:value="${shopID}" name="store"/>
+                <td style="text-align:center">
+                    <button type="button" class="a2c" th:value="${item.id}">Add to Cart</button>
                 </td>
             </div>
-
-        </tr>
-    </table>
-    <br>
-    <div id="shoppingCartButton" th:unless="${#lists.isEmpty(shop.items)}">
-        <input type="hidden" th:value="${shopID}" name="store"/>
-        <input id="shoppingCart" type="submit" value="Add to Cart" disabled/>
-    </div>
-</form>
+            <div id="noInventory" th:if="${item.inventory <= 0}">
+                <td style="text-align:center">
+                    <button type="button" disabled>Add to Cart</button>
+                </td>
+            </div>
+        </div>
+    </tr>
+</table>
+<br>
 
 <br><br><br>
 <div id="tagSection" th:unless="${#lists.isEmpty(shop.tags)}">
     <h5>Tag(s)</h5>
     <div style="display:inline;" th:each="tag: ${shop.tags}"><h6 style="display:inline;"
-                                                                th:text="'&nbsp &nbsp &nbsp' + ${tag.tagName}"></h6></div>
+                                                                 th:text="'&nbsp &nbsp &nbsp' + ${tag.tagName}"></h6>
+    </div>
 </div>
 <br>
 <form action="#" th:action="@{/}">
     <input type="submit" value="Go To Home Page"/>
 </form>
-
 <script type="text/javascript" src="/js/CloudServiceController.js"></script>
-<script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
 <script type="text/javascript" src="/js/SidebarController.js"></script>
+<script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+<script type="text/javascript" src="/js/CustomerShopViewController.js"></script>
 
 </body>
 

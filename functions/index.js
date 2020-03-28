@@ -13,17 +13,19 @@ const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
 const key = crypto.randomBytes(32);
 const iv = crypto.randomBytes(16);
+const SUCCESS_CONSTANT = "SUCCESS";
+const ERROR_CONSTANT = "ERROR - Please contact the developer";
 
 // !--- PLACE ALL SERVICES BELOW HERE ---!
 
 function addShop(shopName, merchantId, mode = '') {
-    if (!ValidateString(shopName) || !ValidateString(merchantId))  {
+    if (!ValidateString(shopName) || !ValidateString(merchantId)) {
         return "Sorry, invalid input was entered!";
     }
 
     var storeKey = database.ref(mode + '/store/').push({
-                           shopName: shopName
-                       }).key;
+        shopName: shopName
+    }).key;
 
     database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
 
@@ -125,40 +127,62 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
 
 }
 
-function purchaseItemFromShop(shopID, itemID, quantities, mode = '') {
-    const SHOP_ID = shopID;
-    const ITEM_IDS = itemID;
+function purchaseItemFromShop(shopIDs, itemIDs, quantities, customerID, mode = '') {
+    const SHOP_IDS = shopIDs;
+    const ITEM_IDS = itemIDs;
     const QUANTITIES = quantities;
-    if (!ValidateString(SHOP_ID) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
+    const CUSTOMER = customerID
+    if (!ValidateString(CUSTOMER) || !ValidateArray(SHOP_IDS, ValidateString) || !ValidateArray(ITEM_IDS, ValidateString) || !ValidateArray(QUANTITIES, ValidateNumber)) {
         return "Sorry, invalid input was entered!";
     }
-    var returnVal = database.ref(mode + "/store/" + SHOP_ID).once("value").then((snapshot) => {
+    var returnVal = database.ref(mode + "/store/").once("value").then((snapshot) => {
         if (snapshot.val()) {
             const res = snapshot.val();
-            for (var id in ITEM_IDS) {
-                var tempItem = res.item[ITEM_IDS[id]];
-                var itemID = ITEM_IDS[id];
+            for (var check in SHOP_IDS) {
+                var tempItem = res[SHOP_IDS[check]].item[ITEM_IDS[check]];
 
-                var newInventoryCount = tempItem.inventory - QUANTITIES[id];
+                var newInventoryCount = tempItem.inventory - QUANTITIES[check];
                 if (newInventoryCount < 0) {
-                    return "Error - Not enough inventory!";
-
-                } else {
-                    database.ref(mode + "/store/" + SHOP_ID).child("item/" + itemID).update({
-                        inventory: newInventoryCount
-                    })
+                    return "Item " + tempItem.name + " from " + res[SHOP_IDS[check]].shopName + " could not be bought. Please double check the inventory, and if you think this is a mistake please contact a developer.";
                 }
             }
-            return "Success";
+
+            for (var id in SHOP_IDS) {
+                var newTempItem = res[SHOP_IDS[id]].item[ITEM_IDS[id]];
+                var newItemID = ITEM_IDS[id];
+
+                var officialInvCount = newTempItem.inventory - QUANTITIES[id];
+                database.ref(mode + "/store/" + SHOP_IDS[id]).child("item/" + newItemID).update({
+                    inventory: officialInvCount
+                })
+            }
+            return database.ref(mode + "/users/customers/" + CUSTOMER).once("value").then((snapshot) => {
+                if (snapshot.val()) {
+                    var name = snapshot.val().userName;
+                    var address = snapshot.val().address;
+                    if (mode !== TEST_MODE) {
+                        address = decrypt(address);
+                    }
+                    return {
+                        res: true,
+                        str: "Thank you for your purchase " + name + "! We will send the item(s) to " + address + "."
+                    };
+                } else {
+                    return ERROR_CONSTANT;
+                }
+            });
 
         }
-        return "Something went wrong!"
+        return ERROR_CONSTANT;
 
     });
     return returnVal;
 }
 
 function createMerchant(username, password, email, phoneNumber, mode = '') {
+    if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(phoneNumber)) {
+        return "Invalid username, password, email or phone number was entered.";
+    }
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedPhoneNumber = encrypt(phoneNumber);
@@ -171,6 +195,9 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
 }
 
 function merchantLogin(username, password, mode = '') {
+    if (!ValidateString(username) || !(ValidateString(password))) {
+        return "Invalid username or password was entered.";
+    }
     password = encrypt(password);
     var retVal = database.ref(mode + "/users/merchants").once("value").then((snapshot) => {
         var ssv = snapshot.val();
@@ -199,6 +226,9 @@ function merchantLogin(username, password, mode = '') {
 }
 
 function createCustomer(username, password, email, address, phoneNumber, note, mode = '') {
+    if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(address) || !ValidateString(phoneNumber)) {
+        return "Invalid username, password, email, address or phone number was entered.";
+    }
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedAddress = encrypt(address);
@@ -213,7 +243,73 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     }).key;
 }
 
+function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
+    if (!ValidateString(customerID) || !ValidateString(shopID) || !ValidateString(itemID)) {
+        return "Incorrect customer, shop or user was entered.";
+    }
+    var returnVal = database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const SC = snapshot.val();
+            for (var item in SC) {
+                if (SC[item].itemID === itemID) {
+                    return {
+                        resp: true,
+                        str: "That item is already in your shopping cart!"
+                    }
+                }
+            }
+        }
+
+        return database.ref(mode + '/users/customers/' + customerID + '/shoppingCart/').push({
+            itemID: itemID,
+            shopID: shopID
+        }).key;
+
+    });
+    return returnVal;
+}
+
+function remItemFromSC(customer, itemToRemove, mode = "") {
+    if (!ValidateString(customer) || !ValidateString(itemToRemove)) {
+        return "Incorrect customer or item was entered.";
+    }
+    var returnVal = database.ref(mode + '/users/customers/' + customer + '/shoppingCart/').once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const SC = snapshot.val();
+            for (var item in SC) {
+                if (SC[item].itemID === itemToRemove) {
+                    database.ref(mode + '/users/customers/' + customer + '/shoppingCart/' + item).remove();
+                    return SUCCESS_CONSTANT;
+                }
+            }
+            return ERROR_CONSTANT;
+        } else {
+            return ERROR_CONSTANT;
+        }
+
+    });
+    return returnVal;
+}
+
 // !--- PLACE ALL PRODUCTION ENDPOINTS WITH THE TEST ENDPOINTS BELOW HERE ---!
+exports.removeItemFromShoppingCart = functions.https.onCall((data, context) => {
+    return remItemFromSC(data.customerID, data.itemID);
+});
+exports.testRemoveItemFromSC = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(remItemFromSC(request.body.userID, request.body.itemID, TEST_MODE));
+    });
+});
+
+exports.addToCart = functions.https.onCall((data, context) => {
+    return addItemToShoppingCart(data.customerID, data.shopID, data.itemID);
+});
+exports.testAddToCart = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(addItemToShoppingCart(request.body.customerID, request.body.shopID, request.body.itemID, TEST_MODE));
+    });
+});
+
 exports.addShop = functions.https.onCall((data, context) => {
     return addShop(data.shopName, data.userId);
 });
@@ -261,7 +357,6 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 
 exports.addItem = functions.https.onCall((data, context) => {
     var inventory = parseInt(data.inventory);
-    var cost = parseFloat(data.cost);
     const itemData = {
         url: data.url,
         altText: data.altText,
@@ -311,7 +406,7 @@ exports.editItem = functions.https.onCall((data, context) => {
 
     return editItemInShop(shopId, itemId, merchantId, itemData);
 });
-exports.editItemTest = functions.https.onRequest((request, response) => {
+exports.testEditItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
         const itemData = {
@@ -326,17 +421,18 @@ exports.editItemTest = functions.https.onRequest((request, response) => {
 });
 
 exports.purchaseItemsFromShop = functions.https.onCall((data, context) => {
-    return purchaseItemFromShop(data.shopID, data.itemIDs, data.quantities);
+    return purchaseItemFromShop(data.shopIDs, data.itemIDs, data.quantities, data.customerID);
 });
 exports.testPurchaseItems = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const items = request.body.itemIDs.split(', ');
+        const stores = request.body.shopIDs.split(', ');
         const quantities = request.body.quantities.split(', ');
         var qties = [];
-        for(var a in quantities) {
+        for (var a in quantities) {
             qties.push(Number(quantities[a]));
         }
-        response.status(200).send(purchaseItemFromShop(request.body.shopID, items, qties, TEST_MODE));
+        response.status(200).send(purchaseItemFromShop(stores, items, qties, request.body.customerID, TEST_MODE));
     });
 });
 

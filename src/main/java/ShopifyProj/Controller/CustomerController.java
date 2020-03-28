@@ -29,9 +29,8 @@ public class CustomerController {
                                                         @RequestParam(value = "setId") String newId,
                                                         Model model) {
         Set<Item> boughtItems = new HashSet<Item>();
-        Set<Item> cart = new HashSet<Item>();
 
-        Customer toAdd = new Customer(userName, email, address, phoneNum, note, boughtItems, cart, password);
+        Customer toAdd = new Customer(userName, email, address, phoneNum, note, boughtItems, password);
         toAdd.setId(newId);
 
         //TODO: FIX

@@ -10,40 +10,37 @@
 </head>
 
 <body>
-    <h2>Cart</h2>
+    <h1 style="text-align:center">Shopping Cart</h1>
+    <span hidden id="customerID" th:value="${customer.id}"></span>
+    <span hidden id="username" th:value="${customer.userName}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+    <div id="emptyCart" th:if="${#lists.isEmpty(items)}"><h2>Your cart is empty!</h2></div>
+    <div id="cartSection" th:unless="${#lists.isEmpty(items)}">
+        <table id="cartTable">
+            <tr>
+                <th>Store</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Inventory Remaining</th>
+                <th>Individual Cost</th>
+            </tr>
+            <tr th:each="item: ${items}">
+                <td><a class="store" th:href="@{/goToShopCustomerView?shopId={id}(id=${item.storeID})}" th:text="${item.storeName}" th:value="${item.storeID}"></a></td>
+                <td class="item" style="text-align:center" th:text="${item.itemName}" th:value="${item.id}"></td> 
+                <td style="text-align:center" class="itemQuantity">
+                    <input class="inv" name="quantity" type="number" min="1" th:max="${item.inventory}" value="1"
+                        onchange="updateCost()" />
+                </td>
+                <td class="maxInv" style="text-align:center" name="itemInventory" th:text="${item.inventory}"></td>
+                <td class="cost" style="text-align:center" th:text="${item.cost}"></td>
+                <td style="text-align:center"><button class="rem" th:value="${item.id}">Remove From Cart</button></td>
+        </table>
+        <p id="totalCost">Total Cost: </p>
+        <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
+    </div>
 
-        <div id="cartSection"></div>
-            <p id="itemIDs" th:text="${itemIDs}" style="display:none"><p/>
-             <table id="cartTable">
-                 <tr>
-                     <th>Name</th>
-                     <th>Quantity</th>
-                     <th>Inventory Remaining</th>
-                     <th>Individual Cost</th>
-                 </tr>
-                 <tr th:each="item: ${items}">
-                     <td style="text-align:center" th:text="${item.itemName}"/>
-                     <td style="text-align:center" name="itemQuantity">
-                         <input name="quantity" type="number" min="1" th:max="${item.inventory}" value="1" onchange="updateCost()"/>
-                     </td>
-                     <td style="text-align:center" name="itemInventory" th:text="${item.inventory}"></td>
-                     <td style="text-align:center" th:text="${item.cost}"></td>
-             </table>
-             <td style="text-align:center"><input id="storeID" name=store th:value="${storeID}" type=hidden />
-
-            <p id="totalCost">Total Cost: </p>
-            <h3>Payment Info</h3>
-            <label for="paymentName">Name</label><br>
-            <input type="text" id="paymentName" name="paymentName"><br>
-            <label for="ccNum">Credit Card Number</label><br>
-            <input type="number" id="ccNum" name="ccNum"><br>
-            <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
-
-    <form action="#" th:action="@{/}">
-        <input type="submit" value="Cancel and go To Home Page" />
-    </form>
-
-     <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+    <script type="text/javascript" src="/js/SidebarController.js"></script>
     <script type="text/javascript" src="/js/CloudServiceController.js"></script>
     <script type="text/javascript" src="/js/CheckoutController.js"></script>
 
