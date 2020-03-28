@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
-        <title>Your Shop Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
 
-    <body>
-        <h1>Edit Shop Form</h1>
-        <input type="hidden" th:value="${shop.id}" id="shopId"/>
-        <input type="hidden" th:value="${currUser.id}" id="currUserId"/>
-        <p th:text="'Id: ' + ${shop.id}"/>
-        <span hidden id="username" th:value="${currUser.userName}"></span>
-        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
-        <h2>Edit Shop Name</h2>
-        <form action="#" th:action="@{/changeShopName}" th:object="${shop}" method="post" id="editNameForm">
-            <input type="hidden" th:value="${shop.id}" name="shopId"/>
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
+    <title>Your Shop Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-            <p>Shop Name: <input type="text" th:value="${shop.shopName}" th:field="*{shopName}" id="shopNameBox"/></p>
+<body>
+    <h1>Edit Shop Form</h1>
+    <input type="hidden" th:value="${shop.id}" id="shopId" />
+    <input type="hidden" th:value="${currUser.id}" id="currUserId" />
+    <p th:text="'Id: ' + ${shop.id}" />
+    <span hidden id="username" th:value="${currUser.userName}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+    <h2>Edit Shop Name</h2>
+    <form action="#" th:action="@{/changeShopName}" th:object="${shop}" method="post" id="editNameForm">
+        <input type="hidden" th:value="${shop.id}" name="shopId" />
 
-            <input type="submit" value="Edit Name"/>
-        </form>
+        <p>Shop Name: <input type="text" th:value="${shop.shopName}" th:field="*{shopName}" id="shopNameBox" /></p>
 
-        <h2>Edit Shop Tags</h2>
-        <h3>Tags:</h3>
-        <div th:style="${#lists.isEmpty(shop.tags) ? 'display:block' : 'display:none'}" id="noTagDiv">
+        <input type="submit" value="Edit Name" />
+    </form>
+
+    <h2>Edit Shop Tags</h2>
+    <h3>Tags:</h3>
+    <div th:style="${#lists.isEmpty(shop.tags) ? 'display:block' : 'display:none'}" id="noTagDiv">
             <p>This store does not have any tags!</p>
         </div>
         <div th:style="${not #lists.isEmpty(shop.tags) ? 'display:block' : 'display:none'}" id="nonEmptyTagDiv">

@@ -18,7 +18,7 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
-        FirebaseController.loadDbInfo(true);
+        FirebaseController.loadDbInfo(false);
         boolean isLoggedIn = false;
         String customerID = "";
         if(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
@@ -120,6 +120,7 @@ public class ShopController {
     public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
                                       @RequestParam(value = "setId") String newId,
                                       Model model) {
+        FirebaseController.loadDbInfo(false);
         Shop newShop = new Shop(name, Optional.empty());
         newShop.setId(newId);
 

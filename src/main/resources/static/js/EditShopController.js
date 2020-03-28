@@ -30,7 +30,7 @@ async function asyncRemoveItem(formData) {
     const resp = await cloudRemoveItem(formData);
 }
 
-function editShopNameHandler(e){
+function editShopNameHandler(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -38,7 +38,7 @@ function editShopNameHandler(e){
     var info = $(editNameFormId).serializeArray();
     var infoJson = {};
 
-    for (var i = 0; i < info.length; i++){
+    for (var i = 0; i < info.length; i++) {
         var curr = info[i];
         infoJson[curr["name"]] = curr["value"];
     }
@@ -47,13 +47,13 @@ function editShopNameHandler(e){
         alert("Please enter a store name!");
     } else {
         showLoading();
-        asyncUpdateShopName(infoJson).then(function(data) {
+        asyncUpdateShopName(infoJson).then(function (data) {
             return $.ajax({
-               url: "/changeShopName?" + $(editNameFormId).serialize(),
-               type: "POST",
-               dataType: "json"
-             })
-        }).then(function(data){
+                url: "/changeShopName?" + $(editNameFormId).serialize(),
+                type: "POST",
+                dataType: "json"
+            })
+        }).then(function (data) {
             hideLoading();
             $(editNameFormId).value = data.shopName;
         });
@@ -67,13 +67,13 @@ function removeTag(btn, shopId, tagId) {
     };
 
     showLoading();
-    asyncRemoveTag(infoJson).then(function(data) {
+    asyncRemoveTag(infoJson).then(function (data) {
         return $.ajax({
             url: "/removeTag?shopId=" + shopId + "&tagId=" + tagId,
             type: "POST",
             dataType: "json"
         })
-    }).then(function(data){
+    }).then(function (data) {
         hideLoading();
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
@@ -85,7 +85,7 @@ function removeTag(btn, shopId, tagId) {
     });
 }
 
-function addTagHandler(e){
+function addTagHandler(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -93,7 +93,7 @@ function addTagHandler(e){
     var info = $(addTagFormId).serializeArray();
     var infoJson = {};
 
-    for (var i = 0; i < info.length; i++){
+    for (var i = 0; i < info.length; i++) {
         var curr = info[i];
         infoJson[curr["name"]] = curr["value"];
     }
@@ -102,13 +102,13 @@ function addTagHandler(e){
         alert("Tag names must be non-empty!");
     } else {
         showLoading();
-        asyncAddTag(infoJson).then(function(data) {
+        asyncAddTag(infoJson).then(function (data) {
             return $.ajax({
                 url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data,
                 type: "POST",
                 dataType: "json"
             })
-        }).then(function(data){
+        }).then(function (data) {
             hideLoading();
             $("#noTagDiv").css("display", "none");
             $("#nonEmptyTagDiv").css("display", "block");
@@ -124,7 +124,7 @@ function addTagHandler(e){
             var remButton = document.createElement("input");
             remButton.type = "button";
             remButton.value = "Remove Tag";
-            remButton.addEventListener('click', function() {
+            remButton.addEventListener('click', function () {
                 removeTag(this, infoJson["shopId"], data.id);
             });
             remButtonBox.appendChild(remButton);
@@ -144,13 +144,13 @@ function removeItem(btn, shopId, itemId) {
     };
 
     showLoading();
-    asyncRemoveItem(infoJson).then(function(data) {
+    asyncRemoveItem(infoJson).then(function (data) {
         return $.ajax({
             url: "/removeItem?shopId=" + shopId + "&itemId=" + itemId,
             type: "POST",
             dataType: "json"
         })
-    }).then(function(data){
+    }).then(function (data) {
         hideLoading();
         var row = btn.parentNode.parentNode;
         row.parentNode.removeChild(row);
@@ -162,7 +162,7 @@ function removeItem(btn, shopId, itemId) {
     });
 }
 
-function editItemHandler(btn){
+function editItemHandler(btn) {
     var shopId = $("#shopId").val();
     var merchantId = $("#currUserId").val();
     var rowId = btn.parentNode.parentNode.id;
@@ -170,10 +170,10 @@ function editItemHandler(btn){
 
     var row = $('#' + rowId);
     var itemData = {};
-    $("td input", row).each(function() {
-         var name = $(this).attr('name')
-         var val = $(this).val();
-         itemData[name] = val;
+    $("td input", row).each(function () {
+        var name = $(this).attr('name')
+        var val = $(this).val();
+        itemData[name] = val;
     });
 
     var callStr = "/editItem?";
@@ -182,13 +182,13 @@ function editItemHandler(btn){
     itemData["merchantId"] = merchantId;
 
     showLoading();
-    asyncEditItem(itemData).then(function(data) {
+    asyncEditItem(itemData).then(function (data) {
         return $.ajax({
             url: callStr + $.param(itemData),
             type: "POST",
             dataType: "json"
         })
-    }).then(function(data) {
+    }).then(function (data) {
         hideLoading();
         if (data.items.length === 0) {
             $("#noItemDiv").css("display", "block");
@@ -198,7 +198,7 @@ function editItemHandler(btn){
     });
 }
 
-function addItemHandler(e){
+function addItemHandler(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
@@ -206,7 +206,7 @@ function addItemHandler(e){
     var info = $(addItemFormId).serializeArray();
     var infoJson = {};
 
-    for (var i = 0; i < info.length; i++){
+    for (var i = 0; i < info.length; i++) {
         var curr = info[i];
         infoJson[curr["name"]] = curr["value"];
     }
@@ -219,13 +219,13 @@ function addItemHandler(e){
         alert("Please enter a cost value!");
     } else {
         showLoading();
-        asyncAddItem(infoJson).then(function(data) {
+        asyncAddItem(infoJson).then(function (data) {
             return $.ajax({
                 url: "/addItem?" + $(addItemFormId).serialize() + "&setId=" + data,
                 type: "POST",
                 dataType: "json"
             })
-        }).then(function(data){
+        }).then(function (data) {
             hideLoading();
             $("#noItemDiv").css("display", "none");
             $("#nonEmptyItemDiv").css("display", "block");
@@ -306,7 +306,7 @@ function addItemHandler(e){
             var remButton = document.createElement("input");
             remButton.type = "button";
             remButton.value = "Remove Item";
-            remButton.addEventListener('click', function() {
+            remButton.addEventListener('click', function () {
                 removeItem(this, infoJson["shopId"], data.id);
             });
             remButtonBox.appendChild(remButton);
@@ -316,8 +316,8 @@ function addItemHandler(e){
             var editButton = document.createElement("input");
             editButton.type = "button";
             editButton.value = "Save Changes";
-            editButton.addEventListener('click', function() {
-               editItemHandler(this);
+            editButton.addEventListener('click', function () {
+                editItemHandler(this);
             });
             editButtonBox.appendChild(editButton);
             newRow.appendChild(editButtonBox);
@@ -327,30 +327,30 @@ function addItemHandler(e){
     }
 }
 
-$(document).ready(function() {
-    $(editNameFormId).submit(function(e) {
+$(document).ready(function () {
+    $(editNameFormId).submit(function (e) {
         editShopNameHandler(e);
     });
 
-    $(addTagFormId).submit(function(e) {
+    $(addTagFormId).submit(function (e) {
         addTagHandler(e);
     });
 
-    $(addItemFormId).submit(function(e) {
+    $(addItemFormId).submit(function (e) {
         addItemHandler(e);
     });
 
-    $(".removeTagButton").on('click', function() {
+    $(".removeTagButton").on('click', function () {
         tagId = this.id.replace("TAG_", "");
         removeTag(this, $("#shopId").val(), tagId);
     });
 
-    $(".removeItemButton").on('click', function() {
+    $(".removeItemButton").on('click', function () {
         tagId = this.parentNode.parentNode.id.replace("ITEM_", "");
         removeItem(this, $("#shopId").val(), tagId);
     });
 
-    $(".saveChangesButton").on('click', function() {
-            editItemHandler(this);
-        });
+    $(".saveChangesButton").on('click', function () {
+        editItemHandler(this);
+    });
 });

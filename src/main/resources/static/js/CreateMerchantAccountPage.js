@@ -14,7 +14,7 @@ function createMerchantAccountHandler(e) {
     var info = $(merchantInfoFormId).serializeArray();
     var infoJson = {};
 
-    for (var i = 0; i < info.length; i++){
+    for (var i = 0; i < info.length; i++) {
         var curr = info[i];
         infoJson[curr["name"]] = curr["value"];
     }
@@ -29,22 +29,22 @@ function createMerchantAccountHandler(e) {
         alert("Please enter a phone number!");
     } else {
         showLoading();
-        createMerchantInDb(infoJson).then(function(data) {
+        createMerchantInDb(infoJson).then(function (data) {
             console.log(data);
             return $.ajax({
                 url: "/addNewMerchant?" + $(merchantInfoFormId).serialize() + "&setId=" + data,
                 type: "POST",
                 dataType: "json"
             });
-        }).then(function(data){
+        }).then(function (data) {
             window.location.href = '/';
             hideLoading();
         });
     }
 }
 
-$(document).ready(function() {
-    $(merchantInfoFormId).submit(function(e) {
+$(document).ready(function () {
+    $(merchantInfoFormId).submit(function (e) {
         createMerchantAccountHandler(e);
     });
 });

@@ -165,7 +165,7 @@ public class FirebaseController {
             }
         }
         if (checkShop == null) {
-            System.out.println(String.format("No shop found with ID %d", shopId));
+            System.out.println(String.format("No shop found with ID %s", shopId));
             throw new Exception();
         }
         return checkShop;

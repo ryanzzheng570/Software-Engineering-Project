@@ -15,8 +15,7 @@
     </div>
     <span hidden id="username" th:value="${username}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
-    <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store
-    yet!</h2>
+    <div id="noItems" th:if="${#lists.isEmpty(shop.items)}"><h2>Sorry, the merchant did not add items to their store yet!</h2>
 </div>
 <div id="itemSection" th:unless="${#lists.isEmpty(shop.items)}"></div>
 <h2>Items</h2>

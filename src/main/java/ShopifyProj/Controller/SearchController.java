@@ -26,7 +26,7 @@ public class SearchController {
 
     @PostMapping("/search")
     public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
-        FirebaseController.loadDbInfo(true);
+        FirebaseController.loadDbInfo(false);
 
         ArrayList<Shop> matchingShops = new ArrayList<>();
 

@@ -1,32 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-        <title>Create a Shop</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
 
-    <body>
-        <h1>Create Shop Page</h1>
+    <title>Create a Shop</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-        <h3>You're Logged in as: </h3>
-        <p th:text="'Id: ' + ${currUser.userName}"/>
-        <span hidden id="username" th:value="${currUser.userName}"></span>
-        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+<body>
+    <h1>Create Shop Page</h1>
 
-        <h3>New Shop Information:</h3>
-        <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="createShopForm">
-            <input type="hidden" name="userId" th:value="${currUser}"/>
-            <p>New Shop Name: <input type="text" th:field="*{shopName}"/></p>
+    <h3>You're Logged in as: </h3>
+    <p th:text="'Id: ' + ${currUser.userName}" />
+    <span hidden id="username" th:value="${currUser.userName}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
 
-            <p><input type="submit" value="Create Shop"/></p>
-        </form>
+    <h3>New Shop Information:</h3>
+    <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="createShopForm">
+        <input type="hidden" name="userId" th:value="${currUser}" />
+        <p>New Shop Name: <input type="text" th:field="*{shopName}" /></p>
 
-        <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/CreateShopController.js}"></script>
-        <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
-    </body>
+        <p><input type="submit" value="Create Shop" /></p>
+    </form>
+
+    <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/CreateShopController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
+</body>
+
 </html>

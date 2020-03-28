@@ -23,7 +23,7 @@ public class CheckoutController {
     @GetMapping("/goToCart")
     public String goToCart(
             Model model) {
-        FirebaseController.loadDbInfo(true);
+        FirebaseController.loadDbInfo(false);
         if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
             return "CustomerLoginPage";
         }

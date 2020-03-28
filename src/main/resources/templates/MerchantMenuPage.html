@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-    <head>
-        <script type="text/javascript"
-                th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
 
-        <title>Merchant Menu Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    </head>
+<head>
+    <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
+    </script>
 
-    <body>
-        <h1>Merchant Menu Page</h1>
-        <input type="hidden" th:value="${currUser.id}" id="currUserId"/>
+    <title>Merchant Menu Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
 
-        <h3>You're Logged in as: </h3>
-        <p th:text="'Id: ' + ${currUser.userName}"/>
-        <span hidden id="username" th:value="${currUser.userName}"></span>
-        <span hidden id="isCustomer" th:value="${isCustomer}"></span>
-        <h3>Your Current Shops:</h3>
-        <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
+<body>
+    <h1>Merchant Menu Page</h1>
+    <input type="hidden" th:value="${currUser.id}" id="currUserId" />
+
+    <h3>You're Logged in as: </h3>
+    <p th:text="'Id: ' + ${currUser.userName}" />
+    <span hidden id="username" th:value="${currUser.userName}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+    <h3>Your Current Shops:</h3>
+    <div th:style="${#lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="noShopDiv">
             <p>You currently do not have any shops!</p>
         </div>
         <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">

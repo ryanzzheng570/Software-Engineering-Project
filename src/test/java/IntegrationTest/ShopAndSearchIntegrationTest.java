@@ -1,6 +1,7 @@
 package ShopifyProj;
 
 import ShopifyProj.Controller.FirebaseController;
+import ShopifyProj.Model.Merchant;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,10 +37,9 @@ public class ShopAndSearchIntegrationTest {
     public void searchShopByName() throws Exception {
         //Create a shop
         String name = "TEST_SHOP_BY_NAME";
-        String tag1 = "TAG_1";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
-
+        FirebaseController.setCurrUser(new Merchant());
         this.mockMvc.perform(post(requestStr));
 
         //Search for the shop by name
@@ -48,8 +48,7 @@ public class ShopAndSearchIntegrationTest {
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString(name)))
-                .andExpect(content().string(containsString(tag1)));
+                .andExpect(content().string(containsString(name)));
 
     }
 
@@ -60,6 +59,7 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "TAG_1";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -84,6 +84,8 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "TAG_1";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
+
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -108,6 +110,8 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "TAG_123456";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
+
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -132,6 +136,8 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "test";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
+
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -156,6 +162,8 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "TEST";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
+
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();
@@ -180,6 +188,8 @@ public class ShopAndSearchIntegrationTest {
         String tag1 = "test";
 
         String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        FirebaseController.setCurrUser(new Merchant());
+
         this.mockMvc.perform(post(requestStr));
 
         String shopId = FirebaseController.findByShopName(name).getId();

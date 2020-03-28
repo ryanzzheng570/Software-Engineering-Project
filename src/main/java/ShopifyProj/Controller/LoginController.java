@@ -29,7 +29,7 @@ public class LoginController {
 
     @GetMapping("/loginAsCustomer")
     public String viewCustomerLogin(Model model) {
-        FirebaseController.loadDbInfo(true);
+        FirebaseController.loadDbInfo(false);
 
         model.addAttribute("customer", new Customer());
         model.addAttribute("isLoginFailed", false);
@@ -41,7 +41,7 @@ public class LoginController {
                                                    @RequestParam(value = "userName") String name,
                                                    @RequestParam(value = "shops[]") Optional<String[]> shopIds,
                                                    Model model) throws Exception {
-        FirebaseController.loadDbInfo(true);
+        FirebaseController.loadDbInfo(false);
 
         Merchant toRet = new Merchant(userId);
 

@@ -13,7 +13,7 @@ function merchantLoginHandler(e) {
     var info = $(merchantLoginFormId).serializeArray();
     var infoJson = {};
 
-    for (var i = 0; i < info.length; i++){
+    for (var i = 0; i < info.length; i++) {
         var curr = info[i];
         infoJson[curr["name"]] = curr["value"];
     }
@@ -24,7 +24,7 @@ function merchantLoginHandler(e) {
         alert("Please enter a password!");
     } else {
         showLoading();
-        merchantLogin(infoJson).then(function(data) {
+        merchantLogin(infoJson).then(function (data) {
             data = data.data;
             if (data === null) {
                 alert("Error: Invalid login.");
@@ -55,7 +55,7 @@ function merchantLoginHandler(e) {
                     dataType: "json"
                 });
             }
-        }).then(function(data){
+        }).then(function (data) {
             hideLoading();
             if (data.id !== null) {
                 window.location.href = '/goToMerchantMenuPage';
@@ -64,8 +64,8 @@ function merchantLoginHandler(e) {
     }
 }
 
-$(document).ready(function() {
-    $(merchantLoginFormId).submit(function(e) {
+$(document).ready(function () {
+    $(merchantLoginFormId).submit(function (e) {
         merchantLoginHandler(e);
     });
 });
