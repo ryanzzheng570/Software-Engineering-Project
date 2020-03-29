@@ -21,6 +21,8 @@
   overflow-x: hidden;
   /* Disable horizontal scroll */
   padding-top: 20px;
+
+  word-wrap: break-word;
 }
 
 /* The navigation menu links */
