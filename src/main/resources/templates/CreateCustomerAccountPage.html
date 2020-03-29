@@ -12,6 +12,8 @@
 </head>
 
 <body>
+    <span hidden id="username" th:value="${username}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
 
     <h1>Create Customer Account: </h1>
     <form action="#" th:action="@{/createCustomerAccount}" th:object="${customer}" method="post" id="customerInfoForm">
@@ -21,8 +23,7 @@
         </p>
         <p>Email: <input type="email" th:value="${customer.email}" th:field="*{email}" id="email"></p>
         <p>Home Address: <input type="text" th:value="${customer.address}" th:field="*{address}" id="address"></p>
-        <p>Phone Number: <input type="text" pattern='[\(]\d{3}[\)]\d{3}[\-]\d{4}' th:value="${customer.phoneNumber}"
-                th:field="*{phoneNumber}" id="phoneNumber"> (Format: (xxx)xxx-xxxx)</p>
+        <p>Phone Number: <input type="text" th:value="${customer.phoneNumber}" th:field="*{phoneNumber}" id="phoneNumber" class="phoneNumber"></p>
         <p>Note: <input type="text" th:value="${customer.note}" th:field="*{note}" id="note"></p>
 
         <input type="submit" value="Submit" />
@@ -31,6 +32,7 @@
     <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
     <script type="text/javascript" th:src="@{/js/CreateCustomerAccountPageController.js}"></script>
     <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
+    <script type="text/javascript" th:src="@{/js/PhoneNumberFormatter.js}"></script>
 </body>
 
 </html>

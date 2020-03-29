@@ -12,6 +12,9 @@
 </head>
 
 <body>
+    <span hidden id="username" th:value="${username}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+
     <form action="#" th:action="@{/loginAsMerchant}" method="post" id="merchantLoginForm">
         <h1>Login As A Merchant</h1>
         <div th:if="${isLoginFailed}">

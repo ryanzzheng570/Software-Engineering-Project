@@ -15,6 +15,15 @@ import java.util.Set;
 public class CustomerController {
     @GetMapping("/createCustomerAccount")
     public String viewCreateCustomerAccountPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         model.addAttribute("customer", new Customer());
         return "CreateCustomerAccountPage";
     }

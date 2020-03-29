@@ -19,6 +19,15 @@ public class MerchantController {
 
     @GetMapping("/addNewMerchant")
     public String viewAddNewMerchantPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         model.addAttribute("merchant", new Merchant());
         return "CreateMerchantAccountPage";
     }
@@ -43,6 +52,15 @@ public class MerchantController {
 
     @GetMapping("/goToAddShopPage")
     public String viewAddShopPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         if (FirebaseController.getCurrUser() == null ||(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) ) {
             return "MerchantLoginPage";
         } else {
@@ -57,6 +75,15 @@ public class MerchantController {
 
     @GetMapping("/goToMerchantMenuPage")
     public String viewMerchantMenuPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer)) {
             return "MerchantLoginPage";
         } else {
