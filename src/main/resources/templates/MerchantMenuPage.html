@@ -26,13 +26,11 @@
     <div th:style="${not #lists.isEmpty(shops) ? 'display:block' : 'display:none'}" id="nonEmptyShopDiv">
     <table>
             <tr>
-                <th>Shop ID</th>
                 <th>Name</th>
                 <th>Tags</th>
             </tr>
 
             <tr th:each="shop: ${shops}" th:id="'SHOP_' + ${shop.id}">
-                <td th:text="${shop.id}"></td>
                 <td th:text="${shop.shopName}"></td>
                 <td th:text="${shop.tags}"></td>
                 <td>
