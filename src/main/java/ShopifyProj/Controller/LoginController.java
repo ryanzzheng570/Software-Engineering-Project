@@ -17,11 +17,29 @@ import java.util.Optional;
 public class LoginController {
     @GetMapping("/login")
     public String viewLoginPage(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         return "Login";
     }
 
     @GetMapping("/loginAsMerchant")
     public String viewMerchantLogin(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         model.addAttribute("user", new Merchant());
         model.addAttribute("isLoginFailed", false);
         return "MerchantLoginPage";
@@ -29,6 +47,15 @@ public class LoginController {
 
     @GetMapping("/loginAsCustomer")
     public String viewCustomerLogin(Model model) {
+        String username = "";
+        boolean isCustomer = false;
+        if(FirebaseController.getCurrUser() != null) {
+            username = FirebaseController.getCurrUser().getUserName();
+            isCustomer = FirebaseController.isCurrUserCustomer();
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("isCustomer", isCustomer);
+
         FirebaseController.loadDbInfo(false);
 
         model.addAttribute("customer", new Customer());

@@ -4,17 +4,22 @@
 <head>
     <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
     </script>
+
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <title>Your Shop Page</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
     <h1>Edit Shop Form</h1>
+
     <input type="hidden" th:value="${shop.id}" id="shopId" />
     <input type="hidden" th:value="${currUser.id}" id="currUserId" />
-    <p th:text="'Id: ' + ${shop.id}" />
     <span hidden id="username" th:value="${currUser.userName}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
+
+    <br />
     <h2>Edit Shop Name</h2>
     <form action="#" th:action="@{/changeShopName}" th:object="${shop}" method="post" id="editNameForm">
         <input type="hidden" th:value="${shop.id}" name="shopId" />
@@ -70,13 +75,12 @@
                 <tr th:each="item: ${shop.items}" th:id="'ITEM_' + ${item.id}"}>
                     <td> <input type='text' th:value="${item.itemName}" name="itemName"/> </td>
 
-                    <td style="text-align:center" th:if="${not #lists.isEmpty(item.images)}">
+                    <td th:if="${not #lists.isEmpty(item.images)}">
                         <a th:href="${item.images[0]?.url}">
-                            <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}"
-                                 style="width:200px;height:200px;border:0;">
+                            <img th:src="${item.images[0]?.url}" th:alt="${item.images[0]?.altText}">
                         </a>
                     </td>
-                    <td style="text-align:center" th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
+                    <td th:if="${#lists.isEmpty(item.images)}">(NO IMAGE)</td>
 
                     <td th:if="${not #lists.isEmpty(item.images)}"> <input type='text' th:value="${item.images[0]?.url}" name="url"/> </td>
                     <td th:if="${#lists.isEmpty(item.images)}"> <input type='text' value="" name="url"/> </td>

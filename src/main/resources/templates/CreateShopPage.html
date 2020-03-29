@@ -5,6 +5,8 @@
     <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
     </script>
 
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <title>Create a Shop</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
@@ -12,14 +14,13 @@
 <body>
     <h1>Create Shop Page</h1>
 
-    <h3>You're Logged in as: </h3>
-    <p th:text="'Id: ' + ${currUser.userName}" />
+    <h3 th:text="'You are Logged in as: ' + ${currUser.userName}" />
     <span hidden id="username" th:value="${currUser.userName}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
 
     <h3>New Shop Information:</h3>
     <form action="#" th:action="@{/addShop}" th:object="${shop}" method="post" id="createShopForm">
-        <input type="hidden" name="userId" th:value="${currUser}" />
+        <input type="hidden" name="userId" th:value="${currUser.id}" />
         <p>New Shop Name: <input type="text" th:field="*{shopName}" /></p>
 
         <p><input type="submit" value="Create Shop" /></p>

@@ -5,11 +5,15 @@
     <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
     </script>
 
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <title>Sign Up</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
+    <span hidden id="username" th:value="${username}"></span>
+    <span hidden id="isCustomer" th:value="${isCustomer}"></span>
 
     <h1>Signing Up</h1>
     <form action="#" th:action="@{/addNewMerchant}">

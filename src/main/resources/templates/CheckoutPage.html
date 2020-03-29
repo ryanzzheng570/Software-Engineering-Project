@@ -5,12 +5,15 @@
 <head>
     <script type="text/javascript" th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}">
     </script>
+
+    <link rel="stylesheet" type="text/css" href="/css/Global.css">
+
     <title>Checkout </title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 
 <body>
-    <h1 style="text-align:center">Shopping Cart</h1>
+    <h1 >Shopping Cart</h1>
     <span hidden id="customerID" th:value="${customer.id}"></span>
     <span hidden id="username" th:value="${customer.userName}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
@@ -26,17 +29,17 @@
             </tr>
             <tr th:each="item: ${items}">
                 <td><a class="store" th:href="@{/goToShopCustomerView?shopId={id}(id=${item.storeID})}" th:text="${item.storeName}" th:value="${item.storeID}"></a></td>
-                <td class="item" style="text-align:center" th:text="${item.itemName}" th:value="${item.id}"></td> 
-                <td style="text-align:center" class="itemQuantity">
+                <td class="item" th:text="${item.itemName}" th:value="${item.id}"></td>
+                <td class="itemQuantity">
                     <input class="inv" name="quantity" type="number" min="1" th:max="${item.inventory}" value="1"
                         onchange="updateCost()" />
                 </td>
-                <td class="maxInv" style="text-align:center" name="itemInventory" th:text="${item.inventory}"></td>
-                <td class="cost" style="text-align:center" th:text="${item.cost}"></td>
-                <td style="text-align:center"><button class="rem" th:value="${item.id}">Remove From Cart</button></td>
+                <td class="maxInv" name="itemInventory" th:text="${item.inventory}"></td>
+                <td class="cost" th:text="${item.cost}"></td>
+                <td><button class="rem" th:value="${item.id}">Remove From Cart</button></td>
         </table>
         <p id="totalCost">Total Cost: </p>
-        <input style="margin-top:10px" type="submit" onclick="checkout()" value="Checkout" />
+        <input type="submit" onclick="checkout()" value="Checkout" />
     </div>
 
     <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
