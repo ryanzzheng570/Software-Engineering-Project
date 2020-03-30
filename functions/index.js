@@ -493,6 +493,7 @@ function ValidateString(string) {
 
 function ValidateNumber(number) {
     if (number && !isNaN(number)) {
+        if (number < 0) return false;
         return true;
     }
     return false;
