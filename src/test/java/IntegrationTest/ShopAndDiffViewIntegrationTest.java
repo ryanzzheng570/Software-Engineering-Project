@@ -374,7 +374,7 @@ public class ShopAndDiffViewIntegrationTest {
         String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s&testMode=true", FirebaseController.getCounterAndIterate(), merchantUsername);
         this.mockMvc.perform(post(requestStr));
 
-        String addShopQuery = String.format("/addShop?shopName=%s&setId=%s&testMode=true&testMode=true", shopName, FirebaseController.getCounterAndIterate());
+        String addShopQuery = String.format("/addShop?shopName=%s&setId=%s&testMode=true", shopName, FirebaseController.getCounterAndIterate());
         this.mockMvc.perform(post(addShopQuery));
 
         String shopId = FirebaseController.findByShopName(shopName).getId();

@@ -28,7 +28,7 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopNoMatch() throws Exception {
         String searchField = "testShop";
-        String requestStr = String.format("/search?searchField=%s&testMpde=true", searchField);
+        String requestStr = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr)).andDo(print())
                 .andExpect(status().isOk());
