@@ -22,6 +22,9 @@ public class CustomerServicesTest {
     private static CloudTestController functionCaller = null;
     private static String result = "";
     private static final String PASS_FLAG = "PASS";
+    private static boolean DONE_FLAG = false;
+    private static int DELAY_COUNTER = 0;
+    private static final int MAX_DELAYS = 3;
 
     @Test
     public void itRemovesItemFromShoppingCart() {
@@ -76,6 +79,7 @@ public class CustomerServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 setResult(PASS_FLAG);
+                setDoneFlag(true);
                 for (DataSnapshot cartData : dataSnapshot.getChildren()) {
                     setResult("Shouldn't come here");
                     String itemID = (String) ((Map<String, Object>) cartData.getValue()).get("itemID");
@@ -87,11 +91,15 @@ public class CustomerServicesTest {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 fail("The database read failed: " + databaseError.getCode());
+                setResult("FALSE");
+                setDoneFlag(true);
             }
 
         });
-        firebaseDelay();
-        firebaseDelay();
+
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
     }
 
@@ -143,17 +151,21 @@ public class CustomerServicesTest {
                     assertThat("Incorrect itemID", itemID, is(ADD_ITEM_ID));
                     assertThat("Incorrect storeID", storeID, is(SHOP_ID));
                     setResult(PASS_FLAG);
+                    setDoneFlag(true);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 fail("The database read failed: " + databaseError.getCode());
+                setResult("FAIL");
+                setDoneFlag(true);
             }
 
         });
-        firebaseDelay();
-        firebaseDelay();
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
     }
 
@@ -220,17 +232,20 @@ public class CustomerServicesTest {
                 String secInvVal = (String) secondItemData.get("inventory");
                 assertThat("Incorrect inventory", secInvVal, is(SECOND_ITEM_QTY));
                 setResult(PASS_FLAG);
+                setDoneFlag(true);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 fail("The database read failed: " + databaseError.getCode());
+                setResult("FALSE");
+                setDoneFlag(true);
             }
 
         });
-        firebaseDelay();
-        // Need second delay because slow update of cloud function
-        firebaseDelay();
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("Database did not update correctly after trying to purchase out of stock items.", getResult(), is(PASS_FLAG));
     }
 
@@ -300,18 +315,20 @@ public class CustomerServicesTest {
                 int secInventory = secInvVal != null ? secInvVal.intValue() : null;
                 assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY) - Integer.parseInt(SECOND_ITEM_PURC)));
                 setResult(PASS_FLAG);
+                setDoneFlag(true);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 fail("The database read failed: " + databaseError.getCode());
+                setResult("FALSE");
+                setDoneFlag(true);
             }
 
         });
-        firebaseDelay();
-        // Need second delay because slow update of cloud function
-        firebaseDelay();
-        firebaseDelay();
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("Database did not update correctly after purchasing items.", getResult(), is(PASS_FLAG));
     }
 
@@ -385,6 +402,8 @@ public class CustomerServicesTest {
     @BeforeEach
     public static void resetResult() {
         result = "";
+        DONE_FLAG = false;
+        DELAY_COUNTER = 0;
     }
 
     public static void setResult(String res) {
@@ -393,6 +412,14 @@ public class CustomerServicesTest {
 
     public static String getResult() {
         return result;
+    }
+
+    private void setDoneFlag(boolean newVal) {
+        DONE_FLAG = newVal;
+    }
+
+    private boolean getDoneFlag() {
+        return DONE_FLAG;
     }
 
 }

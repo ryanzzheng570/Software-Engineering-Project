@@ -24,7 +24,9 @@ public class MerchantServicesTest {
     private static final String PASS_FLAG = "PASS";
     private static final String FAIL_FLAG = "FAIL";
 
-    private boolean DONE_FLAG = false;
+    private static boolean DONE_FLAG = false;
+    private static int DELAY_COUNTER = 0;
+    private static final int MAX_DELAYS = 3;
 
     private void setDoneFlag(boolean newVal) {
         DONE_FLAG = newVal;
@@ -280,7 +282,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -333,7 +335,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -398,7 +400,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -452,7 +454,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -496,7 +498,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -543,7 +545,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -584,7 +586,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -634,7 +636,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -680,7 +682,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -735,7 +737,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -783,7 +785,7 @@ public class MerchantServicesTest {
 
         });
 
-        while (!getDoneFlag()) {
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
 
@@ -842,6 +844,8 @@ public class MerchantServicesTest {
     @BeforeEach
     public static void resetResult() {
         result = "";
+        DONE_FLAG = false;
+        DELAY_COUNTER = 0;
     }
 
     public static void setResult(String res) {
