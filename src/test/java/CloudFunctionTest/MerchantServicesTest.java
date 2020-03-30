@@ -220,30 +220,58 @@ public class MerchantServicesTest {
 
     @Test
     public void itEditsAnItemInAShop() {
-        final String SHOP_NAME = "itEditsAItemInAShop";
-        final String MERCHANT_NAME = "aMerchantId";
-
+        final String SHOP_ID = "itEditsAItemInAShopId";
+        final String MERCHANT_ID = "aMerchantId";
+        final String GENERATED_TOKEN = "GenereatedToken";
         final String FIRST_ITEM_COST = "29.99";
         final String FIRST_ITEM_INV = "1000";
         final String FIRST_ITEM_URL = "FirstItemUrl";
         final String FIRST_ITEM_ALT_TEXT = "FirstItemAltText";
         final String FIRST_ITEM_NAME = "FirstItemName";
+        final String FIRST_ITEM_ID = "FirstItemID";
 
         final String EDIT_ITEM_NAME = "editItemName";
         final String EDIT_ITEM_COST = "1.99";
         final String EDIT_ITEM_INV = "50";
         final String EDIT_ITEM_URL = "EditItemUrl";
         final String EDIT_ITEM_ALT_TEXT = "EditItemAltText";
+        final String EDIT_ITEM_ID = "EditItemID";
 
         final String EDITED_ITEM_COST = "0.49";
         final String EDITED_ITEM_INV = "5000";
 
-        String MERCHANT_ID = createMerchant(MERCHANT_NAME, "aPassword", "a@a.com", "(xxx)xxx-xxxx");
-        String SHOP_ID = createShop(MERCHANT_ID, SHOP_NAME);
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        String FIRST_ITEM_ID = addItemToShop(SHOP_ID, FIRST_ITEM_URL, FIRST_ITEM_ALT_TEXT, FIRST_ITEM_NAME, FIRST_ITEM_COST, FIRST_ITEM_INV);
-        String EDIT_ITEM_ID = addItemToShop(SHOP_ID, EDIT_ITEM_URL, EDIT_ITEM_ALT_TEXT, EDIT_ITEM_NAME, EDIT_ITEM_COST, EDIT_ITEM_INV);
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
 
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", FIRST_ITEM_NAME);
+        map.put("cost", FIRST_ITEM_COST);
+        map.put("inventory", FIRST_ITEM_INV);
+        map.put("altText", FIRST_ITEM_ALT_TEXT);
+        map.put("url", FIRST_ITEM_URL);
+        firstItemRef.updateChildrenAsync(map);
+
+        DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + EDIT_ITEM_ID);
+        Map<String, Object> secMap = new HashMap<>();
+        secMap.put("name", EDIT_ITEM_NAME);
+        secMap.put("cost", EDIT_ITEM_COST);
+        secMap.put("inventory", EDIT_ITEM_INV);
+        secMap.put("url", EDIT_ITEM_URL);
+        secMap.put("altText", EDIT_ITEM_ALT_TEXT);
+        secItemRef.updateChildrenAsync(secMap);
+        firebaseDelay();
         String temp = editItemInShop(SHOP_ID, EDIT_ITEM_ID, MERCHANT_ID, EDIT_ITEM_URL, EDIT_ITEM_ALT_TEXT, EDIT_ITEM_NAME, EDITED_ITEM_COST, EDITED_ITEM_INV);
 
         setDoneFlag(false);
@@ -253,22 +281,18 @@ public class MerchantServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> curStoreData = (Map<String, Object>) ((Map<String, Object>) dataSnapshot.getValue()).get("item");
-
                 Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
-                Long invVal = (Long) firstItemData.get("inventory");
-                int inv = invVal != null ? invVal.intValue() : null;
-                toVerify.put("Incorrect inventory for first item", new Object[]{inv, Integer.parseInt(FIRST_ITEM_INV)});
+                String invVal = (String) firstItemData.get("inventory");
+                toVerify.put("Incorrect inventory for first item", new Object[]{invVal, FIRST_ITEM_INV});
                 String cost = (String) firstItemData.get("cost");
                 toVerify.put("Incorrect cost for first item", new Object[]{cost, FIRST_ITEM_COST});
 
 
                 Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(EDIT_ITEM_ID);
-                invVal = (Long) secondItemData.get("inventory");
-                int inventory = invVal != null ? invVal.intValue() : null;
-                toVerify.put("Incorrect inventory for edited item", new Object[]{inventory, Integer.parseInt(EDITED_ITEM_INV)});
+                invVal = (String) secondItemData.get("inventory");
+                toVerify.put("Incorrect inventory for edited item", new Object[]{invVal, EDITED_ITEM_INV});
                 String secondInvVal = (String) secondItemData.get("cost");
                 toVerify.put("Incorrect cost for edited item", new Object[]{secondInvVal, EDITED_ITEM_COST});
-
                 setResult(PASS_FLAG);
                 setDoneFlag(true);
             }
@@ -295,21 +319,61 @@ public class MerchantServicesTest {
             assertEquals(reason, val1, val2);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
     }
 
     @Test
     public void itRemovesAnItemFromAShop() {
-        final String SHOP_NAME = "itRemovesAItemFromAShopID";
+        final String SHOP_ID = "itRemovesAItemFromAShopID";
+        final String MERCHANT_ID = "aMerchantId";
+        final String GENERATED_TOKEN = "GenereatedToken";
+        final String FIRST_ITEM_COST = "29.99";
+        final String FIRST_ITEM_INV = "1000";
+        final String FIRST_ITEM_NAME = "FirstItemName";
+        final String FIRST_ITEM_ID = "FirstItemID";
+        final String REMOVE_ITEM_COST = "9.99";
+        final String REMOVE_ITEM_INV = "5000";
+        final String REMOVE_ITEM_NAME = "REMOVEItemName";
+        final String REMOVE_ITEM_ID = "REMOVEItemID";
+        final String THIRD_ITEM_COST = "0.99";
+        final String THIRD_ITEM_INV = "5";
+        final String THIRD_ITEM_NAME = "THIRDItemName";
+        final String THIRD_ITEM_ID = "THIRDItemID";
 
-        String MERCHANT_ID = createMerchant("aUsername", "aPassword", "anEmail", "aPhoneNumber");
-        String SHOP_ID = createShop(MERCHANT_ID, SHOP_NAME);
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        System.out.println(SHOP_ID);
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
 
-        String FIRST_ITEM_ID = addItemToShop(SHOP_ID, "aURL1", "someAltText1", "anItemName1", "1.00", "1");
-        String REMOVE_ITEM_ID = addItemToShop(SHOP_ID, "aURL2", "someAltText2", "anItemName2", "2.00", "2");
-        String THIRD_ITEM_ID = addItemToShop(SHOP_ID, "aURL3", "someAltText3", "anItemName3", "3.00", "3");
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", FIRST_ITEM_NAME);
+        map.put("cost", FIRST_ITEM_COST);
+        map.put("inventory", FIRST_ITEM_INV);
+        firstItemRef.updateChildrenAsync(map);
+
+        DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + REMOVE_ITEM_ID);
+        Map<String, Object> secMap = new HashMap<>();
+        secMap.put("name", REMOVE_ITEM_NAME);
+        secMap.put("cost", REMOVE_ITEM_COST);
+        secMap.put("inventory", REMOVE_ITEM_INV);
+        secItemRef.updateChildrenAsync(secMap);
+
+        DatabaseReference thirdtemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + THIRD_ITEM_ID);
+        Map<String, Object> thirdMap = new HashMap<>();
+        thirdMap.put("name", THIRD_ITEM_NAME);
+        thirdMap.put("cost", THIRD_ITEM_COST);
+        thirdMap.put("inventory", THIRD_ITEM_INV);
+        thirdtemRef.updateChildrenAsync(thirdMap);
+        firebaseDelay();
 
         String temp = removeItemFromShop(SHOP_ID, REMOVE_ITEM_ID);
 
@@ -350,16 +414,29 @@ public class MerchantServicesTest {
 
     @Test
     public void itAddsAnItemToAShop() {
-        final String NAME = "itAddsAItemToAShop";
+        final String MERCHANT_ID = "aMerchantID";
+        final String SHOP_ID = "itAddsAnItemToAShopID";
         final String URL = "http://google.ca";
         final String ALT_TEXT = "Google";
         final String ITEM_NAME = "anItemName";
         final String COST = "5.99";
         final String INVENTORY = "20";
         final int INT_INV = 20;
+        final String GENERATED_TOKEN = "GenerateToken";
 
-        String MERCHANT_ID = createMerchant("aUsername", "aPassword", "anEmail", "aPhoneNumber");
-        String SHOP_ID = createShop(MERCHANT_ID, NAME);
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
+
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
 
         String ITEM_ID = addItemToShop(SHOP_ID, URL, ALT_TEXT, ITEM_NAME, COST, INVENTORY);
 
@@ -418,17 +495,42 @@ public class MerchantServicesTest {
 
     @Test
     public void itRemovesATagFromAShop() {
-        final String NAME = "itRemovesATagFromAShop";
+        final String SHOP_ID = "itRemovesATagFromAShopID";
         final String FIRST_TAG_NAME = "firstTag";
+        final String FIRST_TAG_ID = "firstTagID";
         final String REMOVE_TAG_NAME = "removeTag";
+        final String REMOVE_TAG_ID = "removeTagID";
         final String THIRD_TAG_NAME = "thirdTag";
+        final String THIRD_TAG_ID = "thirdTagID";
+        final String MERCHANT_ID = "aMerchantID";
+        final String GENERATED_TOKEN = "GeneratedToken";
 
-        String MERCHANT_ID = createMerchant("aUsername", "aPassword", "anEmail", "aPhoneNumber");
-        String SHOP_ID = createShop(MERCHANT_ID, NAME);
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        String FIRST_TAG_ID = addTagToShop(SHOP_ID, FIRST_TAG_NAME);
-        String REMOVE_TAG_ID = addTagToShop(SHOP_ID, REMOVE_TAG_NAME);
-        String THIRD_TAG_ID = addTagToShop(SHOP_ID, THIRD_TAG_NAME);
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
+
+        DatabaseReference tagRel = testDbInstance.getReference("test/store/" + SHOP_ID + "/tag");
+        Map<String, Object> tag1Map = new HashMap<>();
+        tag1Map.put(FIRST_TAG_ID, FIRST_TAG_NAME);
+        tagRel.updateChildrenAsync(tag1Map);
+        Map<String, Object> tag2Map = new HashMap<>();
+        tag2Map.put(REMOVE_TAG_ID, REMOVE_TAG_NAME);
+        tagRel.updateChildrenAsync(tag2Map);
+        Map<String, Object> tag3Map = new HashMap<>();
+        tag3Map.put(THIRD_TAG_ID, THIRD_TAG_NAME);
+        tagRel.updateChildrenAsync(tag3Map);
+
+        firebaseDelay();
 
         String temp = removeTagFromShop(SHOP_ID, REMOVE_TAG_ID);
 
@@ -469,12 +571,24 @@ public class MerchantServicesTest {
 
     @Test
     public void itAddsATagToAShop() {
-        final String NAME = "itAddsATagToAShop";
+        final String SHOP_ID = "itAddsATagToAShopID";
         final String TAG_NAME = "aTagName";
+        final String GENERATED_TOKEN = "GeneratedTojen";
+        final String MERCHANT_ID = "aMerchantID";
 
-        String MERCHANT_ID = createMerchant("aUsername", "aPassword", "a@a.com", "1234567890");
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        String SHOP_ID = createShop(MERCHANT_ID, NAME);
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
 
         String TAG_ID = addTagToShop(SHOP_ID, TAG_NAME);
 
@@ -517,10 +631,17 @@ public class MerchantServicesTest {
     @Test
     public void itCreatesAShop() {
         final String USERNAME = "aUsername";
-
-        String MERCHANT_ID = createMerchant(USERNAME, "aPassword", "a@a.com", "1234567890");
-
+        final String MERCHANT_ID = "aMerchantID";
         final String SHOP_NAME = "itCreatesAShop";
+
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         String SHOP_ID = createShop(MERCHANT_ID, SHOP_NAME);
 
@@ -597,19 +718,52 @@ public class MerchantServicesTest {
 
     @Test
     public void itDeletesAShop() {
-        final String FIRST_SHOP_NAME = "firstShopID";
-        final String DELETE_SHOP_NAME = "deleteShopID";
-        final String THIRD_SHOP_NAME = "thirdShopID";
-
+        final String FIRST_SHOP_ID = "firstShopID";
+        final String FIRST_SHOP_NAME = "firstShop";
+        final String DELETE_SHOP_NAME = "deleteShop";
+        final String DELETE_SHOP_ID = "deleteShopID";
+        final String THIRD_SHOP_ID = "thirdShopID";
+        final String THIRD_SHOP_NAME = "thirdShop";
+        final String MERCHANT_ID = "aMerchantID";
         final String USERNAME = "aUsername";
+        final String FIRST_SHOP_GENERATED_TOKEN = "TOK1";
+        final String DELETE_SHOP_GENERATED_TOKEN = "TOK2";
+        final String THIRD_SHOP_GENERATED_TOKEN = "TOK3";
 
-        String MERCHANT_ID = createMerchant(USERNAME, "aPassword", "a@a.com", "1234567890");
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        String FIRST_SHOP_ID = createShop(MERCHANT_ID, FIRST_SHOP_NAME);
+        DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
+        Map<String, Object> shop1Map = new HashMap<>();
+        shop1Map.put("shopName", FIRST_SHOP_NAME);
+        shop1Ref.updateChildrenAsync(shop1Map);
 
-        String DELETE_SHOP_ID = createShop(MERCHANT_ID, DELETE_SHOP_NAME);
+        DatabaseReference shop2Ref = testDbInstance.getReference("test/store/" + DELETE_SHOP_ID);
+        Map<String, Object> shop2Map = new HashMap<>();
+        shop2Map.put("shopName", DELETE_SHOP_NAME);
+        shop2Ref.updateChildrenAsync(shop2Map);
 
-        String THIRD_SHOP_ID = createShop(MERCHANT_ID, THIRD_SHOP_NAME);
+        DatabaseReference shop3Ref = testDbInstance.getReference("test/store/" + THIRD_SHOP_ID);
+        Map<String, Object> shop3Map = new HashMap<>();
+        shop3Map.put("shopName", THIRD_SHOP_NAME);
+        shop3Ref.updateChildrenAsync(shop3Map);
+
+        firebaseDelay();
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> rel1Map = new HashMap<>();
+        rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
+        merchRel.updateChildrenAsync(rel1Map);
+        Map<String, Object> rel2Map = new HashMap<>();
+        rel2Map.put(DELETE_SHOP_GENERATED_TOKEN, DELETE_SHOP_ID);
+        merchRel.updateChildrenAsync(rel2Map);
+        Map<String, Object> rel3Map = new HashMap<>();
+        rel3Map.put(THIRD_SHOP_GENERATED_TOKEN, THIRD_SHOP_ID);
+        merchRel.updateChildrenAsync(rel3Map);
 
         deleteShop(DELETE_SHOP_ID, MERCHANT_ID);
 
@@ -700,17 +854,30 @@ public class MerchantServicesTest {
 
     @Test
     public void itChangesAShopName() {
+        final String SHOP_ID = "itChangesAShopNameID";
         final String ORIGINAL_NAME = "itChangesAShopName";
         final String NEW_NAME = "aBetterName";
+        final String MERCHANT_ID = "aMerchantID";
+        final String GENERATED_TOKEN = "GeneratedToken";
 
-        final String USERNAME = "aUsername";
-        String password = "aPassword";
-        String email = "a@a.com";
-        String phoneNum = "1234567890";
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
 
-        String MERCHANT_ID = createMerchant(USERNAME, password, email, phoneNum);
+        DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + SHOP_ID);
+        Map<String, Object> shop1Map = new HashMap<>();
+        shop1Map.put("shopName", ORIGINAL_NAME);
+        shop1Ref.updateChildrenAsync(shop1Map);
 
-        String SHOP_ID = createShop(MERCHANT_ID, ORIGINAL_NAME);
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> rel1Map = new HashMap<>();
+        rel1Map.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(rel1Map);
+        firebaseDelay();
 
         String NAME_CHANGE_ID = changeShopName(SHOP_ID, NEW_NAME);
 
@@ -802,15 +969,22 @@ public class MerchantServicesTest {
     }
 
     @Test
-    public void itLoginsCorrectly() {
+    public void itLogsInCorrectly() {
         final String USERNAME = "aUsername";
         final String PASSWORD = "aPassword";
         String email = "a@a.com";
         String phoneNum = "1234567890";
-        String MERCHANT_ID = createMerchant(USERNAME, PASSWORD, email, phoneNum);
 
-        final String SHOP_NAME = "itCreatesAShop";
-        String SHOP_ID = createShop(MERCHANT_ID, SHOP_NAME);
+        final String MERCHANT_ID = "aMerchantID";
+
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", email);
+        merchMap.put("password", PASSWORD);
+        merchMap.put("phoneNum", phoneNum);
+        merchMap.put("userName", USERNAME);
+        merchantRef.updateChildrenAsync(merchMap);
+
 
         String MERCHANT_LOGIN_ID = merchantLogin(USERNAME, PASSWORD);
 
