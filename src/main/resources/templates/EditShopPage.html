@@ -96,6 +96,7 @@
             </table>
         </div>
 
+        <p><strong>Add a new Item:</strong></p>
         <form action="#" th:action="@{/addItem}" th:object="${item}" method="post" id="addItemForm">
             <input type="hidden" th:value="${shop.id}" name="shopId"/>
 
