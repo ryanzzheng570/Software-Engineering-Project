@@ -15,13 +15,19 @@ import java.util.Optional;
 public class ShopController {
     @Autowired
     private MerchantController merchCont;
+    private static final String PRODUCTION_MODE = "false";
 
     @GetMapping("/goToShopCustomerView")
-    public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
-        FirebaseController.loadDbInfo(false);
+    public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, @RequestParam(value = "testMode", defaultValue = "false") String testMode,
+                                   Model model) {
+        if (testMode.equals(PRODUCTION_MODE)) {
+            FirebaseController.loadDbInfo(true);
+        } else {
+            FirebaseController.loadDbInfo(false);
+        }
         boolean isLoggedIn = false;
         String customerID = "";
-        if(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
+        if (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
             isLoggedIn = true;
             customerID = FirebaseController.getCurrUser().getId();
         }
@@ -39,7 +45,7 @@ public class ShopController {
 
         String username = "";
         boolean isCustomer = false;
-        if(FirebaseController.getCurrUser() != null) {
+        if (FirebaseController.getCurrUser() != null) {
             username = FirebaseController.getCurrUser().getUserName();
             isCustomer = FirebaseController.isCurrUserCustomer();
         }
@@ -50,9 +56,10 @@ public class ShopController {
     }
 
     @PostMapping("/updateShopId")
-    public @ResponseBody Shop changeShopId(@RequestParam(value = "oldId") String oldId,
-                                           @RequestParam(value = "newId") String newId,
-                                           Model model) {
+    public @ResponseBody
+    Shop changeShopId(@RequestParam(value = "oldId") String oldId,
+                      @RequestParam(value = "newId") String newId,
+                      Model model) {
         Shop checkShop = null;
         try {
             checkShop = FirebaseController.getShopWithId(oldId);
@@ -66,9 +73,10 @@ public class ShopController {
     }
 
     @PostMapping("/changeShopName")
-    public @ResponseBody Shop changeShopName(@RequestParam(value = "shopId") String shopId,
-                                 @RequestParam(value = "shopName") String newName,
-                                 Model model) {
+    public @ResponseBody
+    Shop changeShopName(@RequestParam(value = "shopId") String shopId,
+                        @RequestParam(value = "shopName") String newName,
+                        Model model) {
         Shop checkShop = null;
         try {
             checkShop = FirebaseController.getShopWithId(shopId);
@@ -82,9 +90,10 @@ public class ShopController {
     }
 
     @PostMapping("/removeTag")
-    public @ResponseBody Shop removeTag(@RequestParam(value = "shopId") String shopId,
-                                        @RequestParam(value = "tagId") String tagId,
-                                        Model model) {
+    public @ResponseBody
+    Shop removeTag(@RequestParam(value = "shopId") String shopId,
+                   @RequestParam(value = "tagId") String tagId,
+                   Model model) {
         Shop checkShop = null;
         try {
             checkShop = FirebaseController.getShopWithId(shopId);
@@ -98,10 +107,11 @@ public class ShopController {
     }
 
     @PostMapping("/addTag")
-    public @ResponseBody Tag addTag(@RequestParam(value = "shopId") String shopId,
-                                     @RequestParam(value = "tagName") String tagName,
-                                    @RequestParam(value = "setId") String tagId,
-                                     Model model) {
+    public @ResponseBody
+    Tag addTag(@RequestParam(value = "shopId") String shopId,
+               @RequestParam(value = "tagName") String tagName,
+               @RequestParam(value = "setId") String tagId,
+               Model model) {
         Shop checkShop = null;
         try {
             checkShop = FirebaseController.getShopWithId(shopId);
@@ -117,10 +127,16 @@ public class ShopController {
     }
 
     @PostMapping("/addShop")
-    public @ResponseBody Shop addShop(@RequestParam(value = "shopName") String name,
-                                      @RequestParam(value = "setId") String newId,
-                                      Model model) {
-        FirebaseController.loadDbInfo(false);
+    public @ResponseBody
+    Shop addShop(@RequestParam(value = "shopName") String name,
+                 @RequestParam(value = "setId") String newId,
+                 @RequestParam(value = "testMode", defaultValue = "false") String testMode,
+                 Model model) {
+        if (testMode.equals(PRODUCTION_MODE)) {
+            FirebaseController.loadDbInfo(true);
+        } else {
+            FirebaseController.loadDbInfo(false);
+        }
         Shop newShop = new Shop(name, Optional.empty());
         newShop.setId(newId);
 
@@ -132,7 +148,7 @@ public class ShopController {
     }
 
     @GetMapping("/goToEditShopPage")
-    public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model){
+    public String displayYourShop(@RequestParam(value = "shopId") String shopId, Model model) {
         if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer)) {
             return "MerchantLoginPage";
         } else {

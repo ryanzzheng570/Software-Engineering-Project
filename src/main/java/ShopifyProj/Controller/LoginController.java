@@ -3,23 +3,21 @@ package ShopifyProj.Controller;
 import ShopifyProj.Model.Customer;
 import ShopifyProj.Model.Merchant;
 import ShopifyProj.Model.Shop;
-import ShopifyProj.Model.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class LoginController {
+    private static final String PRODUCTION_MODE = "false";
+
     @GetMapping("/login")
     public String viewLoginPage(Model model) {
         String username = "";
         boolean isCustomer = false;
-        if(FirebaseController.getCurrUser() != null) {
+        if (FirebaseController.getCurrUser() != null) {
             username = FirebaseController.getCurrUser().getUserName();
             isCustomer = FirebaseController.isCurrUserCustomer();
         }
@@ -33,7 +31,7 @@ public class LoginController {
     public String viewMerchantLogin(Model model) {
         String username = "";
         boolean isCustomer = false;
-        if(FirebaseController.getCurrUser() != null) {
+        if (FirebaseController.getCurrUser() != null) {
             username = FirebaseController.getCurrUser().getUserName();
             isCustomer = FirebaseController.isCurrUserCustomer();
         }
@@ -46,17 +44,23 @@ public class LoginController {
     }
 
     @GetMapping("/loginAsCustomer")
-    public String viewCustomerLogin(Model model) {
+    public String viewCustomerLogin(@RequestParam(value = "testMode", defaultValue = "false") String testMode,
+                                    Model model) {
+        if (testMode.equals(PRODUCTION_MODE)) {
+            FirebaseController.loadDbInfo(true);
+        } else {
+            FirebaseController.loadDbInfo(false);
+        }
+
         String username = "";
         boolean isCustomer = false;
-        if(FirebaseController.getCurrUser() != null) {
+        if (FirebaseController.getCurrUser() != null) {
             username = FirebaseController.getCurrUser().getUserName();
             isCustomer = FirebaseController.isCurrUserCustomer();
         }
         model.addAttribute("username", username);
         model.addAttribute("isCustomer", isCustomer);
 
-        FirebaseController.loadDbInfo(false);
 
         model.addAttribute("customer", new Customer());
         model.addAttribute("isLoginFailed", false);
@@ -64,11 +68,16 @@ public class LoginController {
     }
 
     @PostMapping("/loginAsMerchant")
-    public @ResponseBody Merchant signInAsMerchant(@RequestParam(value = "id") String userId,
-                                                   @RequestParam(value = "userName") String name,
-                                                   @RequestParam(value = "shops[]") Optional<String[]> shopIds,
-                                                   Model model) throws Exception {
-        FirebaseController.loadDbInfo(false);
+    public @ResponseBody
+    Merchant signInAsMerchant(@RequestParam(value = "id") String userId,
+                              @RequestParam(value = "userName") String name,
+                              @RequestParam(value = "shops[]") Optional<String[]> shopIds,
+                              @RequestParam(value = "testMode", defaultValue = "false") String testMode) throws Exception {
+        if (testMode.equals(PRODUCTION_MODE)) {
+            FirebaseController.loadDbInfo(true);
+        } else {
+            FirebaseController.loadDbInfo(false);
+        }
 
         Merchant toRet = new Merchant(userId);
 
