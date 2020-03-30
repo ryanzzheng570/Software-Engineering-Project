@@ -13,7 +13,7 @@ $(document).ready(function () {
             if (data.length == 0) {
                 $("#results").append('<p>Sorry, no shops were found</p>');
             } else {
-                $("#results").append('<table id="results-table"><tr><th>Shop ID</th><th>Shop Name</th><th>Shop Tags</th><th></th></tr>');
+                $("#results").append('<table id="results-table"><tr><th>Shop Name</th><th>Shop Tags</th><th></th></tr>');
                 for (let i = 0; i < data.length; i++) {
                     let tags = "[";
                     for (let j = 0; j < data[i].tags.length; j++) {
@@ -35,7 +35,6 @@ $(document).ready(function () {
                     button += "</input>";
 
                     let tr = "<tr>";
-                    tr += "<td style=\"text-align:center\">" + data[i].id + "</td>";
                     tr += "<td style=\"text-align:center\">" + data[i].shopName + "</td>";
                     tr += "<td style=\"text-align:center\">" + tags + "</td>";
                     tr += "<td style=\"text-align:center\">" + button + "</td></tr>";

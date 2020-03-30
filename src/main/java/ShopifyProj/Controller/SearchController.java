@@ -11,11 +11,13 @@ import java.util.ArrayList;
 
 @Controller
 public class SearchController {
+    private static final String PRODUCTION_MODE = "false";
+
     @GetMapping("/search")
     public String viewSearchPage(Model model) {
         String username = "";
         boolean isCustomer = false;
-        if(FirebaseController.getCurrUser() != null) {
+        if (FirebaseController.getCurrUser() != null) {
             username = FirebaseController.getCurrUser().getUserName();
             isCustomer = FirebaseController.isCurrUserCustomer();
         }
@@ -25,8 +27,13 @@ public class SearchController {
     }
 
     @PostMapping("/search")
-    public @ResponseBody ArrayList<Shop> search(@RequestParam(value = "searchField") String query) {
-        FirebaseController.loadDbInfo(false);
+    public @ResponseBody
+    ArrayList<Shop> search(@RequestParam(value = "searchField") String query, @RequestParam(value = "testMode", defaultValue = "false") String testMode) {
+        if (testMode.equals(PRODUCTION_MODE)) {
+            FirebaseController.loadDbInfo(true);
+        } else {
+            FirebaseController.loadDbInfo(false);
+        }
 
         ArrayList<Shop> matchingShops = new ArrayList<>();
 
@@ -37,7 +44,7 @@ public class SearchController {
 
             Set<Tag> tags = shop.getTags();
             for (Tag t : tags) {
-                if(t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
+                if (t.getTagName().equalsIgnoreCase(lowercaseQuery) || t.getTagName().toLowerCase().contains(lowercaseQuery) && isAdded == false) {
                     matchingShops.add(shop);
                     isAdded = true;
                 }
