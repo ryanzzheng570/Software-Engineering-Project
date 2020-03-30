@@ -23,13 +23,38 @@ function addShop(shopName, merchantId, mode = '') {
         return "Sorry, invalid input was entered!";
     }
 
-    var storeKey = database.ref(mode + '/store/').push({
-        shopName: shopName
-    }).key;
+    var shopNameToUse = shopName.trim();
 
-    database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
-
-    return storeKey;
+    const returnVal = database.ref(mode + "/store").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const storeData = snapshot.val();
+            for (var storeID in storeData) {
+                if (storeData[storeID].shopName === shopNameToUse) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that store name is already taken."
+            };
+        } else {
+            const storeKey = database.ref(mode + '/store/').push({
+                shopName: shopName
+            }).key;
+            database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
+            return {
+                exists: false,
+                res: storeKey
+            };
+        }
+    });
+    return returnVal;
 }
 
 function deleteShop(shopID, merchantId, mode = '') {

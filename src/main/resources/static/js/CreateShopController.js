@@ -24,12 +24,15 @@ function createShopFormHandler(e) {
     } else {
         showLoading();
         saveStoreToDb(infoJson).then(function (data) {
-            console.log(data);
-            return $.ajax({
-                url: "/addShop?" + $(createShopFormId).serialize() + "&setId=" + data,
-                type: "POST",
-                dataType: "json"
-            });
+            if (data.exists) {
+                alert(data.res);
+            } else {
+                return $.ajax({
+                    url: "/addShop?" + $(createShopFormId).serialize() + "&setId=" + data.res,
+                    type: "POST",
+                    dataType: "json"
+                });
+            }
         }).then(function (data) {
             hideLoading();
             window.location.href = '/goToEditShopPage?shopId=' + data.id;
