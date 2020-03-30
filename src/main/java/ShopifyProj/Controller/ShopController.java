@@ -18,7 +18,7 @@ public class ShopController {
 
     @GetMapping("/goToShopCustomerView")
     public String viewShopPageById(@RequestParam(value = "shopId") String aShopId, Model model) {
-        FirebaseController.loadDbInfo(false);
+        FirebaseController.loadDbInfo(true);
         boolean isLoggedIn = false;
         String customerID = "";
         if(FirebaseController.getCurrUser() != null && FirebaseController.getCurrUser() instanceof Customer) {
