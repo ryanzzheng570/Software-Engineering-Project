@@ -28,7 +28,7 @@ public class ShopAndSearchIntegrationTest {
     @Test
     public void searchShopNoMatch() throws Exception {
         String searchField = "testShop";
-        String requestStr = String.format("/search?searchField=%s", searchField);
+        String requestStr = String.format("/search?searchField=%s&testMpde=true", searchField);
 
         this.mockMvc.perform(post(requestStr)).andDo(print())
                 .andExpect(status().isOk());
@@ -45,7 +45,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Search for the shop by name
         String searchField = "TEST_SHOP";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -59,7 +59,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP123456";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
         this.mockMvc.perform(post(requestStr));
 
@@ -70,7 +70,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Search for the shop by partial name
         String searchField = "234";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -84,7 +84,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP_BY_TAG";
         String tag1 = "TAG_1";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
 
         this.mockMvc.perform(post(requestStr));
@@ -96,7 +96,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Search for the shop by name
         String searchField = "TAG_1";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -110,7 +110,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "TEST_SHOP_PARTIAL_TAG";
         String tag1 = "TAG_123456";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
 
         this.mockMvc.perform(post(requestStr));
@@ -122,7 +122,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Search for the shop by name
         String searchField = "234";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -136,7 +136,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "BookShop_UPPERCASE";
         String tag1 = "test";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
 
         this.mockMvc.perform(post(requestStr));
@@ -148,7 +148,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Shop 1 contains name with book and tag with book
         String searchField = "bookshop";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -162,7 +162,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "BookShop_UPPERCASE_TAG";
         String tag1 = "TEST";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
 
         this.mockMvc.perform(post(requestStr));
@@ -174,7 +174,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Shop 1 contains name with book and tag with book
         String searchField = "test";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
@@ -188,7 +188,7 @@ public class ShopAndSearchIntegrationTest {
         String name = "book";
         String tag1 = "test";
 
-        String requestStr = String.format("/addShop?shopName=%s&setId=%s", name, FirebaseController.getCounterAndIterate());
+        String requestStr = String.format("/addShop?shopName=%s&setId=%s&testMode=true", name, FirebaseController.getCounterAndIterate());
         FirebaseController.setCurrUser(new Merchant());
 
         this.mockMvc.perform(post(requestStr));
@@ -200,7 +200,7 @@ public class ShopAndSearchIntegrationTest {
 
         //Shop 1 contains name with book and tag with book
         String searchField = "BoOk";
-        String requestStr2 = String.format("/search?searchField=%s", searchField);
+        String requestStr2 = String.format("/search?searchField=%s&testMode=true", searchField);
 
         this.mockMvc.perform(post(requestStr2)).andDo(print())
                 .andExpect(status().isOk())
