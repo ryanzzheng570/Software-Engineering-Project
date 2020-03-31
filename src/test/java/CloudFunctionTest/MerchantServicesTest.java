@@ -219,6 +219,74 @@ public class MerchantServicesTest {
     }
 
     @Test
+    public void itDoesntEditShopWithExistingName() {
+        final String FIRST_SHOP_ID = "firstShopID";
+        final String FIRST_SHOP_NAME = "firstShop";
+        final String MERCHANT_ID = "aMerchantID";
+        final String FIRST_SHOP_GENERATED_TOKEN = "TOK1";
+        final String EXISTING_SHOP_NAME = "iExist";
+        final String EXISTING_SHOP_ID = "iExistID";
+
+
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
+
+        DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
+        Map<String, Object> shop1Map = new HashMap<>();
+        shop1Map.put("shopName", FIRST_SHOP_NAME);
+        shop1Ref.updateChildrenAsync(shop1Map);
+        DatabaseReference shop2Ref = testDbInstance.getReference("test/store/" + EXISTING_SHOP_ID);
+        Map<String, Object> shop2Map = new HashMap<>();
+        shop2Map.put("shopName", EXISTING_SHOP_NAME);
+        shop2Ref.updateChildrenAsync(shop2Map);
+        firebaseDelay();
+
+
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> rel1Map = new HashMap<>();
+        rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
+        merchRel.updateChildrenAsync(rel1Map);
+        firebaseDelay();
+
+
+        changeShopName(FIRST_SHOP_ID, EXISTING_SHOP_NAME);
+
+        testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot storeData : dataSnapshot.getChildren()) {
+                    String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
+                    if(FIRST_SHOP_NAME.equals(currName)) {
+                        String key = storeData.getKey();
+                        assertThat("This shop should not have been edited.",storeData.getKey(), is(FIRST_SHOP_ID));
+                        setResult(PASS_FLAG);
+                    }
+                }
+                setDoneFlag(true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+                setResult(FAIL_FLAG);
+                setDoneFlag(true);
+            }
+
+        });
+
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
+
+        assertEquals("Incorrect store ID, meaning something went wrong when trying to edit the shop.", getResult(), PASS_FLAG);
+    }
+
+    @Test
     public void itDoesntCreateShopWithExistingName() {
         final String FIRST_SHOP_ID = "firstShopID";
         final String FIRST_SHOP_NAME = "firstShop";
