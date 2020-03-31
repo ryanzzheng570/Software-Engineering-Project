@@ -137,7 +137,31 @@ function addItemToShop(shopID, itemInfo, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
+    const returnVal = database.ref(mode + "/store/" + shopID + "/item").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const itemData = snapshot.val();
+            for (var itemID in itemData) {
+                if (itemData[itemID].name === itemInfo.name) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that item name is already taken."
+            };
+        } else {
+            const key = database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
+            return {
+                exists: false,
+                res: key
+            };
+        }
+    });
+    return returnVal;
 }
 
 function removeItemFromShop(shopID, itemID, mode = '') {
@@ -408,11 +432,12 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 });
 
 exports.addItem = functions.https.onCall((data, context) => {
-    var inventory = parseInt(data.inventory);
+    const inventory = parseInt(data.inventory);
+    const name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
-        name: data.itemName,
+        name: name,
         cost: data.cost,
         inventory: inventory
     };
@@ -421,10 +446,11 @@ exports.addItem = functions.https.onCall((data, context) => {
 exports.testAddItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
+        const name = request.body.itemName.trim();
         const itemData = {
             url: request.body.url,
             altText: request.body.altText,
-            name: request.body.itemName,
+            name: name,
             cost: request.body.cost,
             inventory: numInventory
         };

@@ -400,7 +400,7 @@ public class CustomerServicesTest {
     }
 
     @BeforeEach
-    public static void resetResult() {
+    public void resetResult() {
         result = "";
         DONE_FLAG = false;
         DELAY_COUNTER = 0;

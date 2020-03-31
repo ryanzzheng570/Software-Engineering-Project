@@ -3,15 +3,14 @@ package CloudFunctionTest;
 import ShopifyProj.Controller.CloudTestController;
 import ShopifyProj.Controller.FirebaseController;
 
-import ShopifyProj.Model.Shop;
 import com.google.firebase.database.*;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 import java.util.*;
@@ -219,6 +218,81 @@ public class MerchantServicesTest {
     }
 
     @Test
+    public void itDoesntAddItemToShopWithExistingName() {
+
+        final String MERCHANT_ID = "aMerchantID";
+        final String ITEM_ID = "aItemID";
+        final String SHOP_ID = "itDoesntAddItemToShopWithExistingNameID";
+        final String URL = "http://google.ca";
+        final String ALT_TEXT = "Google";
+        final String ITEM_NAME = "anItemName";
+        final String COST = "5.99";
+        final String INVENTORY = "20";
+        final String GENERATED_TOKEN = "GenerateToken";
+        final String NEW_URL = "http://apple.ca";
+        final String NEW_ALT_TEXT = "Apple";
+        final String NEW_COST = "5.99";
+        final String NEW_INVENTORY = "20";
+
+        DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
+        Map<String, Object> merchMap = new HashMap<>();
+        merchMap.put("email", "a@a.com");
+        merchMap.put("password", "aPassword");
+        merchMap.put("phoneNum", "(xxx)xxx-xxxx");
+        merchMap.put("userName", "aUsername");
+        merchantRef.updateChildrenAsync(merchMap);
+
+        DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + ITEM_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", ITEM_NAME);
+        map.put("cost", COST);
+        map.put("inventory", INVENTORY);
+        map.put("altText", ALT_TEXT);
+        map.put("url", URL);
+        firstItemRef.updateChildrenAsync(map);
+
+        DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
+        Map<String, Object> relMap = new HashMap<>();
+        relMap.put(GENERATED_TOKEN, SHOP_ID);
+        merchRel.updateChildrenAsync(relMap);
+
+        firebaseDelay();
+        addItemToShop(SHOP_ID, NEW_URL, NEW_ALT_TEXT, ITEM_NAME, NEW_COST, NEW_INVENTORY);
+
+        firebaseDelay();
+        testDbInstance.getReference("test/store/" + SHOP_ID + "/item/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot itemID : dataSnapshot.getChildren()) {
+                        Map<String, Object> currItemData = (Map<String, Object>) itemID.getValue();
+                        String itemName = (String) currItemData.get("name");
+                        if (ITEM_NAME.equals(itemName)) {
+                            setResult(itemID.getKey());
+                            return;
+                        }
+                    }
+                }
+                setDoneFlag(true);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+                setResult(FAIL_FLAG);
+                setDoneFlag(true);
+            }
+
+        });
+
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
+
+        assertEquals( getResult(), ITEM_ID,"There was an error trying to add an item with the same name.");
+    }
+
+    @Test
     public void itDoesntEditShopWithExistingName() {
         final String FIRST_SHOP_ID = "firstShopID";
         final String FIRST_SHOP_NAME = "firstShop";
@@ -261,10 +335,9 @@ public class MerchantServicesTest {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
-                    if(FIRST_SHOP_NAME.equals(currName)) {
-                        String key = storeData.getKey();
-                        assertThat("This shop should not have been edited.",storeData.getKey(), is(FIRST_SHOP_ID));
-                        setResult(PASS_FLAG);
+                    if (FIRST_SHOP_NAME.equals(currName)) {
+                        setResult(storeData.getKey());
+                        return;
                     }
                 }
                 setDoneFlag(true);
@@ -283,14 +356,14 @@ public class MerchantServicesTest {
             firebaseDelay();
         }
 
-        assertEquals("Incorrect store ID, meaning something went wrong when trying to edit the shop.", getResult(), PASS_FLAG);
+        assertEquals( getResult(), FIRST_SHOP_ID,"Incorrect store ID, meaning something went wrong when trying to edit the shop.");
     }
 
     @Test
     public void itDoesntCreateShopWithExistingName() {
-        final String FIRST_SHOP_ID = "firstShopID";
-        final String FIRST_SHOP_NAME = "firstShop";
-        final String MERCHANT_ID = "aMerchantID";
+        final String FIRST_SHOP_ID = "itDoesntCreateShopWithExistingNamefirstShopID";
+        final String FIRST_SHOP_NAME = "itDoesntCreateShopWithExistingNamefirstShop";
+        final String MERCHANT_ID = "itDoesntCreateShopWithExistingNameaMerchantID";
         final String FIRST_SHOP_GENERATED_TOKEN = "TOK1";
 
 
@@ -322,12 +395,11 @@ public class MerchantServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
-                        String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
-                        if(FIRST_SHOP_NAME.equals(currName)) {
-                            String key = storeData.getKey();
-                            assertThat("This shop should not have been created.",storeData.getKey(), is(FIRST_SHOP_ID));
-                            setResult(PASS_FLAG);
-                        }
+                    String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
+                    if (FIRST_SHOP_NAME.equals(currName)) {
+                        setResult(storeData.getKey());
+                        return;
+                    }
                 }
                 setDoneFlag(true);
             }
@@ -345,7 +417,7 @@ public class MerchantServicesTest {
             firebaseDelay();
         }
 
-        assertEquals("Incorrect store ID, meaning something went wrong when trying to create the shop.", getResult(), PASS_FLAG);
+        assertEquals( getResult(), FIRST_SHOP_ID,"Incorrect store ID, meaning something went wrong when trying to create the shop.");
     }
 
     @Test
@@ -446,7 +518,8 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals(val2, val1, reason);
+
         }
 
     }
@@ -539,7 +612,7 @@ public class MerchantServicesTest {
             assertNotEquals("Item was not deleted", id, REMOVE_ITEM_ID);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -562,39 +635,43 @@ public class MerchantServicesTest {
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
+        firebaseDelay();
 
-        String ITEM_ID = addItemToShop(SHOP_ID, URL, ALT_TEXT, ITEM_NAME, COST, INVENTORY);
+        addItemToShop(SHOP_ID, URL, ALT_TEXT, ITEM_NAME, COST, INVENTORY);
 
         setDoneFlag(false);
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
+        firebaseDelay();
 
-        testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + ITEM_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+        testDbInstance.getReference("test/store/" + SHOP_ID + "/item").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> currItemData = (Map<String, Object>) dataSnapshot.getValue();
+                for (DataSnapshot itemIDs : dataSnapshot.getChildren()) {
+                    Map<String, Object> currItemData = (Map<String, Object>) itemIDs.getValue();
+                    String itemName = (String) currItemData.get("name");
+                    if (ITEM_NAME.equals(itemName)) {
+                        toVerify.put("Incorrect name", new Object[]{itemName, ITEM_NAME});
 
-                String itemName = (String) currItemData.get("name");
-                toVerify.put("Incorrect name", new Object[]{itemName, ITEM_NAME});
+                        String cost = ((String) currItemData.get("cost"));
+                        toVerify.put("Incorrect cost", new Object[]{cost, COST});
 
-                String cost = ((String) currItemData.get("cost"));
-                toVerify.put("Incorrect cost", new Object[]{cost, COST});
+                        Long invVal = (Long) currItemData.get("inventory");
+                        int inventory = invVal != null ? invVal.intValue() : null;
+                        toVerify.put("Incorrect inventory", new Object[]{inventory, INT_INV});
 
-                Long invVal = (Long) currItemData.get("inventory");
-                int inventory = invVal != null ? invVal.intValue() : null;
-                toVerify.put("Incorrect inventory", new Object[]{inventory, INT_INV});
+                        String url = (String) currItemData.get("url");
+                        toVerify.put("Incorrect URL", new Object[]{url, URL});
 
-                String url = (String) currItemData.get("url");
-                toVerify.put("Incorrect URL", new Object[]{url, URL});
+                        String altText = (String) currItemData.get("altText");
+                        toVerify.put("Incorrect alt text", new Object[]{altText, ALT_TEXT});
 
-                String altText = (String) currItemData.get("altText");
-                toVerify.put("Incorrect alt text", new Object[]{altText, ALT_TEXT});
-
-                setResult(PASS_FLAG);
+                        setResult(PASS_FLAG);
+                    }
+                }
                 setDoneFlag(true);
             }
 
@@ -617,10 +694,10 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals( val1, val2, reason);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -696,7 +773,7 @@ public class MerchantServicesTest {
             assertNotEquals("Item was not deleted", id, REMOVE_TAG_ID);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -752,10 +829,10 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals( val1, val2,reason);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals(getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -773,17 +850,19 @@ public class MerchantServicesTest {
         merchantRef.updateChildrenAsync(merchMap);
         firebaseDelay();
 
-        String SHOP_ID = createShop(MERCHANT_ID, SHOP_NAME);
+        createShop(MERCHANT_ID, SHOP_NAME);
 
         setDoneFlag(false);
-        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
 
-        testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+        testDbInstance.getReference("test/store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String shopName = (String) ((Map<String, Object>) dataSnapshot.getValue()).get("shopName");
-                toVerify.put("Could not find the store in the DB.", new Object[]{shopName, SHOP_NAME});
-                setResult(PASS_FLAG);
+                for (DataSnapshot storeID : dataSnapshot.getChildren()) {
+                    String shopName = (String) ((Map<String, Object>) storeID.getValue()).get("shopName");
+                    if (SHOP_NAME.equals(shopName)) {
+                        setResult(storeID.getKey());
+                    }
+                }
                 setDoneFlag(true);
             }
 
@@ -800,19 +879,9 @@ public class MerchantServicesTest {
             firebaseDelay();
         }
 
-        for (String reason : toVerify.keySet()) {
-            Object val1 = toVerify.get(reason)[0];
-            Object val2 = toVerify.get(reason)[1];
-
-            System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
-
-            assertEquals(reason, val1, val2);
-        }
-
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
-
         ArrayList<String> toVerify2 = new ArrayList<String>();
         setDoneFlag(false);
+        DELAY_COUNTER = 0;
 
         testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -824,7 +893,6 @@ public class MerchantServicesTest {
                 for (String key : keys) {
                     toVerify2.add((String) temp.get(key));
                 }
-                setResult(PASS_FLAG);
                 setDoneFlag(true);
             }
 
@@ -840,22 +908,18 @@ public class MerchantServicesTest {
         while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
         }
-
-        assertEquals(toVerify2.contains(SHOP_ID), true);
-
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( toVerify2.contains(getResult()), true, "The shop was not created properly.");
     }
 
     @Test
     public void itDeletesAShop() {
-        final String FIRST_SHOP_ID = "firstShopID";
-        final String FIRST_SHOP_NAME = "firstShop";
-        final String DELETE_SHOP_NAME = "deleteShop";
-        final String DELETE_SHOP_ID = "deleteShopID";
-        final String THIRD_SHOP_ID = "thirdShopID";
-        final String THIRD_SHOP_NAME = "thirdShop";
-        final String MERCHANT_ID = "aMerchantID";
-        final String USERNAME = "aUsername";
+        final String FIRST_SHOP_ID = "itDeletesAShopfirstShopID";
+        final String FIRST_SHOP_NAME = "itDeletesAShopfirstShop";
+        final String DELETE_SHOP_NAME = "itDeletesAShopdeleteShop";
+        final String DELETE_SHOP_ID = "itDeletesAShopdeleteShopID";
+        final String THIRD_SHOP_ID = "itDeletesAShopthirdShopID";
+        final String THIRD_SHOP_NAME = "itDeletesAShopthirdShop";
+        final String MERCHANT_ID = "itDeletesAShopaMerchantID";
         final String FIRST_SHOP_GENERATED_TOKEN = "TOK1";
         final String DELETE_SHOP_GENERATED_TOKEN = "TOK2";
         final String THIRD_SHOP_GENERATED_TOKEN = "TOK3";
@@ -888,18 +952,21 @@ public class MerchantServicesTest {
         Map<String, Object> rel1Map = new HashMap<>();
         rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
         merchRel.updateChildrenAsync(rel1Map);
+        DatabaseReference merchRel2 = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel2Map = new HashMap<>();
         rel2Map.put(DELETE_SHOP_GENERATED_TOKEN, DELETE_SHOP_ID);
-        merchRel.updateChildrenAsync(rel2Map);
+        merchRel2.updateChildrenAsync(rel2Map);
+        DatabaseReference merchRel3 = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel3Map = new HashMap<>();
         rel3Map.put(THIRD_SHOP_GENERATED_TOKEN, THIRD_SHOP_ID);
-        merchRel.updateChildrenAsync(rel3Map);
+        merchRel3.updateChildrenAsync(rel3Map);
+
 
         deleteShop(DELETE_SHOP_ID, MERCHANT_ID);
 
         setDoneFlag(false);
         ArrayList<String> shopNames = new ArrayList<String>();
-
+        firebaseDelay();
         testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -907,8 +974,8 @@ public class MerchantServicesTest {
                     String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
                     shopNames.add(currName);
                     setResult(PASS_FLAG);
-                    setDoneFlag(true);
                 }
+                setDoneFlag(true);
             }
 
             @Override
@@ -925,12 +992,12 @@ public class MerchantServicesTest {
         }
 
         assertEquals(shopNames.contains(DELETE_SHOP_NAME), false);
-
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run v1");
 
         setDoneFlag(false);
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
-
+        DELAY_COUNTER = 0;
+        setResult(FAIL_FLAG);
         testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -976,10 +1043,10 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals( val1, val2, reason);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not runv2");
     }
 
     @Test
@@ -1009,17 +1076,17 @@ public class MerchantServicesTest {
         merchRel.updateChildrenAsync(rel1Map);
         firebaseDelay();
 
-        String NAME_CHANGE_ID = changeShopName(SHOP_ID, NEW_NAME);
+        changeShopName(SHOP_ID, NEW_NAME);
 
         setDoneFlag(false);
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
+        firebaseDelay();
 
         testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String shopName = (String) ((Map<String, Object>) dataSnapshot.getValue()).get("shopName");
                 toVerify.put("Store name was not updated.", new Object[]{shopName, NEW_NAME});
-
                 setResult(PASS_FLAG);
                 setDoneFlag(true);
             }
@@ -1044,10 +1111,9 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals( val1, val2, reason);
         }
-
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -1092,10 +1158,10 @@ public class MerchantServicesTest {
 
             System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
 
-            assertEquals(reason, val1, val2);
+            assertEquals( val1, val2, reason);
         }
 
-        assertEquals("OnDataChange method did not run", getResult(), PASS_FLAG);
+        assertEquals( getResult(), PASS_FLAG,"OnDataChange method did not run");
     }
 
     @Test
@@ -1118,7 +1184,7 @@ public class MerchantServicesTest {
 
         String MERCHANT_LOGIN_ID = merchantLogin(USERNAME, PASSWORD);
 
-        assertNotEquals("Could not find the store in the DB.", MERCHANT_LOGIN_ID, functionCaller.getCallErrorMsg());
+        assertNotEquals( MERCHANT_LOGIN_ID, functionCaller.getCallErrorMsg(),"Could not find the store in the DB.");
     }
 
     public static void firebaseDelay() {
@@ -1130,13 +1196,13 @@ public class MerchantServicesTest {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         testDbInstance = FirebaseController.getInstance();
         functionCaller = new CloudTestController();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() {
         testDbInstance.getReference("test/").removeValueAsync();
         firebaseDelay();
@@ -1146,7 +1212,7 @@ public class MerchantServicesTest {
     }
 
     @BeforeEach
-    public static void resetResult() {
+    public void resetResult() {
         result = "";
         DONE_FLAG = false;
         DELAY_COUNTER = 0;
