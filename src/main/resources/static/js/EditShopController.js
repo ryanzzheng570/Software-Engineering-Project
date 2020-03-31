@@ -19,12 +19,12 @@ async function asyncRemoveTag(formData) {
 
 async function asyncAddItem(formData) {
     const resp = await cloudAddItem(formData);
-    var itemId = resp.data;
-    return itemId;
+    return resp.data;
 }
 
 async function asyncEditItem(formData) {
     const resp = await cloudEditItem(formData);
+    return resp.data;
 }
 
 async function asyncRemoveItem(formData) {
@@ -190,18 +190,25 @@ function editItemHandler(btn) {
 
     showLoading();
     asyncEditItem(itemData).then(function (data) {
-        return $.ajax({
-            url: callStr + $.param(itemData),
-            type: "POST",
-            dataType: "json"
-        })
+        if (data.res) {
+            return $.ajax({
+                url: callStr + $.param(itemData),
+                type: "POST",
+                dataType: "json"
+            })
+        } else {
+            alert(data.str);
+        }
+
     }).then(function (data) {
         hideLoading();
-        if (data.items.length === 0) {
-            $("#noItemDiv").css("display", "block");
-            $("#nonEmptyItemDiv").css("display", "none");
+        if (data) {
+            if (data.items.length === 0) {
+                $("#noItemDiv").css("display", "block");
+                $("#nonEmptyItemDiv").css("display", "none");
+            }
+            window.location.href = '/goToEditShopPage?shopId=' + data.id;
         }
-        window.location.href = '/goToEditShopPage?shopId=' + data.id;
     });
 }
 

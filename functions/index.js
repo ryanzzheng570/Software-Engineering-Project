@@ -183,13 +183,12 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
         }
     }
 
-    var retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
+    const retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
         var validChange = false;
         var ssv = snapshot.val();
         if (ssv) {
             for (var shopKey in ssv) {
                 if (ssv[shopKey] === shopID) {
-                    database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
                     validChange = true;
                     break;
                 }
@@ -197,6 +196,31 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
         }
 
         return validChange;
+    }).then((res) => {
+        if (res) {
+            const temp = database.ref(mode + "/store/" + shopID + "/item/").once("value").then((snapshot) => {
+                const items = snapshot.val();
+                for (var id in items) {
+                    if (items[id].name === itemInfo.name) {
+                        return {
+                            res: false,
+                            str: "Sorry, you already have an item with that name."
+                        }
+                    }
+                }
+                database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+                return {
+                    res: true
+                }
+
+            });
+            return temp;
+        } else {
+            return {
+                res: false,
+                str: "Sorry, that change was not valid."
+            }
+        }
     });
 
     return retVal;
@@ -474,10 +498,11 @@ exports.editItem = functions.https.onCall((data, context) => {
 
     var inventory = parseInt(data.inventory);
     var cost = parseFloat(data.cost);
+    var name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
-        name: data.itemName,
+        name: name,
         cost: cost,
         inventory: inventory
     };
@@ -487,10 +512,11 @@ exports.editItem = functions.https.onCall((data, context) => {
 exports.testEditItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
+        const name = request.body.itemName.trim();
         const itemData = {
             url: request.body.url,
             altText: request.body.altText,
-            name: request.body.itemName,
+            name: name,
             cost: request.body.cost,
             inventory: numInventory
         };
