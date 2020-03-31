@@ -383,7 +383,6 @@ public class MerchantServicesTest {
                         String itemName = (String) currItemData.get("name");
                         if (ITEM_NAME.equals(itemName)) {
                             setResult(itemID.getKey());
-                            return;
                         }
                     }
                 }
@@ -458,7 +457,6 @@ public class MerchantServicesTest {
                         String itemName = (String) currItemData.get("name");
                         if (ITEM_NAME.equals(itemName)) {
                             setResult(itemID.getKey());
-                            return;
                         }
                     }
                 }
@@ -524,7 +522,6 @@ public class MerchantServicesTest {
                     String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
                     if (FIRST_SHOP_NAME.equals(currName)) {
                         setResult(storeData.getKey());
-                        return;
                     }
                 }
                 setDoneFlag(true);
@@ -583,7 +580,6 @@ public class MerchantServicesTest {
                     String currName = (String) ((Map<String, Object>) storeData.getValue()).get("shopName");
                     if (FIRST_SHOP_NAME.equals(currName)) {
                         setResult(storeData.getKey());
-                        return;
                     }
                 }
                 setDoneFlag(true);
