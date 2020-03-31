@@ -123,7 +123,32 @@ function addTagToShop(shopID, tag, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(tag)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID + "/tag").push(tag).key;
+    const tagToAdd = tag.trim();
+    const returnVal = database.ref(mode + "/store/" + shopID + "/tag").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const tags = snapshot.val();
+            for (var id in tags) {
+                if (tags[id] === tagToAdd) {
+                    return {
+                        res: false,
+                        str: "Sorry, a tag with that name already exists."
+                    };
+                }
+            }
+            const key = database.ref(mode + '/store/' + shopID + "/tag").push(tagToAdd).key;
+            return {
+                res: true,
+                str: key
+            }
+        } else {
+            const key = database.ref(mode + '/store/' + shopID + "/tag").push(tagToAdd).key;
+            return {
+                res: true,
+                str: key
+            }
+        }
+    });
+    return returnVal;
 }
 
 function removeTagFromShop(shopID, tagID, mode = '') {
@@ -201,7 +226,7 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
             const temp = database.ref(mode + "/store/" + shopID + "/item/").once("value").then((snapshot) => {
                 const items = snapshot.val();
                 for (var id in items) {
-                    if (items[id].name === itemInfo.name) {
+                    if ((items[id].name === itemInfo.name) && (itemID !== id)) {
                         return {
                             res: false,
                             str: "Sorry, you already have an item with that name."

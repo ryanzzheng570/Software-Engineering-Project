@@ -9,8 +9,7 @@ async function asyncUpdateShopName(formData) {
 
 async function asyncAddTag(formData) {
     const resp = await cloudAddTag(formData);
-    var tagId = resp.data;
-    return tagId;
+    return resp.data;
 }
 
 async function asyncRemoveTag(formData) {
@@ -110,34 +109,42 @@ function addTagHandler(e) {
     } else {
         showLoading();
         asyncAddTag(infoJson).then(function (data) {
-            return $.ajax({
-                url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data,
-                type: "POST",
-                dataType: "json"
-            })
+            if (data.res) {
+                return $.ajax({
+                    url: "/addTag?" + $(addTagFormId).serialize() + "&setId=" + data.str,
+                    type: "POST",
+                    dataType: "json"
+                })
+            } else {
+                alert(data.str);
+            }
+
         }).then(function (data) {
             hideLoading();
-            $("#noTagDiv").css("display", "none");
-            $("#nonEmptyTagDiv").css("display", "block");
+            if (data) {
+                $("#noTagDiv").css("display", "none");
+                $("#nonEmptyTagDiv").css("display", "block");
 
-            var newRow = document.createElement("tr");
+                var newRow = document.createElement("tr");
 
-            var nameElem = document.createElement("td");
-            var nameText = document.createTextNode(data.tagName)
-            nameElem.appendChild(nameText);
-            newRow.appendChild(nameElem);
+                var nameElem = document.createElement("td");
+                var nameText = document.createTextNode(data.tagName)
+                nameElem.appendChild(nameText);
+                newRow.appendChild(nameElem);
 
-            var remButtonBox = document.createElement("td");
-            var remButton = document.createElement("input");
-            remButton.type = "button";
-            remButton.value = "Remove Tag";
-            remButton.addEventListener('click', function () {
-                removeTag(this, infoJson["shopId"], data.id);
-            });
-            remButtonBox.appendChild(remButton);
-            newRow.appendChild(remButtonBox);
+                var remButtonBox = document.createElement("td");
+                var remButton = document.createElement("input");
+                remButton.type = "button";
+                remButton.value = "Remove Tag";
+                remButton.addEventListener('click', function () {
+                    removeTag(this, infoJson["shopId"], data.id);
+                });
+                remButtonBox.appendChild(remButton);
+                newRow.appendChild(remButtonBox);
 
-            document.getElementById("tagTable").appendChild(newRow);
+                document.getElementById("tagTable").appendChild(newRow);
+            }
+
         });
     }
 }
