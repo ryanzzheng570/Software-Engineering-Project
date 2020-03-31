@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 import java.util.HashMap;
@@ -20,11 +21,11 @@ import java.util.Map;
 public class CustomerServicesTest {
     private static FirebaseDatabase testDbInstance = null;
     private static CloudTestController functionCaller = null;
-    private static String result = "";
-    private static final String PASS_FLAG = "PASS";
-    private static boolean DONE_FLAG = false;
-    private static int DELAY_COUNTER = 0;
-    private static final int MAX_DELAYS = 3;
+    private String result = "";
+    private final String PASS_FLAG = "PASS";
+    private boolean DONE_FLAG = false;
+    private int DELAY_COUNTER = 0;
+    private final int MAX_DELAYS = 3;
 
     @Test
     public void itRemovesItemFromShoppingCart() {
@@ -141,15 +142,15 @@ public class CustomerServicesTest {
             fail("sendPost exception");
         }
         firebaseDelay();
-
+        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
         testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID + "/shoppingCart/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot cartData : dataSnapshot.getChildren()) {
                     String itemID = (String) ((Map<String, Object>) cartData.getValue()).get("itemID");
                     String storeID = (String) ((Map<String, Object>) cartData.getValue()).get("shopID");
-                    assertThat("Incorrect itemID", itemID, is(ADD_ITEM_ID));
-                    assertThat("Incorrect storeID", storeID, is(SHOP_ID));
+                    toVerify.put("Incorrect item ID", new Object[]{itemID, ADD_ITEM_ID});
+                    toVerify.put("Incorrect store ID.", new Object[]{storeID, SHOP_ID});
                     setResult(PASS_FLAG);
                 }
                 setDoneFlag(true);
@@ -166,6 +167,14 @@ public class CustomerServicesTest {
         });
         while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
             firebaseDelay();
+        }
+        for (String reason : toVerify.keySet()) {
+            Object val1 = toVerify.get(reason)[0];
+            Object val2 = toVerify.get(reason)[1];
+
+            System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
+
+            assertEquals(val1, val2, reason);
         }
         assertThat("The item was not added to the shopping cart correctly.", getResult(), is(PASS_FLAG));
     }
@@ -368,10 +377,10 @@ public class CustomerServicesTest {
         testDbInstance.getReference("test/users/customers/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot customers: dataSnapshot.getChildren()) {
+                for (DataSnapshot customers : dataSnapshot.getChildren()) {
                     Map<String, Object> data = (Map<String, Object>) customers.getValue();
                     String userName = (String) data.get("userName");
-                    if(USERNAME.equals(userName)) {
+                    if (USERNAME.equals(userName)) {
                         setResult(customers.getKey());
                     }
                 }
@@ -409,11 +418,11 @@ public class CustomerServicesTest {
         testDbInstance.getReference("test/users/customers/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot customers: dataSnapshot.getChildren()) {
+                for (DataSnapshot customers : dataSnapshot.getChildren()) {
                     Map<String, Object> data = (Map<String, Object>) customers.getValue();
 
                     String userName = (String) data.get("userName");
-                    if(USERNAME.equals(userName)) {
+                    if (USERNAME.equals(userName)) {
                         assertThat("Incorrect username", userName, is(USERNAME));
                         String note = (String) data.get("note");
                         assertThat("Incorrect note", note, is(NOTE));
@@ -435,7 +444,7 @@ public class CustomerServicesTest {
 
     public static void firebaseDelay() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             fail("waitForCloudFunction exception\n" + ex.getStackTrace().toString());
@@ -464,11 +473,11 @@ public class CustomerServicesTest {
         DELAY_COUNTER = 0;
     }
 
-    public static void setResult(String res) {
+    public void setResult(String res) {
         result = res;
     }
 
-    public static String getResult() {
+    public String getResult() {
         return result;
     }
 

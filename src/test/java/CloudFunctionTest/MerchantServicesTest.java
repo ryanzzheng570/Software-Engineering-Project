@@ -10,8 +10,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.xml.crypto.Data;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -23,14 +21,14 @@ import java.util.*;
 public class MerchantServicesTest {
     private static FirebaseDatabase testDbInstance = null;
     private static CloudTestController functionCaller = null;
-    private static String result = "";
+    private String result = "";
 
-    private static final String PASS_FLAG = "PASS";
-    private static final String FAIL_FLAG = "FAIL";
+    private final String PASS_FLAG = "PASS";
+    private final String FAIL_FLAG = "FAIL";
 
-    private static boolean DONE_FLAG = false;
-    private static int DELAY_COUNTER = 0;
-    private static final int MAX_DELAYS = 3;
+    private boolean DONE_FLAG = false;
+    private int DELAY_COUNTER = 0;
+    private final int MAX_DELAYS = 3;
 
     private void setDoneFlag(boolean newVal) {
         DONE_FLAG = newVal;
@@ -211,6 +209,7 @@ public class MerchantServicesTest {
         param.put("itemName", itemName);
         param.put("cost", cost);
         param.put("inventory", inventory);
+        firebaseDelay();
 
         try {
             key = functionCaller.sendPost(CloudTestController.editItemInShop, param);
@@ -288,17 +287,16 @@ public class MerchantServicesTest {
         tagMap.put(TAG_ID, TAG_NAME);
         tagRef.updateChildrenAsync(tagMap);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
         rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
         merchRel.updateChildrenAsync(rel1Map);
+        firebaseDelay();
 
         addTagToShop(FIRST_SHOP_ID, TAG_NAME);
-
-        setDoneFlag(false);
-        ArrayList<String> shopNames = new ArrayList<String>();
         firebaseDelay();
+
+        ArrayList<String> shopNames = new ArrayList<String>();
         testDbInstance.getReference("test/store/" + FIRST_SHOP_ID + "/tag").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -509,8 +507,6 @@ public class MerchantServicesTest {
         Map<String, Object> shop2Map = new HashMap<>();
         shop2Map.put("shopName", EXISTING_SHOP_NAME);
         shop2Ref.updateChildrenAsync(shop2Map);
-        firebaseDelay();
-
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -518,8 +514,8 @@ public class MerchantServicesTest {
         merchRel.updateChildrenAsync(rel1Map);
         firebaseDelay();
 
-
         changeShopName(FIRST_SHOP_ID, EXISTING_SHOP_NAME);
+        firebaseDelay();
 
         testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -570,8 +566,6 @@ public class MerchantServicesTest {
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", FIRST_SHOP_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
-        firebaseDelay();
-
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -579,8 +573,8 @@ public class MerchantServicesTest {
         merchRel.updateChildrenAsync(rel1Map);
         firebaseDelay();
 
-
         createShop(MERCHANT_ID, FIRST_SHOP_NAME);
+        firebaseDelay();
 
         testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -615,20 +609,20 @@ public class MerchantServicesTest {
     public void itEditsAnItemInAShop() {
         final String SHOP_ID = "itEditsAItemInAShopId";
         final String MERCHANT_ID = "aMerchantId";
-        final String GENERATED_TOKEN = "GenereatedToken";
+        final String GENERATED_TOKEN = "GenereatedTokenForEditItemInShop";
         final String FIRST_ITEM_COST = "29.99";
         final String FIRST_ITEM_INV = "1000";
         final String FIRST_ITEM_URL = "FirstItemUrl";
         final String FIRST_ITEM_ALT_TEXT = "FirstItemAltText";
-        final String FIRST_ITEM_NAME = "FirstItemName";
-        final String FIRST_ITEM_ID = "FirstItemID";
+        final String FIRST_ITEM_NAME = "FirstItemNameInEditsShop";
+        final String FIRST_ITEM_ID = "FirstItemIDInEditsShop";
 
-        final String EDIT_ITEM_NAME = "editItemName";
+        final String EDIT_ITEM_NAME = "editItemNameInShop";
         final String EDIT_ITEM_COST = "1.99";
         final String EDIT_ITEM_INV = "50";
         final String EDIT_ITEM_URL = "EditItemUrl";
         final String EDIT_ITEM_ALT_TEXT = "EditItemAltText";
-        final String EDIT_ITEM_ID = "EditItemID";
+        final String EDIT_ITEM_ID = "EditItemInShopID";
 
         final String EDITED_ITEM_COST = "0.49";
         final String EDITED_ITEM_INV = "5000";
@@ -641,7 +635,6 @@ public class MerchantServicesTest {
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
@@ -667,9 +660,8 @@ public class MerchantServicesTest {
         firebaseDelay();
         editItemInShop(SHOP_ID, EDIT_ITEM_ID, MERCHANT_ID, EDIT_ITEM_URL, EDIT_ITEM_ALT_TEXT, EDIT_ITEM_NAME, EDITED_ITEM_COST, EDITED_ITEM_INV);
 
-        setDoneFlag(false);
+        firebaseDelay();
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
-
         testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -682,10 +674,10 @@ public class MerchantServicesTest {
 
 
                 Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(EDIT_ITEM_ID);
-                invVal = (String) secondItemData.get("inventory");
-                toVerify.put("Incorrect inventory for edited item", new Object[]{invVal, EDITED_ITEM_INV});
-                String secondInvVal = (String) secondItemData.get("cost");
-                toVerify.put("Incorrect cost for edited item", new Object[]{secondInvVal, EDITED_ITEM_COST});
+                Long invVal2 = (Long) secondItemData.get("inventory");
+                toVerify.put("Incorrect inventory for edited item", new Object[]{Long.toString(invVal2), EDITED_ITEM_INV});
+                String cost2 = (String) secondItemData.get("cost");
+                toVerify.put("Incorrect cost for edited item", new Object[]{cost2, EDITED_ITEM_COST});
                 setResult(PASS_FLAG);
                 setDoneFlag(true);
             }
@@ -712,6 +704,7 @@ public class MerchantServicesTest {
             assertEquals(val2, val1, reason);
 
         }
+        assertEquals(getResult(), PASS_FLAG, "onDataChange did not run,");
 
     }
 
@@ -769,19 +762,18 @@ public class MerchantServicesTest {
         thirdtemRef.updateChildrenAsync(thirdMap);
         firebaseDelay();
 
-        String temp = removeItemFromShop(SHOP_ID, REMOVE_ITEM_ID);
+        removeItemFromShop(SHOP_ID, REMOVE_ITEM_ID);
+        firebaseDelay();
 
-        setDoneFlag(false);
         ArrayList<String> toVerify = new ArrayList<String>();
-
         testDbInstance.getReference("test/store/" + SHOP_ID + "/item/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot storeData : dataSnapshot.getChildren()) {
                     toVerify.add(storeData.getKey());
                     setResult(PASS_FLAG);
-                    setDoneFlag(true);
                 }
+                setDoneFlag(true);
             }
 
             @Override
@@ -834,7 +826,6 @@ public class MerchantServicesTest {
 
         addItemToShop(SHOP_ID, URL, ALT_TEXT, ITEM_NAME, COST, INVENTORY);
 
-        setDoneFlag(false);
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
         firebaseDelay();
 
@@ -911,7 +902,6 @@ public class MerchantServicesTest {
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
@@ -930,9 +920,10 @@ public class MerchantServicesTest {
 
         firebaseDelay();
 
-        String temp = removeTagFromShop(SHOP_ID, REMOVE_TAG_ID);
+        removeTagFromShop(SHOP_ID, REMOVE_TAG_ID);
+        firebaseDelay();
 
-        setDoneFlag(false);
+
         ArrayList<String> toVerify = new ArrayList<String>();
 
         testDbInstance.getReference("test/store/" + SHOP_ID + "/tag/").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -970,36 +961,34 @@ public class MerchantServicesTest {
     @Test
     public void itAddsATagToAShop() {
         final String SHOP_ID = "itAddsATagToAShopID";
-        final String TAG_NAME = "aTagName";
-        final String GENERATED_TOKEN = "GeneratedTojen";
-        final String MERCHANT_ID = "aMerchantID";
+        final String TAG_NAME = "aTagNameForAShop";
+        final String GENERATED_TOKEN = "GeneratedTokenForAddingTag";
+        final String MERCHANT_ID = "aMerchantIDToAddATag";
 
         DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
         Map<String, Object> merchMap = new HashMap<>();
         merchMap.put("email", "a@a.com");
         merchMap.put("password", "aPassword");
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
-        merchMap.put("userName", "aUsername");
+        merchMap.put("userName", "aTagUsername");
         merchantRef.updateChildrenAsync(merchMap);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
-
+        firebaseDelay();
         addTagToShop(SHOP_ID, TAG_NAME);
 
-        setDoneFlag(false);
-        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
 
+        firebaseDelay();
         testDbInstance.getReference("test/store/" + SHOP_ID + "/tag/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot tags : dataSnapshot.getChildren()) {
                     String tagName = (String) tags.getValue();
                     if (TAG_NAME.equals(tagName)) {
-                        setResult(PASS_FLAG);
+                        setResult(TAG_NAME);
                     }
                 }
                 setDoneFlag(true);
@@ -1018,28 +1007,26 @@ public class MerchantServicesTest {
             firebaseDelay();
         }
 
-        assertEquals(getResult(), PASS_FLAG, "Tag was not successfully added.");
+        assertEquals(getResult(), TAG_NAME, "Tag was not successfully added.");
     }
 
     @Test
     public void itCreatesAShop() {
-        final String USERNAME = "aUsername";
-        final String MERCHANT_ID = "aMerchantID";
-        final String SHOP_NAME = "itCreatesAShop";
+        final String MERCHANT_ID = "aMerchantIDToCreateAShop";
+        final String SHOP_NAME = "itCreatesAShopTestName";
 
         DatabaseReference merchantRef = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID);
         Map<String, Object> merchMap = new HashMap<>();
         merchMap.put("email", "a@a.com");
         merchMap.put("password", "aPassword");
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
-        merchMap.put("userName", "aUsername");
+        merchMap.put("userName", "createdShopUsername");
         merchantRef.updateChildrenAsync(merchMap);
         firebaseDelay();
 
         createShop(MERCHANT_ID, SHOP_NAME);
 
-        setDoneFlag(false);
-
+        firebaseDelay();
         testDbInstance.getReference("test/store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1069,6 +1056,7 @@ public class MerchantServicesTest {
         setDoneFlag(false);
         DELAY_COUNTER = 0;
 
+        firebaseDelay();
         testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1133,7 +1121,6 @@ public class MerchantServicesTest {
         shop3Map.put("shopName", THIRD_SHOP_NAME);
         shop3Ref.updateChildrenAsync(shop3Map);
 
-        firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
         rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
@@ -1146,11 +1133,11 @@ public class MerchantServicesTest {
         Map<String, Object> rel3Map = new HashMap<>();
         rel3Map.put(THIRD_SHOP_GENERATED_TOKEN, THIRD_SHOP_ID);
         merchRel3.updateChildrenAsync(rel3Map);
+        firebaseDelay();
 
 
         deleteShop(DELETE_SHOP_ID, MERCHANT_ID);
 
-        setDoneFlag(false);
         ArrayList<String> shopNames = new ArrayList<String>();
         firebaseDelay();
         testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1264,7 +1251,6 @@ public class MerchantServicesTest {
 
         changeShopName(SHOP_ID, NEW_NAME);
 
-        setDoneFlag(false);
         Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
         firebaseDelay();
 
@@ -1304,25 +1290,26 @@ public class MerchantServicesTest {
 
     @Test
     public void itCreatesAMerchant() {
-        final String USERNAME = "aUniqueUsername";
+        final String USERNAME = "aUniqueUsernameToCreate";
         String password = "aPassword";
         String email = "a@a.com";
         String phoneNum = "1234567890";
-
         createMerchant(USERNAME, password, email, phoneNum);
+        firebaseDelay();
 
         testDbInstance.getReference("test/users/merchants/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot customers: dataSnapshot.getChildren()) {
+                for (DataSnapshot customers : dataSnapshot.getChildren()) {
                     Map<String, Object> data = (Map<String, Object>) customers.getValue();
 
                     String userName = (String) data.get("userName");
-                    if(USERNAME.equals(userName)) {
+                    if (USERNAME.equals(userName)) {
                         assertThat("Incorrect username", userName, is(USERNAME));
                         setResult(USERNAME);
                     }
                 }
+                setDoneFlag(true);
             }
 
             @Override
@@ -1357,16 +1344,17 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", phoneNum);
         merchMap.put("userName", USERNAME);
         merchantRef.updateChildrenAsync(merchMap);
-
+        firebaseDelay();
 
         String MERCHANT_LOGIN_ID = merchantLogin(USERNAME, PASSWORD);
+        firebaseDelay();
 
         assertNotEquals(MERCHANT_LOGIN_ID, functionCaller.getCallErrorMsg(), "Could not find the store in the DB.");
     }
 
     public static void firebaseDelay() {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
             fail("waitForCloudFunction exception\n" + ex.getStackTrace().toString());
@@ -1395,11 +1383,11 @@ public class MerchantServicesTest {
         DELAY_COUNTER = 0;
     }
 
-    public static void setResult(String res) {
+    public void setResult(String res) {
         result = res;
     }
 
-    public static String getResult() {
+    public String getResult() {
         return result;
     }
 }
