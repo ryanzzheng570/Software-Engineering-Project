@@ -384,6 +384,7 @@ public class CustomerServicesTest {
                         setResult(customers.getKey());
                     }
                 }
+                setDoneFlag(true);
             }
 
             @Override
@@ -392,7 +393,9 @@ public class CustomerServicesTest {
             }
 
         });
-        firebaseDelay();
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("Customer was not created correctly.", getResult(), is(USER_ID));
     }
 
@@ -429,6 +432,7 @@ public class CustomerServicesTest {
                         setResult(USERNAME);
                     }
                 }
+                setDoneFlag(true);
             }
 
             @Override
@@ -437,7 +441,9 @@ public class CustomerServicesTest {
             }
 
         });
-        firebaseDelay();
+        while (!getDoneFlag() && DELAY_COUNTER++ < MAX_DELAYS) {
+            firebaseDelay();
+        }
         assertThat("Customer was not created correctly.", getResult(), is(USERNAME));
     }
 
