@@ -43,7 +43,7 @@ function addShop(shopName, merchantId, mode = '') {
             };
         } else {
             const storeKey = database.ref(mode + '/store/').push({
-                shopName: shopName
+                shopName: shopNameToUse
             }).key;
             database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
             return {
@@ -85,9 +85,38 @@ function changeShopName(shopID, shopName, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(shopName)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID).update({
-        shopName: shopName
-    }).key;
+
+    var shopNameToUse = shopName.trim();
+
+    const returnVal = database.ref(mode + "/store").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const storeData = snapshot.val();
+            for (var storeID in storeData) {
+                if (storeData[storeID].shopName === shopNameToUse) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that store name is already taken."
+            };
+        } else {
+            const key = database.ref(mode + '/store/' + shopID).update({
+                shopName: shopNameToUse
+            }).key;
+            return {
+                exists: false,
+                res: key
+            };
+        }
+    });
+    return returnVal;
 }
 
 function addTagToShop(shopID, tag, mode = '') {

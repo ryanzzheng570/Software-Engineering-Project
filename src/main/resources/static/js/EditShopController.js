@@ -4,6 +4,7 @@ var addItemFormId = "#addItemForm";
 
 async function asyncUpdateShopName(formData) {
     const resp = await cloudUpdateShopName(formData);
+    return resp.data;
 }
 
 async function asyncAddTag(formData) {
@@ -48,14 +49,20 @@ function editShopNameHandler(e) {
     } else {
         showLoading();
         asyncUpdateShopName(infoJson).then(function (data) {
-            return $.ajax({
-                url: "/changeShopName?" + $(editNameFormId).serialize(),
-                type: "POST",
-                dataType: "json"
-            })
+            if (data.exists) {
+                alert(data.res);
+            } else {
+                return $.ajax({
+                    url: "/changeShopName?" + $(editNameFormId).serialize(),
+                    type: "POST",
+                    dataType: "json"
+                })
+            }
         }).then(function (data) {
             hideLoading();
-            $(editNameFormId).value = data.shopName;
+            if (data && data.shopName) {
+                $(editNameFormId).value = data.shopName;
+            }
         });
     }
 }

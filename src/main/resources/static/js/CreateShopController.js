@@ -35,7 +35,9 @@ function createShopFormHandler(e) {
             }
         }).then(function (data) {
             hideLoading();
-            window.location.href = '/goToEditShopPage?shopId=' + data.id;
+            if (data && data.id) {
+                window.location.href = '/goToEditShopPage?shopId=' + data.id;
+            }
         });
     }
 }
