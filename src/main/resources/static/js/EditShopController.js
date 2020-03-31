@@ -176,6 +176,25 @@ function editItemHandler(btn) {
         itemData[name] = val;
     });
 
+    if (itemData["itemName"] === "") {
+        alert("Please enter an item name!");
+        return;
+    } else if (itemData["inventory"] === "") {
+        alert("Please enter a quantity value!");
+        return;
+    } else if (itemData["cost"] === "") {
+        alert("Please enter a cost value!");
+        return;
+    }
+
+    if (isNaN(itemData["inventory"] || Number.isInteger(itemData["inventory"]) || itemData["inventory"] < 0)) {
+        alert("Please enter a whole number quantity!");
+        return;
+    } else if (isNaN(itemData["cost"]) || itemData["cost"] < 0) {
+        alert("Please enter a valid cost value!");
+        return;
+    }
+
     var callStr = "/editItem?";
     itemData["shopId"] = shopId;
     itemData["itemId"] = itemId;
