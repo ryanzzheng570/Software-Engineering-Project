@@ -308,15 +308,32 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
     if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(phoneNumber)) {
         return "Invalid username, password, email or phone number was entered.";
     }
+    const nameToUse = username.trim();
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedPhoneNumber = encrypt(phoneNumber);
-    return database.ref(mode + '/users/merchants').push({
-        userName: username,
-        password: encryptedPassword,
-        email: encryptedEmail,
-        phoneNum: encryptedPhoneNumber
-    }).key;
+    const retVal = database.ref(mode + "/users/merchants/").once("value").then((snapshot) => {
+        const merchants = snapshot.val();
+        for (var id in merchants) {
+            if (merchants[id].userName === nameToUse) {
+                return {
+                    res: false,
+                    str: "Sorry, that username is already in use."
+                }
+            }
+        }
+        const key = database.ref(mode + '/users/merchants').push({
+            userName: nameToUse,
+            password: encryptedPassword,
+            email: encryptedEmail,
+            phoneNum: encryptedPhoneNumber
+        }).key;
+        return {
+            res: true,
+            str: key
+        }
+    });
+    return retVal;
 }
 
 function merchantLogin(username, password, mode = '') {
@@ -354,18 +371,36 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(address) || !ValidateString(phoneNumber)) {
         return "Invalid username, password, email, address or phone number was entered.";
     }
+    const nameToUse = username.trim();
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedAddress = encrypt(address);
     const encryptedPhoneNumber = encrypt(phoneNumber);
-    return database.ref(mode + '/users/customers').push({
-        userName: username,
-        password: encryptedPassword,
-        email: encryptedEmail,
-        address: encryptedAddress,
-        phoneNum: encryptedPhoneNumber,
-        note: note
-    }).key;
+
+    const retVal = database.ref(mode + "/users/customers/").once("value").then((snapshot) => {
+        const customers = snapshot.val();
+        for (var id in customers) {
+            if (customers[id].userName === nameToUse) {
+                return {
+                    res: false,
+                    str: "Sorry, that username is already in use."
+                }
+            }
+        }
+        const key = database.ref(mode + '/users/customers').push({
+            userName: nameToUse,
+            password: encryptedPassword,
+            email: encryptedEmail,
+            address: encryptedAddress,
+            phoneNum: encryptedPhoneNumber,
+            note: note
+        }).key;
+        return {
+            res: true,
+            str: key
+        }
+    });
+    return retVal;
 }
 
 function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {

@@ -12,6 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.crypto.Data;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -220,6 +223,45 @@ public class MerchantServicesTest {
     }
 
     @Test
+    public void itDoesntCreateMerchantWithTheSameUsername() {
+        final String USERNAME = "aUniqueMerchantUsername";
+        final String USER_ID = "aUniqueExistingUserID";
+
+        DatabaseReference merchRef = testDbInstance.getReference("test/users/merchants/" + USER_ID);
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", "b@b.com");
+        map.put("password", "shhhhh");
+        map.put("phoneNum", "0987654321");
+        map.put("userName", USERNAME);
+        merchRef.updateChildrenAsync(map);
+        firebaseDelay();
+
+        createMerchant(USERNAME, "shhh", "b@b.com", "1234567890");
+        firebaseDelay();
+
+        testDbInstance.getReference("test/users/merchants/").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot merchants : dataSnapshot.getChildren()) {
+                    Map<String, Object> data = (Map<String, Object>) merchants.getValue();
+                    String userName = (String) data.get("userName");
+                    if (USERNAME.equals(userName)) {
+                        setResult(merchants.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                fail("The database read failed: " + databaseError.getCode());
+            }
+
+        });
+        firebaseDelay();
+        assertThat("Customer was not created correctly.", getResult(), is(USER_ID));
+    }
+
+    @Test
     public void itDoesntAddTagWithExistingName() {
         final String FIRST_SHOP_ID = "itDoesntAddTagWithExistingNameID";
         final String FIRST_SHOP_NAME = "itDoesntAddTagWithExistingName";
@@ -261,8 +303,8 @@ public class MerchantServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot tagData : dataSnapshot.getChildren()) {
-                    String tagName = (String)  tagData.getValue();
-                    if(TAG_NAME.equals(tagName)) {
+                    String tagName = (String) tagData.getValue();
+                    if (TAG_NAME.equals(tagName)) {
                         setResult(tagData.getKey());
                     }
                 }
@@ -954,7 +996,7 @@ public class MerchantServicesTest {
         testDbInstance.getReference("test/store/" + SHOP_ID + "/tag/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot tags:dataSnapshot.getChildren()) {
+                for (DataSnapshot tags : dataSnapshot.getChildren()) {
                     String tagName = (String) tags.getValue();
                     if (TAG_NAME.equals(tagName)) {
                         setResult(PASS_FLAG);
@@ -1262,30 +1304,30 @@ public class MerchantServicesTest {
 
     @Test
     public void itCreatesAMerchant() {
-        final String USERNAME = "aUsername";
+        final String USERNAME = "aUniqueUsername";
         String password = "aPassword";
         String email = "a@a.com";
         String phoneNum = "1234567890";
 
-        String MERCHANT_ID = createMerchant(USERNAME, password, email, phoneNum);
+        createMerchant(USERNAME, password, email, phoneNum);
 
-        setDoneFlag(false);
-        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
-
-        testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/userName").addListenerForSingleValueEvent(new ValueEventListener() {
+        testDbInstance.getReference("test/users/merchants/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String userName = (String) dataSnapshot.getValue();
-                toVerify.put("Merchant was not added.", new Object[]{USERNAME, userName});
+                for(DataSnapshot customers: dataSnapshot.getChildren()) {
+                    Map<String, Object> data = (Map<String, Object>) customers.getValue();
 
-                setResult(PASS_FLAG);
-                setDoneFlag(true);
+                    String userName = (String) data.get("userName");
+                    if(USERNAME.equals(userName)) {
+                        assertThat("Incorrect username", userName, is(USERNAME));
+                        setResult(USERNAME);
+                    }
+                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 fail("The database read failed: " + databaseError.getCode());
-
                 setResult(FAIL_FLAG);
                 setDoneFlag(true);
             }
@@ -1296,16 +1338,7 @@ public class MerchantServicesTest {
             firebaseDelay();
         }
 
-        for (String reason : toVerify.keySet()) {
-            Object val1 = toVerify.get(reason)[0];
-            Object val2 = toVerify.get(reason)[1];
-
-            System.out.println(String.format("Verifying %s equals %s", val1.toString(), val2.toString()));
-
-            assertEquals(val1, val2, reason);
-        }
-
-        assertEquals(getResult(), PASS_FLAG, "OnDataChange method did not run");
+        assertEquals(getResult(), USERNAME, "OnDataChange method did not run");
     }
 
     @Test
