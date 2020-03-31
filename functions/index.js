@@ -33,10 +33,8 @@ function addShop(shopName, merchantId, mode = '') {
                     return true;
                 }
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }).then((res) => {
         if (res) {
             return {
