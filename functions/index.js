@@ -243,6 +243,36 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     }).key;
 }
 
+function customerLogin(username, password, mode='') {
+    if(!ValidateString(username) || !(ValidateString(password))) {
+        return "Invalid username or password was entered.";
+    }
+
+    password = encrypt(password);
+    var retVal = database.ref(mode + "/users/customers").once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+        for(var customerId in ssv) {
+            var currData = ssv[customerId];
+
+            var checkUsername = currData["userName"];
+            var checkPass = currData["password"];
+
+            if((checkUsername === username) && (checkPass === password)) {
+                var cart = [];
+                if("shoppingCart" in currData) {
+                    cart = currData["shoppingCart"];
+                }
+
+                return {
+                    id: customerId,
+                    cart: cart,
+                    name: checkUsername
+                }
+            }
+        }
+    })
+}
+
 function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
     if (!ValidateString(customerID) || !ValidateString(shopID) || !ValidateString(itemID)) {
         return "Incorrect customer, shop or user was entered.";
