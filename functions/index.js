@@ -493,6 +493,10 @@ exports.testCreateCustomer = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.customerLogin = functions.https.onCall((data, context) => {
+    return customerLogin(data.userName, data.password);
+})
+
 // !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
 
 const ENCRYPTION_PASSWORD = "password";
