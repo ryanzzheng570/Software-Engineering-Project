@@ -23,13 +23,36 @@ function addShop(shopName, merchantId, mode = '') {
         return "Sorry, invalid input was entered!";
     }
 
-    var storeKey = database.ref(mode + '/store/').push({
-        shopName: shopName
-    }).key;
+    var shopNameToUse = shopName.trim();
 
-    database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
-
-    return storeKey;
+    const returnVal = database.ref(mode + "/store").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const storeData = snapshot.val();
+            for (var storeID in storeData) {
+                if (storeData[storeID].shopName === shopNameToUse) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that store name is already taken."
+            };
+        } else {
+            const storeKey = database.ref(mode + '/store/').push({
+                shopName: shopNameToUse
+            }).key;
+            database.ref(mode + "/users/merchants/" + merchantId + "/shops").push(storeKey);
+            return {
+                exists: false,
+                res: storeKey
+            };
+        }
+    });
+    return returnVal;
 }
 
 function deleteShop(shopID, merchantId, mode = '') {
@@ -62,16 +85,70 @@ function changeShopName(shopID, shopName, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(shopName)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID).update({
-        shopName: shopName
-    }).key;
+
+    var shopNameToUse = shopName.trim();
+
+    const returnVal = database.ref(mode + "/store").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const storeData = snapshot.val();
+            for (var storeID in storeData) {
+                if (storeData[storeID].shopName === shopNameToUse) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that store name is already taken."
+            };
+        } else {
+            const key = database.ref(mode + '/store/' + shopID).update({
+                shopName: shopNameToUse
+            }).key;
+            return {
+                exists: false,
+                res: key
+            };
+        }
+    });
+    return returnVal;
 }
 
 function addTagToShop(shopID, tag, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(tag)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID + "/tag").push(tag).key;
+    const tagToAdd = tag.trim();
+    const returnVal = database.ref(mode + "/store/" + shopID + "/tag").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const tags = snapshot.val();
+            for (var id in tags) {
+                if (tags[id] === tagToAdd) {
+                    return {
+                        res: false,
+                        str: "Sorry, a tag with that name already exists."
+                    };
+                }
+            }
+            const key = database.ref(mode + '/store/' + shopID + "/tag").push(tagToAdd).key;
+            return {
+                res: true,
+                str: key
+            }
+        } else {
+            const key = database.ref(mode + '/store/' + shopID + "/tag").push(tagToAdd).key;
+            return {
+                res: true,
+                str: key
+            }
+        }
+    });
+    return returnVal;
 }
 
 function removeTagFromShop(shopID, tagID, mode = '') {
@@ -85,7 +162,31 @@ function addItemToShop(shopID, itemInfo, mode = '') {
     if (!ValidateString(shopID) || !ValidateString(itemInfo.name) || !ValidateNumber(itemInfo.cost) && !ValidateNumber(itemInfo.inventory)) {
         return "Sorry, invalid input was entered!";
     }
-    return database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
+    const returnVal = database.ref(mode + "/store/" + shopID + "/item").once("value").then((snapshot) => {
+        if (snapshot.val()) {
+            const itemData = snapshot.val();
+            for (var itemID in itemData) {
+                if (itemData[itemID].name === itemInfo.name) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }).then((res) => {
+        if (res) {
+            return {
+                exists: true,
+                res: "Sorry, that item name is already taken."
+            };
+        } else {
+            const key = database.ref(mode + '/store/' + shopID + "/item").push(itemInfo).key;
+            return {
+                exists: false,
+                res: key
+            };
+        }
+    });
+    return returnVal;
 }
 
 function removeItemFromShop(shopID, itemID, mode = '') {
@@ -107,13 +208,12 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
         }
     }
 
-    var retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
+    const retVal = database.ref(mode + "/users/merchants/" + merchantID + "/shops/").once("value").then((snapshot) => {
         var validChange = false;
         var ssv = snapshot.val();
         if (ssv) {
             for (var shopKey in ssv) {
                 if (ssv[shopKey] === shopID) {
-                    database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
                     validChange = true;
                     break;
                 }
@@ -121,6 +221,31 @@ function editItemInShop(shopID, itemID, merchantID, itemInfo, mode = '') {
         }
 
         return validChange;
+    }).then((res) => {
+        if (res) {
+            const temp = database.ref(mode + "/store/" + shopID + "/item/").once("value").then((snapshot) => {
+                const items = snapshot.val();
+                for (var id in items) {
+                    if ((items[id].name === itemInfo.name) && (itemID !== id)) {
+                        return {
+                            res: false,
+                            str: "Sorry, you already have an item with that name."
+                        }
+                    }
+                }
+                database.ref(mode + '/store/' + shopID + "/item/" + itemID).update(itemInfo);
+                return {
+                    res: true
+                }
+
+            });
+            return temp;
+        } else {
+            return {
+                res: false,
+                str: "Sorry, that change was not valid."
+            }
+        }
     });
 
     return retVal;
@@ -183,15 +308,32 @@ function createMerchant(username, password, email, phoneNumber, mode = '') {
     if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(phoneNumber)) {
         return "Invalid username, password, email or phone number was entered.";
     }
+    const nameToUse = username.trim();
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedPhoneNumber = encrypt(phoneNumber);
-    return database.ref(mode + '/users/merchants').push({
-        userName: username,
-        password: encryptedPassword,
-        email: encryptedEmail,
-        phoneNum: encryptedPhoneNumber
-    }).key;
+    const retVal = database.ref(mode + "/users/merchants/").once("value").then((snapshot) => {
+        const merchants = snapshot.val();
+        for (var id in merchants) {
+            if (merchants[id].userName === nameToUse) {
+                return {
+                    res: false,
+                    str: "Sorry, that username is already in use."
+                }
+            }
+        }
+        const key = database.ref(mode + '/users/merchants').push({
+            userName: nameToUse,
+            password: encryptedPassword,
+            email: encryptedEmail,
+            phoneNum: encryptedPhoneNumber
+        }).key;
+        return {
+            res: true,
+            str: key
+        }
+    });
+    return retVal;
 }
 
 function merchantLogin(username, password, mode = '') {
@@ -229,18 +371,36 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
     if (!ValidateString(username) || !ValidateString(password) || !ValidateString(email) || !ValidateString(address) || !ValidateString(phoneNumber)) {
         return "Invalid username, password, email, address or phone number was entered.";
     }
+    const nameToUse = username.trim();
     const encryptedPassword = encrypt(password);
     const encryptedEmail = encrypt(email);
     const encryptedAddress = encrypt(address);
     const encryptedPhoneNumber = encrypt(phoneNumber);
-    return database.ref(mode + '/users/customers').push({
-        userName: username,
-        password: encryptedPassword,
-        email: encryptedEmail,
-        address: encryptedAddress,
-        phoneNum: encryptedPhoneNumber,
-        note: note
-    }).key;
+
+    const retVal = database.ref(mode + "/users/customers/").once("value").then((snapshot) => {
+        const customers = snapshot.val();
+        for (var id in customers) {
+            if (customers[id].userName === nameToUse) {
+                return {
+                    res: false,
+                    str: "Sorry, that username is already in use."
+                }
+            }
+        }
+        const key = database.ref(mode + '/users/customers').push({
+            userName: nameToUse,
+            password: encryptedPassword,
+            email: encryptedEmail,
+            address: encryptedAddress,
+            phoneNum: encryptedPhoneNumber,
+            note: note
+        }).key;
+        return {
+            res: true,
+            str: key
+        }
+    });
+    return retVal;
 }
 
 function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
@@ -356,11 +516,12 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 });
 
 exports.addItem = functions.https.onCall((data, context) => {
-    var inventory = parseInt(data.inventory);
+    const inventory = parseInt(data.inventory);
+    const name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
-        name: data.itemName,
+        name: name,
         cost: data.cost,
         inventory: inventory
     };
@@ -369,10 +530,11 @@ exports.addItem = functions.https.onCall((data, context) => {
 exports.testAddItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
+        const name = request.body.itemName.trim();
         const itemData = {
             url: request.body.url,
             altText: request.body.altText,
-            name: request.body.itemName,
+            name: name,
             cost: request.body.cost,
             inventory: numInventory
         };
@@ -396,10 +558,11 @@ exports.editItem = functions.https.onCall((data, context) => {
 
     var inventory = parseInt(data.inventory);
     var cost = parseFloat(data.cost);
+    var name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
-        name: data.itemName,
+        name: name,
         cost: cost,
         inventory: inventory
     };
@@ -409,10 +572,11 @@ exports.editItem = functions.https.onCall((data, context) => {
 exports.testEditItem = functions.https.onRequest((request, response) => {
     cors(request, response, () => {
         const numInventory = Number(request.body.inventory);
+        const name = request.body.itemName.trim();
         const itemData = {
             url: request.body.url,
             altText: request.body.altText,
-            name: request.body.itemName,
+            name: name,
             cost: request.body.cost,
             inventory: numInventory
         };

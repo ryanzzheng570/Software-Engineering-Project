@@ -2,8 +2,7 @@ var merchantInfoFormId = "#merchantInfoForm";
 
 async function createMerchantInDb(merchantData) {
     const resp = await cloudSaveMerchant(merchantData);
-    var merchantId = resp.data;
-    return merchantId;
+    return resp.data;
 }
 
 function createMerchantAccountHandler(e) {
@@ -30,14 +29,21 @@ function createMerchantAccountHandler(e) {
     } else {
         showLoading();
         createMerchantInDb(infoJson).then(function (data) {
-            console.log(data);
-            return $.ajax({
-                url: "/addNewMerchant?" + $(merchantInfoFormId).serialize() + "&setId=" + data,
-                type: "POST",
-                dataType: "json"
-            });
+            if (data.res) {
+                return $.ajax({
+                    url: "/addNewMerchant?" + $(merchantInfoFormId).serialize() + "&setId=" + data.str,
+                    type: "POST",
+                    dataType: "json"
+                });
+            } else {
+                alert(data.str);
+                return false;
+            }
+
         }).then(function (data) {
-            window.location.href = '/';
+            if (data) {
+                window.location.href = '/';
+            }
             hideLoading();
         });
     }
