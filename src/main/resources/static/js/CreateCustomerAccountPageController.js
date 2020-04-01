@@ -2,8 +2,7 @@ var customerInfoFormId = "#customerInfoForm";
 
 async function createCustomerInDb(customerData) {
     const resp = await cloudSaveCustomer(customerData);
-    var customerId = resp.data;
-    return customerId;
+    return resp.data;
 }
 
 function createCustomerAccountHandler(e) {
@@ -34,14 +33,20 @@ function createCustomerAccountHandler(e) {
     } else {
         showLoading();
         createCustomerInDb(infoJson).then(function (data) {
-            console.log(data);
-            return $.ajax({
-                url: "/createCustomerAccount?" + $(customerInfoFormId).serialize() + "&setId=" + data,
-                type: "POST",
-                dataType: "json"
-            });
+            if (data.res) {
+                return $.ajax({
+                    url: "/createCustomerAccount?" + $(customerInfoFormId).serialize() + "&setId=" + data.str,
+                    type: "POST",
+                    dataType: "json"
+                });
+            } else {
+                alert(data.str);
+                return false;
+            }
         }).then(function (data) {
-            window.location.href = '/';
+            if (data) {
+                window.location.href = '/';
+            }
             hideLoading();
         });
     }
