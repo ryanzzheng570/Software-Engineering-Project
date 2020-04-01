@@ -212,6 +212,7 @@ function merchantLogin(username, password, mode = '') {
                 if ("shops" in currData) {
                     shops = currData["shops"];
                 }
+
                 return {
                     id: merchantId,
                     shops: shops,
@@ -267,10 +268,14 @@ function customerLogin(username, password, mode='') {
                     id: customerId,
                     cart: cart,
                     name: checkUsername
-                }
+                };
             }
         }
-    })
+
+        return null;
+    });
+
+    return retVal;
 }
 
 function addItemToShoppingCart(customerID, shopID, itemID, mode = "") {
