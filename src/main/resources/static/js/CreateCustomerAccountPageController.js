@@ -33,14 +33,14 @@ function createCustomerAccountHandler(e) {
     } else {
         showLoading();
         createCustomerInDb(infoJson).then(function (data) {
-            if (data.res) {
+            if (data) {
                 return $.ajax({
                     url: "/createCustomerAccount?" + $(customerInfoFormId).serialize() + "&setId=" + data.str,
                     type: "POST",
                     dataType: "json"
                 });
             } else {
-                alert(data.str);
+                alert("Failed to create customer account");
                 return false;
             }
         }).then(function (data) {

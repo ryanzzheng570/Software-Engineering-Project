@@ -42,11 +42,8 @@ public class CustomerController {
         Customer toAdd = new Customer(userName, email, address, phoneNum, note, boughtItems, password);
         toAdd.setId(newId);
 
-        //TODO: FIX
-        //customerRepository.save(customer);
-        /*
-         todo Should navigate to profile page, redirect to home page for now
-         */
+        FirebaseController.setCurrUser(toAdd);
+
         return toAdd;
     }
 }
