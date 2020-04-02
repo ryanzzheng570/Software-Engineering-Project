@@ -7,7 +7,7 @@ async function merchantLogin(shopData) {
 }
 
 async function customerLogin(cartData) {
-    const resp = await cloudCustomerLogin(cartData);\
+    const resp = await cloudCustomerLogin(cartData);
     return resp;
 }
 
@@ -126,7 +126,7 @@ function customerLoginHandler(e) {
         }).then(function (data) {
             hideLoading();
             if(data.id !== null) {
-                window.location.href ='/HomePage';
+                window.location.href ='/';
              }
         });
     }

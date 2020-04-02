@@ -103,7 +103,8 @@ public class LoginController {
     }
 
     @PostMapping("/loginAsCustomer")
-    public String signInAsCustomer(@RequestParam(value = "id") String userId,
+    public @ResponseBody
+    Customer signInAsCustomer(@RequestParam(value = "id") String userId,
                                     @RequestParam(value = "userName") String userName,
                                    @RequestParam(value = "cart[]") Optional<String[]> cartIds,
                                    @RequestParam(value = "testMode", defaultValue = "false") String testMode) {
@@ -113,9 +114,12 @@ public class LoginController {
             FirebaseController.loadDbInfo(false);
         }
 
+        Customer toRet = new Customer(userId);
+        toRet.setUserName(userName);
 
+        FirebaseController.setCurrUser(toRet);
 
         //Navigate to appropriate page, use "Home" for now
-        return "HomePage";
+        return toRet;
     }
 }
