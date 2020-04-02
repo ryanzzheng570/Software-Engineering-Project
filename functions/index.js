@@ -664,6 +664,12 @@ exports.testCreateCustomer = functions.https.onRequest((request, response) => {
 
 exports.customerLogin = functions.https.onCall((data, context) => {
     return customerLogin(data.userName, data.password);
+});
+
+export.testCustomerLogin = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(createCustomer(request.body.userName, request.body.password, TEST_MODE));
+    });
 })
 
 // !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
