@@ -276,16 +276,19 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", FIRST_SHOP_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
+        firebaseDelay();
 
         DatabaseReference tagRef = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID + "/tag/");
         Map<String, Object> tagMap = new HashMap<>();
         tagMap.put(TAG_ID, TAG_NAME);
         tagRef.updateChildrenAsync(tagMap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -348,6 +351,7 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -357,6 +361,7 @@ public class MerchantServicesTest {
         map.put("altText", ALT_TEXT);
         map.put("url", URL);
         firstItemRef.updateChildrenAsync(map);
+        firebaseDelay();
 
         DatabaseReference secondItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + SECOND_ITEM_ID);
         Map<String, Object> secondmap = new HashMap<>();
@@ -364,6 +369,7 @@ public class MerchantServicesTest {
         secondmap.put("cost", SECOND_ITEM_COST);
         secondmap.put("inventory", SECOND_ITEM_INV);
         secondItemRef.updateChildrenAsync(secondmap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
@@ -429,6 +435,7 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -438,13 +445,14 @@ public class MerchantServicesTest {
         map.put("altText", ALT_TEXT);
         map.put("url", URL);
         firstItemRef.updateChildrenAsync(map);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
-
         firebaseDelay();
+
         addItemToShop(SHOP_ID, NEW_URL, NEW_ALT_TEXT, ITEM_NAME, NEW_COST, NEW_INVENTORY);
 
         firebaseDelay();
@@ -496,15 +504,19 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", FIRST_SHOP_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
+        firebaseDelay();
+
         DatabaseReference shop2Ref = testDbInstance.getReference("test/store/" + EXISTING_SHOP_ID);
         Map<String, Object> shop2Map = new HashMap<>();
         shop2Map.put("shopName", EXISTING_SHOP_NAME);
         shop2Ref.updateChildrenAsync(shop2Map);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -558,11 +570,13 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", FIRST_SHOP_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -630,11 +644,13 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -644,6 +660,7 @@ public class MerchantServicesTest {
         map.put("altText", FIRST_ITEM_ALT_TEXT);
         map.put("url", FIRST_ITEM_URL);
         firstItemRef.updateChildrenAsync(map);
+        firebaseDelay();
 
         DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + EDIT_ITEM_ID);
         Map<String, Object> secMap = new HashMap<>();
@@ -729,12 +746,14 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         firebaseDelay();
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
+        firebaseDelay();
 
         DatabaseReference firstItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + FIRST_ITEM_ID);
         Map<String, Object> map = new HashMap<>();
@@ -742,6 +761,7 @@ public class MerchantServicesTest {
         map.put("cost", FIRST_ITEM_COST);
         map.put("inventory", FIRST_ITEM_INV);
         firstItemRef.updateChildrenAsync(map);
+        firebaseDelay();
 
         DatabaseReference secItemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + REMOVE_ITEM_ID);
         Map<String, Object> secMap = new HashMap<>();
@@ -749,6 +769,7 @@ public class MerchantServicesTest {
         secMap.put("cost", REMOVE_ITEM_COST);
         secMap.put("inventory", REMOVE_ITEM_INV);
         secItemRef.updateChildrenAsync(secMap);
+        firebaseDelay();
 
         DatabaseReference thirdtemRef = testDbInstance.getReference("test/store/" + SHOP_ID + "/item/" + THIRD_ITEM_ID);
         Map<String, Object> thirdMap = new HashMap<>();
@@ -813,6 +834,7 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
@@ -897,23 +919,28 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
+        firebaseDelay();
 
         DatabaseReference tagRel = testDbInstance.getReference("test/store/" + SHOP_ID + "/tag");
         Map<String, Object> tag1Map = new HashMap<>();
         tag1Map.put(FIRST_TAG_ID, FIRST_TAG_NAME);
         tagRel.updateChildrenAsync(tag1Map);
+        firebaseDelay();
+
         Map<String, Object> tag2Map = new HashMap<>();
         tag2Map.put(REMOVE_TAG_ID, REMOVE_TAG_NAME);
         tagRel.updateChildrenAsync(tag2Map);
+        firebaseDelay();
+
         Map<String, Object> tag3Map = new HashMap<>();
         tag3Map.put(THIRD_TAG_ID, THIRD_TAG_NAME);
         tagRel.updateChildrenAsync(tag3Map);
-
         firebaseDelay();
 
         removeTagFromShop(SHOP_ID, REMOVE_TAG_ID);
@@ -968,16 +995,17 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aTagUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> relMap = new HashMap<>();
         relMap.put(GENERATED_TOKEN, SHOP_ID);
         merchRel.updateChildrenAsync(relMap);
         firebaseDelay();
+
         addTagToShop(SHOP_ID, TAG_NAME);
-
-
         firebaseDelay();
+
         testDbInstance.getReference("test/store/" + SHOP_ID + "/tag/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1021,8 +1049,8 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         createShop(MERCHANT_ID, SHOP_NAME);
-
         firebaseDelay();
+
         testDbInstance.getReference("test/store").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1101,30 +1129,38 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + FIRST_SHOP_ID);
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", FIRST_SHOP_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
+        firebaseDelay();
 
         DatabaseReference shop2Ref = testDbInstance.getReference("test/store/" + DELETE_SHOP_ID);
         Map<String, Object> shop2Map = new HashMap<>();
         shop2Map.put("shopName", DELETE_SHOP_NAME);
         shop2Ref.updateChildrenAsync(shop2Map);
+        firebaseDelay();
 
         DatabaseReference shop3Ref = testDbInstance.getReference("test/store/" + THIRD_SHOP_ID);
         Map<String, Object> shop3Map = new HashMap<>();
         shop3Map.put("shopName", THIRD_SHOP_NAME);
         shop3Ref.updateChildrenAsync(shop3Map);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
         rel1Map.put(FIRST_SHOP_GENERATED_TOKEN, FIRST_SHOP_ID);
         merchRel.updateChildrenAsync(rel1Map);
+        firebaseDelay();
+
         DatabaseReference merchRel2 = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel2Map = new HashMap<>();
         rel2Map.put(DELETE_SHOP_GENERATED_TOKEN, DELETE_SHOP_ID);
         merchRel2.updateChildrenAsync(rel2Map);
+        firebaseDelay();
+
         DatabaseReference merchRel3 = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel3Map = new HashMap<>();
         rel3Map.put(THIRD_SHOP_GENERATED_TOKEN, THIRD_SHOP_ID);
@@ -1133,9 +1169,9 @@ public class MerchantServicesTest {
 
 
         deleteShop(DELETE_SHOP_ID, MERCHANT_ID);
+        firebaseDelay();
 
         ArrayList<String> shopNames = new ArrayList<String>();
-        firebaseDelay();
         testDbInstance.getReference("test/store/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -1233,11 +1269,13 @@ public class MerchantServicesTest {
         merchMap.put("phoneNum", "(xxx)xxx-xxxx");
         merchMap.put("userName", "aUsername");
         merchantRef.updateChildrenAsync(merchMap);
+        firebaseDelay();
 
         DatabaseReference shop1Ref = testDbInstance.getReference("test/store/" + SHOP_ID);
         Map<String, Object> shop1Map = new HashMap<>();
         shop1Map.put("shopName", ORIGINAL_NAME);
         shop1Ref.updateChildrenAsync(shop1Map);
+        firebaseDelay();
 
         DatabaseReference merchRel = testDbInstance.getReference("test/users/merchants/" + MERCHANT_ID + "/shops");
         Map<String, Object> rel1Map = new HashMap<>();
@@ -1246,10 +1284,9 @@ public class MerchantServicesTest {
         firebaseDelay();
 
         changeShopName(SHOP_ID, NEW_NAME);
-
-        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
         firebaseDelay();
 
+        Map<String, Object[]> toVerify = new HashMap<String, Object[]>();
         testDbInstance.getReference("test/store/" + SHOP_ID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
