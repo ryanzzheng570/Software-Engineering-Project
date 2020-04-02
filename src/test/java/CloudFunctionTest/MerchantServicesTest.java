@@ -620,16 +620,16 @@ public class MerchantServicesTest {
         final String SHOP_ID = "itEditsAItemInAShopId";
         final String MERCHANT_ID = "aMerchantId";
         final String GENERATED_TOKEN = "GenereatedTokenForEditItemInShop";
-        final String FIRST_ITEM_COST = "29.99";
-        final String FIRST_ITEM_INV = "1000";
+        final double FIRST_ITEM_COST = 29.99;
+        final int FIRST_ITEM_INV = 1000;
         final String FIRST_ITEM_URL = "FirstItemUrl";
         final String FIRST_ITEM_ALT_TEXT = "FirstItemAltText";
         final String FIRST_ITEM_NAME = "FirstItemNameInEditsShop";
         final String FIRST_ITEM_ID = "FirstItemIDInEditsShop";
 
         final String EDIT_ITEM_NAME = "editItemNameInShop";
-        final String EDIT_ITEM_COST = "1.99";
-        final String EDIT_ITEM_INV = "50";
+        final double EDIT_ITEM_COST = 1.99;
+        final int EDIT_ITEM_INV = 50;
         final String EDIT_ITEM_URL = "EditItemUrl";
         final String EDIT_ITEM_ALT_TEXT = "EditItemAltText";
         final String EDIT_ITEM_ID = "EditItemInShopID";
@@ -679,18 +679,32 @@ public class MerchantServicesTest {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Map<String, Object> curStoreData = (Map<String, Object>) ((Map<String, Object>) dataSnapshot.getValue()).get("item");
+
                 Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
-                String invVal = (String) firstItemData.get("inventory");
-                toVerify.put("Incorrect inventory for first item", new Object[]{invVal, FIRST_ITEM_INV});
-                String cost = (String) firstItemData.get("cost");
+                Long invVal = (Long) firstItemData.get("inventory");
+                int inventory = invVal != null ? invVal.intValue() : null;
+                toVerify.put("Incorrect inventory for first item", new Object[]{inventory, FIRST_ITEM_INV});
+                double cost;
+                try {
+                    cost = (double) firstItemData.get("cost");
+                } catch (Exception f) {
+                    String costVal = (String) firstItemData.get("cost");
+                    cost = Double.parseDouble(costVal);
+                }
                 toVerify.put("Incorrect cost for first item", new Object[]{cost, FIRST_ITEM_COST});
 
 
                 Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(EDIT_ITEM_ID);
-                Long invVal2 = (Long) secondItemData.get("inventory");
-                toVerify.put("Incorrect inventory for edited item", new Object[]{Long.toString(invVal2), EDITED_ITEM_INV});
-                String cost2 = (String) secondItemData.get("cost");
-                toVerify.put("Incorrect cost for edited item", new Object[]{cost2, EDITED_ITEM_COST});
+                invVal = (Long) secondItemData.get("inventory");
+                inventory = invVal != null ? invVal.intValue() : null;
+                toVerify.put("Incorrect inventory for edited item", new Object[]{inventory, Integer.parseInt(EDITED_ITEM_INV)});
+                try {
+                    cost = (double) secondItemData.get("cost");
+                } catch (Exception f) {
+                    String costVal = (String) secondItemData.get("cost");
+                    cost = Double.parseDouble(costVal);
+                }
+                toVerify.put("Incorrect cost for edited item", new Object[]{cost, Double.parseDouble(EDITED_ITEM_COST)});
                 setResult(PASS_FLAG);
                 setDoneFlag(true);
             }

@@ -551,8 +551,9 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 });
 
 exports.addItem = functions.https.onCall((data, context) => {
-    const inventory = parseInt(data.inventory);
-    const name = data.itemName.trim();
+    var inventory = parseInt(data.inventory);
+    var cost = parseFloat(data.cost);
+    var name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
