@@ -28,7 +28,7 @@ class CustomerTest {
     }
 
     @Test
-    public void appendNewBoughItem() {
+    public void appendNewBoughtItem() {
         Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewBoughtItem(newItem);
 
@@ -37,7 +37,7 @@ class CustomerTest {
     }
 
     @Test
-    public void getBoughItemById() {
+    public void getBoughtItemById() {
         Item newItem = new Item("ITEM_1", new ArrayList<Image>(), 0.0, 0);
         testCustomer.appendNewBoughtItem(newItem);
         assertEquals(newItem, testCustomer.getBoughtItemById(newItem.getId()));
