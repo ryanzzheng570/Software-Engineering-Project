@@ -23,6 +23,14 @@ public class CheckoutController {
             FirebaseController.loadDbInfo(false);
         }
         if (FirebaseController.getCurrUser() == null || (FirebaseController.getCurrUser() != null && !(FirebaseController.getCurrUser() instanceof Customer))) {
+            String username = "";
+            boolean isCustomer = false;
+            if (FirebaseController.getCurrUser() != null) {
+                username = FirebaseController.getCurrUser().getUserName();
+                isCustomer = FirebaseController.isCurrUserCustomer();
+            }
+            model.addAttribute("username", username);
+            model.addAttribute("isCustomer", isCustomer);
             return "CustomerLoginPage";
         }
 
