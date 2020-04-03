@@ -28,7 +28,7 @@ public class MerchantServicesTest {
 
     private boolean DONE_FLAG = false;
     private int DELAY_COUNTER = 0;
-    private final int MAX_DELAYS = 3;
+    private final int MAX_DELAYS = 5;
 
     private void setDoneFlag(boolean newVal) {
         DONE_FLAG = newVal;
