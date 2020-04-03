@@ -500,7 +500,7 @@ public class ShopAndDiffViewIntegrationTest {
     }
 
     @Test
-    public void testShoppingCartMenuNavWithLogin() throws Exception {
+    public void testShoppingCartNavWithLogin() throws Exception {
         FirebaseController.setCurrUser(null);
 
         // Should bring you to customer login page when not logged in
