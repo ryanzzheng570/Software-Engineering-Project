@@ -21,22 +21,6 @@ public class Item {
     private List<Image> images;
     private Double cost;
 
-    public String getStoreName() {
-        return storeName;
-    }
-
-    public void setStoreName(String storeName) {
-        this.storeName = storeName;
-    }
-
-    public String getStoreID() {
-        return storeID;
-    }
-
-    public void setStoreID(String storeID) {
-        this.storeID = storeID;
-    }
-
     private String storeName;
     private String storeID;
 
@@ -54,6 +38,22 @@ public class Item {
         this.images = images;
         this.inventory = inventory;
         this.cost = cost;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getStoreID() {
+        return storeID;
+    }
+
+    public void setStoreID(String storeID) {
+        this.storeID = storeID;
     }
 
     public void setId(String id) {
