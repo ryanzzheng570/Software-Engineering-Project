@@ -354,6 +354,7 @@ function merchantLogin(username, password, mode = '') {
                 if ("shops" in currData) {
                     shops = currData["shops"];
                 }
+
                 return {
                     id: merchantId,
                     shops: shops,
@@ -400,6 +401,40 @@ function createCustomer(username, password, email, address, phoneNumber, note, m
             str: key
         }
     });
+    return retVal;
+}
+
+function customerLogin(username, password, mode='') {
+    if(!ValidateString(username) || !(ValidateString(password))) {
+        return "Invalid username or password was entered.";
+    }
+
+    password = encrypt(password);
+    var retVal = database.ref(mode + "/users/customers").once("value").then((snapshot) => {
+        var ssv = snapshot.val();
+        for(var customerId in ssv) {
+            var currData = ssv[customerId];
+
+            var checkUsername = currData["userName"];
+            var checkPass = currData["password"];
+
+            if((checkUsername === username) && (checkPass === password)) {
+                var cart = [];
+                if("shoppingCart" in currData) {
+                    cart = currData["shoppingCart"];
+                }
+
+                return {
+                    id: customerId,
+                    cart: cart,
+                    name: checkUsername
+                };
+            }
+        }
+
+        return null;
+    });
+
     return retVal;
 }
 
@@ -516,8 +551,9 @@ exports.testRemoveTag = functions.https.onRequest((request, response) => {
 });
 
 exports.addItem = functions.https.onCall((data, context) => {
-    const inventory = parseInt(data.inventory);
-    const name = data.itemName.trim();
+    var inventory = parseInt(data.inventory);
+    var cost = parseFloat(data.cost);
+    var name = data.itemName.trim();
     const itemData = {
         url: data.url,
         altText: data.altText,
@@ -626,6 +662,16 @@ exports.testCreateCustomer = functions.https.onRequest((request, response) => {
         response.status(200).send(createCustomer(request.body.userName, request.body.password, request.body.email, request.body.address, request.body.phoneNumber, request.body.note, TEST_MODE));
     });
 });
+
+exports.customerLogin = functions.https.onCall((data, context) => {
+    return customerLogin(data.userName, data.password);
+});
+
+exports.testCustomerLogin = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {
+        response.status(200).send(createCustomer(request.body.userName, request.body.password, TEST_MODE));
+    });
+})
 
 // !--- PLACE ALL HELPER FUNCTIONS BELOW HERE ---!
 

@@ -59,6 +59,12 @@ async function cloudSaveCustomer(customerData) {
     return response;
 }
 
+async function cloudCustomerLogin(customerData) {
+    console.log("Inside Cloud customer login");
+    var response = await callCloudFunction("customerLogin", customerData);
+    return response;
+}
+
 async function cloudAddToCart(data) {
     var response = await callCloudFunction("addToCart", data);
     return response;

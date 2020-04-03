@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -22,6 +23,11 @@ public class Customer extends User{
     @Autowired
     public Customer() {
         super();
+    }
+
+    public Customer(String id) {
+        this("", "", "", "", "", new HashSet<Item>(), "");
+        this.id = id;
     }
 
     public Customer(String userName, String password) {
