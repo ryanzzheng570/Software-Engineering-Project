@@ -137,7 +137,7 @@ $(document).ready(function () {
         merchantLoginHandler(e);
     });
 
-    $(customerLoginForm).submit(function (e) {
+    $(customerLoginFormId).submit(function (e) {
         customerLoginHandler(e);
     });
 });

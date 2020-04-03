@@ -7,6 +7,7 @@ import com.google.firebase.database.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
 
@@ -463,7 +464,7 @@ public class CustomerServicesTest {
         functionCaller = new CloudTestController();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanup() {
         testDbInstance.getReference("test/").removeValueAsync();
         firebaseDelay();
