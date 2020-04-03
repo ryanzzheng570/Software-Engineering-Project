@@ -439,20 +439,18 @@ public class ShopAndDiffViewIntegrationTest {
     public void testMerchantMenuNavNoLogin() throws Exception {
         FirebaseController.setCurrUser(null);
 
-        // Should bring you to login page when not logged in
+        // Should bring you to merchant login page when not logged in
         this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Login")));
+                .andExpect(content().string(containsString("Login As A Merchant")));
     }
 
     @Test
     public void testMerchantMenuNavWithLogin() throws Exception {
         FirebaseController.setCurrUser(null);
 
-        // Should bring you to login page when not logged in
-        this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Login")));
+        // Should bring you to merchant login page when not logged in
+        this.mockMvc.perform(get("/goToMerchantMenuPage"));
 
         String merchantUsername = "USERNAME";
 
@@ -464,6 +462,84 @@ public class ShopAndDiffViewIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Merchant Menu Page")))
                 .andExpect(content().string(containsString(merchantUsername)));
+    }
+
+    @Test
+    public void testMerchantMenuNavWithLogout() throws Exception {
+        FirebaseController.setCurrUser(null);
+
+        // Should bring you to merchant login page when not logged in
+        this.mockMvc.perform(get("/goToMerchantMenuPage"));
+
+        String merchantUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsMerchant?id=%s&userName=%s&testMode=true", FirebaseController.getCounterAndIterate(), merchantUsername);
+        this.mockMvc.perform(post(requestStr));
+
+        // Should bring you to merchant menu page when logged in
+        this.mockMvc.perform(get("/goToMerchantMenuPage"));
+
+        this.mockMvc.perform(get("/logout")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Home Page")));
+
+        // Should bring you to merchant login page when not logged in
+        this.mockMvc.perform(get("/goToMerchantMenuPage")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Login As A Merchant")));
+    }
+
+    @Test
+    public void testShoppingCartNavWithoutLogin()  throws Exception{
+        FirebaseController.setCurrUser(null);
+
+        // Should bring you to customer login page when not logged in
+        this.mockMvc.perform(get("/goToCart")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Login As A Customer")));
+    }
+
+    @Test
+    public void testShoppingCartNavWithLogin() throws Exception {
+        FirebaseController.setCurrUser(null);
+
+        // Should bring you to customer login page when not logged in
+        this.mockMvc.perform(get("/goToCart"));
+
+        String customerUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsCustomer?id=%s&userName=%s&testMode=true", FirebaseController.getCounterAndIterate(), customerUsername);
+        this.mockMvc.perform(post(requestStr));
+
+        // Should bring you to shopping cart page when logged in
+        this.mockMvc.perform(get("/goToCart")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Shopping Cart")));
+    }
+
+    @Test
+    public void testShoppingCartMenuNavWithLogout() throws Exception{
+        FirebaseController.setCurrUser(null);
+
+        // Should bring you to customer login page when not logged in
+        this.mockMvc.perform(get("/goToCart"));
+
+        String customerUsername = "USERNAME";
+
+        String requestStr = String.format("/loginAsCustomer?id=%s&userName=%s&testMode=true", FirebaseController.getCounterAndIterate(), customerUsername);
+        this.mockMvc.perform(post(requestStr));
+
+        // Should bring you to shopping cart page when logged in
+        this.mockMvc.perform(get("/goToCart"));
+
+        this.mockMvc.perform(get("/logout")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Home Page")));
+
+        // Should bring you to customer login page when not logged in
+        this.mockMvc.perform(get("/goToCart")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Login As A Customer")));
     }
 
     @Test

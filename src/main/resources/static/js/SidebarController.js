@@ -64,6 +64,14 @@ function addSidebar() {
     signUpLink.appendChild(signUpText);
     sidebarDiv.appendChild(signUpLink);
 
+    var username = $("#username").attr('value');
+    if (username && username != "") {
+        var logoutLink = document.createElement("a");
+        var logoutText = document.createTextNode("Logout");
+        logoutLink.href = "/logout";
+        logoutLink.appendChild(logoutText);
+        sidebarDiv.appendChild(logoutLink);
+    }
 
     $("body").prepend(sidebarDiv);
 }

@@ -25,7 +25,7 @@ public class CustomerServicesTest {
     private final String PASS_FLAG = "PASS";
     private boolean DONE_FLAG = false;
     private int DELAY_COUNTER = 0;
-    private final int MAX_DELAYS = 3;
+    private final int MAX_DELAYS = 5;
 
     @Test
     public void itRemovesItemFromShoppingCart() {
