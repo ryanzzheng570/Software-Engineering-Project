@@ -467,6 +467,11 @@ public class ShopAndDiffViewIntegrationTest {
     }
 
     @Test
+    public void testMerchantMenuNavWithLogout() throws Exception {
+
+    }
+
+    @Test
     public void testDiffMerchantsHaveDiffShops() throws Exception {
         String shopName1 = "SHOP_ONE";
         String shopName2 = "SHOP_TWO";
