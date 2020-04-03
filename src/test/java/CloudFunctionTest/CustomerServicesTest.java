@@ -264,14 +264,14 @@ public class CustomerServicesTest {
         final String SHOP_ID = "itPurchaseItemsFromStoresID";
         final String FIRST_ITEM_ID = "firstItemID";
         final String FIRST_ITEM_NAME = "firstItem";
-        final String FIRST_ITEM_QTY = "30";
-        final String FIRST_ITEM_COST = "4.99";
+        final int FIRST_ITEM_QTY = 30;
+        final double FIRST_ITEM_COST = 4.99;
         final String SECOND_ITEM_ID = "secondItemID";
         final String SECOND_ITEM_NAME = "secondItem";
-        final String SECOND_ITEM_QTY = "5";
-        final String SECOND_ITEM_COST = "1.99";
-        final String FIRST_ITEM_PURC = "3";
-        final String SECOND_ITEM_PURC = "1";
+        final int SECOND_ITEM_QTY = 5;
+        final double SECOND_ITEM_COST = 1.99;
+        final int FIRST_ITEM_PURC = 3;
+        final int SECOND_ITEM_PURC = 1;
         final String CUSTOMER_ID = "aCustomerIDForThis";
 
         DatabaseReference customerRef = testDbInstance.getReference("test/users/customers/" + CUSTOMER_ID);
@@ -318,12 +318,12 @@ public class CustomerServicesTest {
                 Map<String, Object> firstItemData = (Map<String, Object>) curStoreData.get(FIRST_ITEM_ID);
                 Long invVal = (Long) firstItemData.get("inventory");
                 int inventory = invVal != null ? invVal.intValue() : null;
-                assertThat("Incorrect inventory", inventory, is(Integer.parseInt(FIRST_ITEM_QTY) - Integer.parseInt(FIRST_ITEM_PURC)));
+                assertThat("Incorrect inventory", inventory, is(FIRST_ITEM_QTY - FIRST_ITEM_PURC));
 
                 Map<String, Object> secondItemData = (Map<String, Object>) curStoreData.get(SECOND_ITEM_ID);
                 Long secInvVal = (Long) secondItemData.get("inventory");
                 int secInventory = secInvVal != null ? secInvVal.intValue() : null;
-                assertThat("Incorrect inventory", secInventory, is(Integer.parseInt(SECOND_ITEM_QTY) - Integer.parseInt(SECOND_ITEM_PURC)));
+                assertThat("Incorrect inventory", secInventory, is(SECOND_ITEM_QTY - SECOND_ITEM_PURC));
                 setResult(PASS_FLAG);
                 setDoneFlag(true);
             }

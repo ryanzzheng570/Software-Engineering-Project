@@ -16,7 +16,7 @@
     <span hidden id="username" th:value="${username}"></span>
     <span hidden id="isCustomer" th:value="${isCustomer}"></span>
 
-    <form action="#" th:action="@{/loginAsCustomer}" method="post">
+    <form action="#" th:action="@{/loginAsCustomer}" method="post" id="customerLoginForm">
         <h1>Login As A Customer</h1>
         <div th:if="${isLoginFailed}">
             Error: User Name/Password incorrect
@@ -25,7 +25,11 @@
         <p>Password: <input type="password" name="password" /></p>
 
         <p><input type="submit" value="Login" /></p>
+
+        <script type="text/javascript" th:src="@{/js/LoadingAnimationController.js}"></script>
         <script type="text/javascript" th:src="@{/js/SidebarController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/LoginController.js}"></script>
+        <script type="text/javascript" th:src="@{/js/CloudServiceController.js}"></script>
     </form>
 </body>
 

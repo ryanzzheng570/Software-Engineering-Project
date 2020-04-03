@@ -18,6 +18,7 @@ async function removeFromCartHandler(obj) {
         if (resp.data === "SUCCESS") {
             obj.closest('tr').remove();
             updateCost();
+            updateTable();
         } else {
             if (resp.data != "") {
                 alert(resp.data);
@@ -41,6 +42,20 @@ function updateCost() {
         totalCost += quantity * cost;
     })
     $("#totalCost").text("Total Cost: $" + totalCost.toFixed(2));
+}
+
+function updateTable() {
+    let count = 0;
+
+    $(".inv").each(function () {
+        count += 1;
+    })
+
+    if (count === 0) {
+        $("#emptyCart").show();
+        $("#cartSection").hide();
+        $(".main").append("<div><h2>Your cart is empty!</h2></div>");
+    }
 }
 
 

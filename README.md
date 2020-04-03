@@ -25,11 +25,15 @@ To Test:
  ### Current State
  - Users can signup as customer and/or merchants
  - Users can login as customer and/or merchants 
+ - Users can logout
+ 
  - Shops can be created
  - Merchants can modify shops by changing the shops name, adding/removing tags, and adding/removing/editing items 
+ 
  - Shops can be searched by using the name or tags
  - Shops have different views for customers and merchants
  - Customers can add items to cart and checkout 
+ 
  - Setup and integrated Firebase/database
  - App is running on Travis CI and Heroku
  
