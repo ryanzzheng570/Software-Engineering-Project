@@ -9,26 +9,30 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  Heroku: https://dashboard.heroku.com/apps/minishopifygroup5
  
  ### To Test The Application
- Test Locally:
+Test Locally:
  1. Clone the repo
  2. Open "src/main/java/ShopifyProj/Launcher.java" and run the Launcher
  3. Go to http://localhost:8181/ <br />
- Alternatively, use Heroku:
+ 
+Alternatively, use Heroku:
  1. Go to https://dashboard.heroku.com/apps/minishopifygroup5
  2. Click "Open App" <br />
- To Test:
+ 
+To Test:
  1. Use the navigation menu or buttons to test the app (NOTE: some pages ask for phone numbers, email, or credit card numbers. Nothing is done with this information, so you can just enter fake info)
   
   
  ### Current State
+ - Users can signup as customer and/or merchants
+ - Users can login as customer and/or merchants 
  - Shops can be created
+ - Merchants can modify shops by changing the shops name, adding/removing tags, and adding/removing/editing items 
  - Shops can be searched by using the name or tags
- - Merchants can modify shops by chaning the shops name, adding/removing tags, and adding/removing items
  - Shops have different views for customers and merchants
- - App is running on Travis CI and Heroku
+ - Customers can add items to cart and checkout 
  - Setup and integrated Firebase/database
- - Setup account signup for merchant and customers
- - Customers can add items to cart and checkout
+ - App is running on Travis CI and Heroku
+ 
  
  ### UML Diagram
  ![UML](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Eng%20Lab%20Project%20UML.png)
@@ -38,8 +42,4 @@ Merchant can create a new shop by filling in a form containing: the name of the 
  ![Database Schema](https://github.com/haseebakhan10/EngLabProject/blob/master/diagrams/Database%20Schema.png)
  
  ### Plan For Next Sprint
- - Add login support for customers and merchants
- - Improve testing for cart and checkout
- - Update the user interface
- - Update database to account for merchant's for owning shops
- - More updates for merchant shop view
+ - Project Complete
